@@ -2,6 +2,7 @@ package velmora.composer.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,17 +18,25 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String nickname;
+
   @Column(unique = true, nullable = false)
   private String email;
 
-  @Column(nullable = false)
+  @Column(name = "password_hash", nullable = false)
   private String password;
 
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Column(nullable = false)
-  private boolean enabled = true;
+  @Column(name = "is_confirmed")
+  private boolean enabled = false;
+
+  @Column(name = "invite_code")
+  private String inviteCode;
+
+  @Column(name = "created_at")
+  private LocalDateTime createdAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Composition> compositions;

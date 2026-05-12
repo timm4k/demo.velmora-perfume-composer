@@ -17,10 +17,9 @@ public class Perfume {
   private Long id;
 
   private String name;
-
   private String brand;
-
   private BigDecimal price;
+  private BigDecimal rating;
 
   @Column(name = "image_url")
   private String imageUrl;
@@ -28,6 +27,6 @@ public class Perfume {
   @Column(columnDefinition = "TEXT")
   private String description;
 
-  @Column(name = "is_available")
+  @Column(name = "availability")
   private boolean available = true;
 }

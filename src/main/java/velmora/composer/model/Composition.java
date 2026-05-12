@@ -21,13 +21,23 @@ public class Composition {
   private String name;
   private String description;
 
+  @Column(name = "is_public")
+  private boolean isPublic = false;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "perfume_id")
+  private Perfume perfume;
+
   @OneToMany(mappedBy = "composition", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CompositionItem> items = new ArrayList<>();
 
+  @Column(name = "created_at")
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  @Column(name = "updated_at")
   private LocalDateTime updatedAt = LocalDateTime.now();
 }

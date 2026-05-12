@@ -1,14 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER"
-  spacing="20.0"
-  xmlns="http://javafx.com/javafx/17"
-  xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="velmora.composer.ui.controller.MainController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="velmora.composer.ui.controller.MainController">
+  <children>
+    <VBox prefWidth="80.0" styleClass="sidebar" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+      <children>
+        <StackPane prefHeight="100.0">
+          <Label text="V" styleClass="sidebar-logo" />
+        </StackPane>
 
-  <Label text="Velmora Perfume Composer" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-  <Button text="Test Service" onAction="#handleTestConnection" style="-fx-padding: 10 20;"/>
+        <VBox alignment="CENTER" spacing="8.0" VBox.vgrow="ALWAYS">
+          <Label text="&#9679;" styleClass="sidebar-icon active" />
+          <Label text="&#9675;" styleClass="sidebar-icon" />
+          <Label text="&#9675;" styleClass="sidebar-icon" />
+        </VBox>
 
-</VBox>
+        <VBox alignment="CENTER" spacing="8.0" prefHeight="120.0">
+          <Label fx:id="userInitials" text="?" styleClass="sidebar-user" />
+          <Button text="&#10005;" onAction="#handleLogout" styleClass="btn-ghost" />
+        </VBox>
+      </children>
+    </VBox>
+
+    <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="0.0">
+      <children>
+        <VBox layoutX="36.0" layoutY="32.0" spacing="4.0">
+          <Label text="THE COMPOSER" styleClass="heading-hero" />
+          <Label text="DIGITAL OLFACTORY LABORATORY" styleClass="heading-sub" />
+        </VBox>
+
+        <HBox layoutX="36.0" layoutY="140.0" spacing="24.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="140.0" AnchorPane.bottomAnchor="100.0">
+          <children>
+            <VBox styleClass="card" prefWidth="280.0" minWidth="240.0" spacing="16.0" HBox.hgrow="NEVER">
+              <children>
+                <Label text="RAW MATERIALS" styleClass="section-label" />
+                <TextField fx:id="searchNotes" promptText="Search molecules..." />
+                <ListView fx:id="notesListView" prefHeight="2000.0" VBox.vgrow="ALWAYS" />
+                <HBox spacing="8.0" alignment="CENTER">
+                  <Rectangle width="8.0" height="8.0" fill="#78a0a0" arcWidth="2" arcHeight="2" />
+                  <Label text="TOP" styleClass="label-muted" />
+                  <Rectangle width="8.0" height="8.0" fill="#a4a0c5" arcWidth="2" arcHeight="2" />
+                  <Label text="HEART" styleClass="label-muted" />
+                  <Rectangle width="8.0" height="8.0" fill="#e2a998" arcWidth="2" arcHeight="2" />
+                  <Label text="BASE" styleClass="label-muted" />
+                </HBox>
+              </children>
+            </VBox>
+
+            <VBox styleClass="pyramid-container" spacing="16.0" HBox.hgrow="ALWAYS">
+              <children>
+                <Label text="OLFACTORY PYRAMID" styleClass="section-label" />
+                <Label text="Click a note to add it to the pyramid" styleClass="label-muted" />
+
+                <VBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="topNotesZone" styleClass="pyramid-zone top-zone" prefHeight="100.0" alignment="TOP_CENTER">
+                    <children>
+                      <Label text="TOP NOTES" styleClass="pyramid-zone-title" />
+                      <Label text="&#8593; First impression" styleClass="label-muted" />
+                    </children>
+                  </VBox>
+
+                  <VBox fx:id="heartNotesZone" styleClass="pyramid-zone heart-zone" prefHeight="140.0" alignment="TOP_CENTER">
+                    <children>
+                      <Label text="HEART NOTES" styleClass="pyramid-zone-title" />
+                      <Label text="&#9830; The soul of the fragrance" styleClass="label-muted" />
+                    </children>
+                  </VBox>
+
+                  <VBox fx:id="baseNotesZone" styleClass="pyramid-zone base-zone" prefHeight="180.0" alignment="TOP_CENTER">
+                    <children>
+                      <Label text="BASE NOTES" styleClass="pyramid-zone-title" />
+                      <Label text="&#8999; Long-lasting foundation" styleClass="label-muted" />
+                    </children>
+                  </VBox>
+                </VBox>
+
+                <HBox spacing="24.0" alignment="CENTER" prefHeight="32.0">
+                  <children>
+                    <HBox spacing="8.0" alignment="CENTER">
+                      <Rectangle width="12.0" height="12.0" fill="#D4D480" arcWidth="3" arcHeight="3" />
+                      <Label text="TOP:" styleClass="label-muted" />
+                      <Label fx:id="topPctLabel" text="0%" style="-fx-font-weight: bold; -fx-font-size: 13;" />
+                    </HBox>
+                    <HBox spacing="8.0" alignment="CENTER">
+                      <Rectangle width="12.0" height="12.0" fill="#D4809F" arcWidth="3" arcHeight="3" />
+                      <Label text="HEART:" styleClass="label-muted" />
+                      <Label fx:id="heartPctLabel" text="0%" style="-fx-font-weight: bold; -fx-font-size: 13;" />
+                    </HBox>
+                    <HBox spacing="8.0" alignment="CENTER">
+                      <Rectangle width="12.0" height="12.0" fill="#6B4C47" arcWidth="3" arcHeight="3" />
+                      <Label text="BASE:" styleClass="label-muted" />
+                      <Label fx:id="basePctLabel" text="0%" style="-fx-font-weight: bold; -fx-font-size: 13;" />
+                    </HBox>
+                  </children>
+                </HBox>
+              </children>
+            </VBox>
+
+            <VBox styleClass="analysis-card" prefWidth="240.0" minWidth="200.0" spacing="16.0" HBox.hgrow="NEVER">
+              <children>
+                <Label text="LIVE ANALYSIS" styleClass="section-label" />
+
+                <StackPane prefHeight="80.0" prefWidth="200.0">
+                  <Circle radius="32.0" styleClass="score-circle" />
+                  <Label fx:id="compatibilityScore" text="--" styleClass="score-text" />
+                </StackPane>
+
+                <ScrollPane fitToWidth="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                  <content>
+                    <Label fx:id="analysisLabel" text="Waiting for ingredients..." wrapText="true" style="-fx-padding: 0 0 8 0;" />
+                  </content>
+                </ScrollPane>
+
+                <Label fx:id="analysisStatus" styleClass="analysis-status" managed="false" visible="false" wrapText="true" />
+
+                <Button text="ANALYZE" onAction="#handleAnalyze" styleClass="btn-primary" maxWidth="Infinity" />
+                <Button text="CLEAR ALL" onAction="#handleClear" styleClass="btn-ghost" maxWidth="Infinity" />
+              </children>
+            </VBox>
+          </children>
+        </HBox>
+
+        <HBox spacing="16.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="36.0" AnchorPane.bottomAnchor="24.0">
+          <children>
+            <TextField fx:id="compositionName" promptText="Name your composition..." HBox.hgrow="ALWAYS" style="-fx-border-color: #E8E4DE; -fx-border-width: 0 0 1 0; -fx-background-color: transparent;" />
+            <Button text="SAVE COMPOSITION" onAction="#handleSave" styleClass="btn-primary" />
+          </children>
+        </HBox>
+      </children>
+    </AnchorPane>
+  </children>
+</AnchorPane>

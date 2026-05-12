@@ -1,0 +1,520 @@
+.root {
+  -velmora-bg: #F6F3EE;
+  -velmora-text: #1A1A1A;
+  -velmora-accent-purple: #A4A0C5;
+  -velmora-accent-teal: #78A0A0;
+  -velmora-accent-peach: #E2A998;
+  -velmora-white: #FFFFFF;
+  -velmora-border: #E8E4DE;
+  -velmora-error: #D14545;
+  -velmora-success: #5A9E8F;
+  -velmora-warning: #D4A853;
+  -velmora-glow-purple: rgba(164, 160, 197, 0.3);
+  -velmora-glow-teal: rgba(120, 160, 160, 0.3);
+  -velmora-glow-peach: rgba(226, 169, 152, 0.3);
+  -fx-background-color: -velmora-bg;
+}
+
+.auth-root {
+  -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, -velmora-bg 0%, derive(-velmora-bg, -3%) 100%);
+}
+
+.auth-brand-bg {
+  -fx-background-color: -velmora-bg;
+  -fx-border-color: transparent transparent -velmora-border transparent;
+  -fx-border-width: 0 0 1 0;
+}
+
+.auth-brand {
+  -fx-font-family: 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 64;
+  -fx-text-fill: -velmora-text;
+  -fx-letter-spacing: 12;
+}
+
+.auth-subtitle {
+  -fx-font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  -fx-font-size: 16;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 6;
+}
+
+.auth-tagline {
+  -fx-font-size: 12;
+  -fx-text-fill: #B0ADA8;
+  -fx-letter-spacing: 3;
+}
+
+.auth-card {
+  -fx-background-color: -velmora-white;
+  -fx-background-radius: 20;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 24, 0, 0, 8);
+  -fx-padding: 0;
+  -fx-max-height: 480;
+}
+
+.auth-form-title {
+  -fx-font-family: 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 26;
+  -fx-text-fill: -velmora-text;
+}
+
+.field-label {
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 2;
+}
+
+.auth-error {
+  -fx-text-fill: -velmora-error;
+  -fx-font-size: 12;
+  -fx-font-weight: 500;
+}
+
+.auth-switch-text {
+  -fx-font-size: 12;
+  -fx-text-fill: #B0ADA8;
+}
+
+.auth-switch-link {
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-font-weight: bold;
+  -fx-border-color: transparent;
+  -fx-underline: false;
+}
+
+.auth-switch-link:hover {
+  -fx-text-fill: derive(-velmora-accent-purple, -20%);
+}
+
+.sidebar {
+  -fx-background-color: -velmora-white;
+  -fx-border-color: -velmora-border;
+  -fx-border-width: 0 1 0 0;
+  -fx-padding: 0;
+}
+
+.sidebar-logo {
+  -fx-font-family: 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 28;
+  -fx-text-fill: -velmora-text;
+  -fx-cursor: hand;
+}
+
+.sidebar-icon {
+  -fx-font-size: 18;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-cursor: hand;
+  -fx-padding: 14;
+  -fx-background-radius: 12;
+}
+
+.sidebar-icon:hover {
+  -fx-background-color: -velmora-bg;
+  -fx-text-fill: -velmora-text;
+}
+
+.sidebar-icon.active {
+  -fx-background-color: -velmora-bg;
+  -fx-text-fill: -velmora-text;
+}
+
+.sidebar-user {
+  -fx-font-size: 10;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-font-weight: bold;
+}
+
+.heading-hero {
+  -fx-font-family: 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 44;
+  -fx-text-fill: -velmora-text;
+}
+
+.heading-sub {
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 4;
+}
+
+.section-label {
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 2;
+}
+
+.text-field, .password-field {
+  -fx-background-color: transparent;
+  -fx-border-color: -velmora-border;
+  -fx-border-width: 0 0 1 0;
+  -fx-font-size: 13;
+  -fx-padding: 8 0 8 0;
+  -fx-text-fill: -velmora-text;
+  -fx-prompt-text-fill: #B0ADA8;
+  -fx-background-radius: 0;
+}
+
+.text-field:focused, .password-field:focused {
+  -fx-border-color: -velmora-accent-purple;
+  -fx-border-width: 0 0 1.5 0;
+}
+
+.text-field:disabled, .password-field:disabled {
+  -fx-opacity: 0.5;
+}
+
+.btn-primary {
+  -fx-background-color: -velmora-text;
+  -fx-text-fill: -velmora-white;
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1.5;
+  -fx-background-radius: 0;
+  -fx-padding: 14 28;
+  -fx-cursor: hand;
+  -fx-border-color: transparent;
+}
+
+.btn-primary:hover {
+  -fx-background-color: derive(-velmora-text, 20%);
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 2);
+}
+
+.btn-primary:pressed {
+  -fx-background-color: derive(-velmora-text, 40%);
+}
+
+.btn-primary:disabled {
+  -fx-opacity: 0.4;
+  -fx-cursor: default;
+}
+
+.btn-secondary {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-text;
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1.5;
+  -fx-background-radius: 0;
+  -fx-padding: 14 28;
+  -fx-cursor: hand;
+  -fx-border-color: -velmora-text;
+  -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+  -fx-background-color: -velmora-text;
+  -fx-text-fill: -velmora-white;
+}
+
+.btn-ghost {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1;
+  -fx-background-radius: 0;
+  -fx-padding: 10 18;
+  -fx-cursor: hand;
+  -fx-border-color: transparent;
+}
+
+.btn-ghost:hover {
+  -fx-text-fill: derive(-velmora-accent-purple, -20%);
+}
+
+.btn-danger {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-error;
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1.5;
+  -fx-background-radius: 0;
+  -fx-padding: 14 28;
+  -fx-cursor: hand;
+  -fx-border-color: -velmora-error;
+  -fx-border-width: 1;
+}
+
+.btn-danger:hover {
+  -fx-background-color: -velmora-error;
+  -fx-text-fill: -velmora-white;
+}
+
+.card {
+  -fx-background-color: -velmora-white;
+  -fx-background-radius: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 12, 0, 0, 4);
+  -fx-padding: 24;
+}
+
+.card-subtle {
+  -fx-background-color: -velmora-white;
+  -fx-background-radius: 12;
+  -fx-padding: 0;
+}
+
+.list-view {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+.list-view .list-cell {
+  -fx-background-color: transparent;
+  -fx-padding: 6 8;
+  -fx-text-fill: -velmora-text;
+  -fx-font-size: 13;
+  -fx-cursor: hand;
+}
+
+.list-view .list-cell:hover {
+  -fx-background-color: -velmora-bg;
+  -fx-background-radius: 8;
+}
+
+.list-view .list-cell:selected {
+  -fx-background-color: derive(-velmora-accent-purple, 40%);
+  -fx-background-radius: 8;
+  -fx-text-fill: -velmora-text;
+}
+
+.list-view .scroll-bar {
+  -fx-background-color: transparent;
+  -fx-pref-width: 4;
+}
+
+.list-view .scroll-bar .thumb {
+  -fx-background-color: -velmora-border;
+  -fx-background-radius: 4;
+}
+
+.list-view .scroll-bar .increment-button,
+.list-view .scroll-bar .decrement-button {
+  -fx-pref-height: 0;
+  -fx-pref-width: 0;
+  -fx-opacity: 0;
+}
+
+.note-chip {
+  -fx-background-radius: 6;
+  -fx-padding: 6 12;
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-text-fill: -velmora-text;
+  -fx-cursor: hand;
+}
+
+.note-chip:hover {
+  -fx-opacity: 0.8;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
+}
+
+.note-chip.top-note {
+  -fx-background-color: derive(#DFFF00, 80%);
+  -fx-border-color: derive(#DFFF00, 40%);
+  -fx-border-width: 1;
+}
+
+.note-chip.heart-note {
+  -fx-background-color: derive(#E0115F, 90%);
+  -fx-border-color: derive(#E0115F, 50%);
+  -fx-border-width: 1;
+}
+
+.note-chip.base-note {
+  -fx-background-color: derive(#2C1B18, 80%);
+  -fx-border-color: derive(#2C1B18, 50%);
+  -fx-border-width: 1;
+}
+
+.pyramid-container {
+  -fx-background-color: -velmora-white;
+  -fx-background-radius: 16;
+  -fx-padding: 20;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 12, 0, 0, 4);
+}
+
+.pyramid-zone {
+  -fx-background-radius: 12;
+  -fx-border-radius: 12;
+  -fx-border-width: 1;
+  -fx-padding: 12;
+  -fx-spacing: 6;
+}
+
+.pyramid-zone.top-zone {
+  -fx-background-color: derive(#DFFF00, 85%);
+  -fx-border-color: derive(#DFFF00, 50%);
+  -fx-max-width: 200;
+}
+
+.pyramid-zone.heart-zone {
+  -fx-background-color: derive(#E0115F, 85%);
+  -fx-border-color: derive(#E0115F, 50%);
+  -fx-max-width: 260;
+}
+
+.pyramid-zone.base-zone {
+  -fx-background-color: derive(#2C1B18, 85%);
+  -fx-border-color: derive(#2C1B18, 50%);
+  -fx-max-width: 320;
+}
+
+.pyramid-zone-title {
+  -fx-font-size: 9;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 2;
+  -fx-text-fill: -velmora-text;
+  -fx-opacity: 0.5;
+}
+
+.pyramid-zone-empty {
+  -fx-font-size: 11;
+  -fx-text-fill: #B0ADA8;
+  -fx-font-style: italic;
+}
+
+.analysis-card {
+  -fx-background-color: -velmora-white;
+  -fx-background-radius: 16;
+  -fx-padding: 24;
+  -fx-spacing: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 12, 0, 0, 4);
+}
+
+.score-circle {
+  -fx-stroke: -velmora-accent-teal;
+  -fx-stroke-width: 3;
+  -fx-fill: transparent;
+}
+
+.score-text {
+  -fx-font-family: 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 32;
+  -fx-text-fill: -velmora-text;
+}
+
+.analysis-status {
+  -fx-font-size: 12;
+  -fx-padding: 8 16;
+  -fx-background-radius: 6;
+  -fx-font-weight: 600;
+}
+
+.analysis-status.good {
+  -fx-background-color: derive(-velmora-success, 80%);
+  -fx-text-fill: derive(-velmora-success, -40%);
+}
+
+.analysis-status.warning {
+  -fx-background-color: derive(-velmora-warning, 70%);
+  -fx-text-fill: derive(-velmora-warning, -40%);
+}
+
+.analysis-status.error {
+  -fx-background-color: derive(-velmora-error, 80%);
+  -fx-text-fill: derive(-velmora-error, -20%);
+}
+
+.pct-bar {
+  -fx-background-color: -velmora-border;
+  -fx-background-radius: 4;
+  -fx-pref-height: 4;
+}
+
+.pct-bar-fill {
+  -fx-background-radius: 4;
+  -fx-pref-height: 4;
+}
+
+.pct-bar-fill.top-fill {
+  -fx-background-color: derive(#DFFF00, 30%);
+}
+
+.pct-bar-fill.heart-fill {
+  -fx-background-color: derive(#E0115F, 40%);
+}
+
+.pct-bar-fill.base-fill {
+  -fx-background-color: derive(#2C1B18, 40%);
+}
+
+.scroll-pane {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+  -fx-background-color: transparent;
+  -fx-pref-width: 4;
+}
+
+.scroll-pane .scroll-bar .thumb {
+  -fx-background-color: -velmora-border;
+  -fx-background-radius: 4;
+}
+
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+  -fx-pref-height: 0;
+  -fx-pref-width: 0;
+  -fx-opacity: 0;
+}
+
+.slider {
+  -fx-pref-height: 24;
+}
+
+.slider .track {
+  -fx-background-color: -velmora-border;
+  -fx-background-radius: 2;
+  -fx-pref-height: 2;
+}
+
+.slider .thumb {
+  -fx-background-color: -velmora-accent-purple;
+  -fx-background-radius: 10;
+  -fx-pref-width: 14;
+  -fx-pref-height: 14;
+  -fx-effect: dropshadow(gaussian, -velmora-glow-purple, 6, 0, 0, 0);
+}
+
+.slider .thumb:hover {
+  -fx-background-color: derive(-velmora-accent-purple, -10%);
+}
+
+.label-bold {
+  -fx-font-weight: bold;
+}
+
+.label-muted {
+  -fx-text-fill: #B0ADA8;
+  -fx-font-size: 11;
+}
+
+.hyperlink {
+  -fx-border-color: transparent;
+  -fx-underline: false;
+  -fx-cursor: hand;
+}
+
+.hyperlink:hover {
+  -fx-underline: true;
+}
+
+.tooltip {
+  -fx-background-color: -velmora-text;
+  -fx-text-fill: -velmora-white;
+  -fx-font-size: 11;
+  -fx-background-radius: 6;
+  -fx-padding: 6 12;
+}

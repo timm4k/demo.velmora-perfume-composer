@@ -2,12 +2,10 @@ package velmora.composer;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import velmora.composer.ui.ViewManager;
 
 public class JavaFxApplication extends Application {
 
@@ -15,23 +13,46 @@ public class JavaFxApplication extends Application {
 
   @Override
   public void init() {
-    this.context = new SpringApplicationBuilder(Main.class).run();
+    try {
+      System.out.println("[JFX] Initializing Spring context...");
+      this.context = new SpringApplicationBuilder(Main.class).run();
+      System.out.println("[JFX] Spring context ready.");
+    } catch (Exception e) {
+      System.out.println("[JFX] FAILED to start Spring context:");
+      e.printStackTrace(System.out);
+      Platform.exit();
+      System.exit(1);
+    }
   }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
-    loader.setControllerFactory(context::getBean);
+    try {
+      System.out.println("[JFX] Starting JavaFX UI...");
+      ViewManager viewManager = context.getBean(ViewManager.class);
+      viewManager.setPrimaryStage(primaryStage);
 
-    Parent root = loader.load();
-    primaryStage.setTitle("Velmora Perfume Composer");
-    primaryStage.setScene(new Scene(root, 1000, 700));
-    primaryStage.show();
+      primaryStage.setTitle("Velmora — Olfactory Lab");
+      primaryStage.setMinWidth(1100);
+      primaryStage.setMinHeight(750);
+
+      viewManager.showAuth();
+      primaryStage.toFront();
+      System.out.println("[JFX] UI started successfully");
+    } catch (Exception e) {
+      System.out.println("[JFX] FAILED to start UI:");
+      e.printStackTrace(System.out);
+      Platform.exit();
+      System.exit(1);
+    }
   }
 
   @Override
   public void stop() {
-    this.context.close();
+    System.out.println("[JFX] Stopping application...");
+    if (context != null) {
+      this.context.close();
+    }
     Platform.exit();
   }
 }

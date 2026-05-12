@@ -2,6 +2,7 @@ package velmora.composer.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "composition_items")
@@ -9,19 +10,33 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@IdClass(CompositionItemId.class)
 public class CompositionItem {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Column(name = "composition_id")
+  private Long compositionId;
+
+  @Id
+  @Column(name = "note_id")
+  private Long noteId;
+
+  private Integer percentage;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "composition_id")
+  @JoinColumn(name = "composition_id", insertable = false, updatable = false)
   private Composition composition;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "note_id")
+  @JoinColumn(name = "note_id", insertable = false, updatable = false)
   private Note note;
+}
 
-  private Double percentage;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+class CompositionItemId implements Serializable {
+  private Long compositionId;
+  private Long noteId;
 }

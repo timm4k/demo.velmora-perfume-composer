@@ -8,7 +8,7 @@ import velmora.composer.model.Perfume;
 
 @Repository
 public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
-  List<List<Perfume>> findByBrand(String brand);
+  List<Perfume> findByBrand(String brand);
 
   List<Perfume> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 }
