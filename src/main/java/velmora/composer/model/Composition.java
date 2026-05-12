@@ -1,10 +1,10 @@
 package velmora.composer.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
 
 @Entity
 @Table(name = "compositions")
@@ -19,8 +19,6 @@ public class Composition {
   private Long id;
 
   private String name;
-
-  @Column(columnDefinition = "TEXT")
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -30,9 +28,6 @@ public class Composition {
   @OneToMany(mappedBy = "composition", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CompositionItem> items = new ArrayList<>();
 
-  @Column(name = "created_at")
   private LocalDateTime createdAt = LocalDateTime.now();
-
-  @Column(name = "updated_at")
   private LocalDateTime updatedAt = LocalDateTime.now();
 }

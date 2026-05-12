@@ -1,13 +1,14 @@
 package velmora.composer.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -25,9 +26,9 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Column(name = "is_enabled")
-  private boolean enabled = false;
+  @Column(nullable = false)
+  private boolean enabled = true;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Composition> compositions;
 }
