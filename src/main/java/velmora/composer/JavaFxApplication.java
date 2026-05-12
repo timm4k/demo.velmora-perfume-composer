@@ -31,12 +31,8 @@ public class JavaFxApplication extends Application {
       System.out.println("[JFX] Starting JavaFX UI...");
       ViewManager viewManager = context.getBean(ViewManager.class);
       viewManager.setPrimaryStage(primaryStage);
-
-      primaryStage.setTitle("Velmora — Olfactory Lab");
-      primaryStage.setMinWidth(1100);
-      primaryStage.setMinHeight(750);
-
       viewManager.showAuth();
+      primaryStage.show();
       primaryStage.toFront();
       System.out.println("[JFX] UI started successfully");
     } catch (Exception e) {

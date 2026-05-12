@@ -6,4 +6,5 @@ import velmora.composer.model.Composition;
 
 @Repository
 public interface CompositionRepository extends JpaRepository<Composition, Long> {
+  java.util.List<Composition> findByUserId(Long userId);
 }

@@ -22,8 +22,10 @@ import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionItem;
 import velmora.composer.model.Note;
 import velmora.composer.model.NoteType;
+import velmora.composer.model.User;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.service.CompositionService;
+import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
 
 @Component
@@ -33,6 +35,7 @@ public class MainController {
   private final NoteRepository noteRepository;
   private final CompositionService compositionService;
   private final ViewManager viewManager;
+  private final UserSession userSession;
 
   @FXML private ListView<Note> notesListView;
   @FXML private TextField searchNotes;
@@ -59,7 +62,7 @@ public class MainController {
     loadNotes();
     setupSearch();
     setupNoteClick();
-    userInitials.setText("U");
+    userInitials.setText(userSession.getInitials() != null ? userSession.getInitials() : "?");
     updateAnalysis();
   }
 
@@ -292,10 +295,14 @@ public class MainController {
     int basePct = 100 / total;
     int remainder = 100 - basePct * total;
 
+    User currentUser = new User();
+    currentUser.setId(userSession.getUserId());
+
     Composition composition = new Composition();
     composition.setName(name);
     composition.setDescription("Created in Velmora Olfactory Lab");
     composition.setPublic(false);
+    composition.setUser(currentUser);
 
     for (int i = 0; i < total; i++) {
       CompositionItem item = new CompositionItem();
@@ -315,7 +322,13 @@ public class MainController {
   }
 
   @FXML
+  public void handleSettings() {
+    viewManager.showSettings();
+  }
+
+  @FXML
   public void handleLogout() {
+    userSession.clear();
     viewManager.showAuth();
   }
 

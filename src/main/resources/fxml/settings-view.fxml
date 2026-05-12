@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="velmora.composer.ui.controller.SettingsController"
+  style="-fx-background-color: #F4F1EC;">
+
+  <VBox prefWidth="220.0" styleClass="sidebar"
+    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+    <StackPane prefHeight="90.0">
+      <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 24;" spacing="12.0">
+        <StackPane prefWidth="36.0" prefHeight="36.0"
+          style="-fx-background-color: rgba(164,160,197,0.18); -fx-background-radius: 8;
+                 -fx-border-color: rgba(164,160,197,0.4); -fx-border-width: 1; -fx-border-radius: 8;">
+          <Label fx:id="userInitials" text="?" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
+        </StackPane>
+        <VBox spacing="1.0">
+          <Label text="VELMORA" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1C1917; -fx-letter-spacing: 3;" />
+          <Label text="OLFACTORY LAB" style="-fx-font-size: 9; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;" />
+        </VBox>
+      </HBox>
+    </StackPane>
+
+    <Rectangle width="180.0" height="1.0" fill="#DDD9D1" style="-fx-translate-x: 20;" />
+
+    <VBox spacing="2.0" style="-fx-padding: 20 12 0 12;" VBox.vgrow="ALWAYS">
+      <Label text="NAVIGATION" style="-fx-font-size: 10; -fx-letter-spacing: 3; -fx-text-fill: #C4BFB9; -fx-padding: 0 0 8 8;" />
+
+      <HBox spacing="12.0" alignment="CENTER_LEFT"
+        onMouseClicked="#handleBack"
+        style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
+        <Label text="✦" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
+        <VBox spacing="1.0">
+          <Label text="Composer" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
+          <Label text="FORMULA WORKBENCH" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
+        </VBox>
+      </HBox>
+
+      <HBox spacing="12.0" alignment="CENTER_LEFT"
+        style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;
+               -fx-background-color: rgba(164,160,197,0.14);
+               -fx-border-color: rgba(164,160,197,0.4); -fx-border-width: 1; -fx-border-radius: 4;">
+        <Label text="◎" style="-fx-font-size: 13; -fx-text-fill: #A4A0C5;" />
+        <VBox spacing="1.0">
+          <Label text="Settings" style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #1C1917;" />
+          <Label text="PREFERENCES" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #A4A0C5;" />
+        </VBox>
+      </HBox>
+    </VBox>
+
+    <VBox spacing="0.0" style="-fx-padding: 0 0 24 0;">
+      <Rectangle width="180.0" height="1.0" fill="#DDD9D1" style="-fx-translate-x: 20;" />
+      <VBox spacing="4.0" style="-fx-padding: 16 12 0 12;">
+        <Label text="ACCOUNT" style="-fx-font-size: 10; -fx-letter-spacing: 3; -fx-text-fill: #C4BFB9; -fx-padding: 0 0 4 8;" />
+        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 4 8;">
+          <Button text="LOG OUT" onAction="#handleLogout" styleClass="btn-danger" />
+        </HBox>
+      </VBox>
+    </VBox>
+  </VBox>
+
+  <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+    AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
+    <children>
+      <VBox layoutX="44.0" layoutY="36.0" spacing="4.0">
+        <Label text="Settings" style="-fx-font-family: 'Garamond','Times New Roman',serif; -fx-font-size: 36; -fx-text-fill: #1C1917;" />
+        <Rectangle width="50.0" height="2.0" fill="#E2A998" arcWidth="2" arcHeight="2" />
+        <Label text="ACCOUNT &amp; PREFERENCES" style="-fx-font-size: 12; -fx-letter-spacing: 4; -fx-text-fill: #78A0A0;" />
+      </VBox>
+
+      <ScrollPane fitToWidth="true" fitToHeight="false"
+        AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0"
+        AnchorPane.topAnchor="120.0" AnchorPane.bottomAnchor="24.0"
+        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <content>
+          <VBox spacing="24.0" maxWidth="700.0" style="-fx-padding: 0 0 40 0;">
+
+            <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4); -fx-border-color: #DDD9D1; -fx-border-width: 1; -fx-border-radius: 8;" spacing="20.0">
+              <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Rectangle width="4.0" height="22.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
+                <Label text="PROFILE" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #A4A0C5;" />
+              </HBox>
+
+              <HBox alignment="CENTER_LEFT" spacing="16.0">
+                <StackPane prefWidth="52.0" prefHeight="52.0"
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(164,160,197,0.3) 0%, rgba(120,160,160,0.2) 100%); -fx-background-radius: 14; -fx-border-color: rgba(164,160,197,0.45); -fx-border-width: 1; -fx-border-radius: 14;">
+                  <Label fx:id="profileInitials" text="?" style="-fx-text-fill: #A4A0C5; -fx-font-size: 20; -fx-font-weight: bold;" />
+                </StackPane>
+                <VBox spacing="3.0">
+                  <Label fx:id="profileName" text="Perfumer" style="-fx-font-size: 18; -fx-font-weight: 600; -fx-text-fill: #1C1917;" />
+                  <Label fx:id="profileEmail" text="loading…" style="-fx-font-size: 12; -fx-text-fill: #A8A29E; -fx-font-style: italic;" />
+                </VBox>
+              </HBox>
+
+              <Rectangle width="Infinity" height="1.0" style="-fx-fill: rgba(120,160,160,0.4);" />
+
+              <VBox spacing="5.0">
+                <Label text="DISPLAY NICKNAME" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #78A0A0; -fx-letter-spacing: 2;" />
+                <TextField fx:id="nicknameField" promptText="Your perfumer alias" />
+              </VBox>
+
+              <VBox spacing="5.0">
+                <Label text="EMAIL ADDRESS" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #78A0A0; -fx-letter-spacing: 2;" />
+                <TextField fx:id="emailField" promptText="you@example.com" />
+              </VBox>
+
+              <Rectangle width="Infinity" height="1.0" style="-fx-fill: rgba(120,160,160,0.4);" />
+
+              <Label text="CHANGE PASSWORD" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #78A0A0;" />
+
+              <HBox spacing="16.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                  <Label text="CURRENT PASSWORD" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #A8A29E; -fx-letter-spacing: 2;" />
+                  <PasswordField fx:id="currentPasswordField" promptText="Current password" />
+                </VBox>
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                  <Label text="NEW PASSWORD" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #A8A29E; -fx-letter-spacing: 2;" />
+                  <PasswordField fx:id="newPasswordField" promptText="At least 6 characters" />
+                </VBox>
+              </HBox>
+
+              <Label fx:id="saveFeedback" style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;" managed="false" visible="false" wrapText="true" />
+
+              <HBox spacing="12.0" alignment="CENTER_RIGHT">
+                <Button text="BACK TO COMPOSER" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #A4A0C5; -fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 1.5; -fx-cursor: hand;" />
+                <Button text="SAVE CHANGES" onAction="#handleSave" style="-fx-background-color: #78A0A0; -fx-text-fill: white; -fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 1.5; -fx-padding: 12 28; -fx-cursor: hand; -fx-background-radius: 4;" />
+              </HBox>
+            </VBox>
+
+            <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4); -fx-border-color: #DDD9D1; -fx-border-width: 1; -fx-border-radius: 8;" spacing="16.0">
+              <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Rectangle width="4.0" height="22.0" fill="#E2A998" arcWidth="2" arcHeight="2" />
+                <Label text="SAVED COMPOSITIONS" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #E2A998;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="compCount" text="0" style="-fx-background-color: rgba(164,160,197,0.2); -fx-background-radius: 4; -fx-padding: 2 10; -fx-text-fill: #A4A0C5; -fx-font-size: 12; -fx-font-weight: bold;" />
+              </HBox>
+              <ListView fx:id="compositionsList" prefHeight="200.0" />
+            </VBox>
+
+          </VBox>
+        </content>
+      </ScrollPane>
+    </children>
+  </AnchorPane>
+</AnchorPane>

@@ -87,4 +87,34 @@ public class UserService {
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new RuntimeException("User not found"));
   }
+
+  @Transactional
+  public User updateNickname(Long userId, String nickname) {
+    User user = findById(userId);
+    user.setNickname(nickname);
+    return userRepository.save(user);
+  }
+
+  @Transactional
+  public User updateEmail(Long userId, String newEmail) {
+    if (userRepository.findByEmail(newEmail).isPresent()) {
+      throw new IllegalArgumentException("Email already in use");
+    }
+    User user = findById(userId);
+    user.setEmail(newEmail);
+    return userRepository.save(user);
+  }
+
+  @Transactional
+  public User updatePassword(Long userId, String oldPassword, String newPassword) {
+    User user = findById(userId);
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+      throw new IllegalArgumentException("Current password is incorrect");
+    }
+    if (newPassword.length() < 6) {
+      throw new IllegalArgumentException("New password must be at least 6 characters");
+    }
+    user.setPassword(passwordEncoder.encode(newPassword));
+    return userRepository.save(user);
+  }
 }

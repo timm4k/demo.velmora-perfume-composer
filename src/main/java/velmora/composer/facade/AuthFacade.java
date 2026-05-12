@@ -7,15 +7,18 @@ import velmora.composer.dto.auth.RegistrationRequest;
 import velmora.composer.dto.auth.UserDto;
 import velmora.composer.model.User;
 import velmora.composer.service.UserService;
+import velmora.composer.ui.UserSession;
 
 @Component
 @RequiredArgsConstructor
 public class AuthFacade {
 
   private final UserService userService;
+  private final UserSession userSession;
 
   public UserDto login(LoginRequest request) {
     User user = userService.authenticate(request.getEmail(), request.getPassword());
+    setSession(user);
     return UserDto.from(user);
   }
 
@@ -30,6 +33,18 @@ public class AuthFacade {
 
   public UserDto verifyEmail(String email, String code) {
     User user = userService.verifyEmail(email, code);
+    setSession(user);
     return UserDto.from(user);
+  }
+
+  private void setSession(User user) {
+    userSession.setUserId(user.getId());
+    userSession.setNickname(user.getNickname());
+    userSession.setEmail(user.getEmail());
+    userSession.setInitials(
+        user.getNickname() != null && !user.getNickname().isEmpty()
+            ? user.getNickname().substring(0, 1).toUpperCase()
+            : "?"
+    );
   }
 }
