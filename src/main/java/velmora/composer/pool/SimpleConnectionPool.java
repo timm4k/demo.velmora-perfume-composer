@@ -53,9 +53,6 @@ public class SimpleConnectionPool {
     }
   }
 
-/**
- * Повертає з'єднання з пулу (ручне звільнення через releaseConnection).
- */
   public synchronized Connection getConnection() throws SQLException {
     while (!available.isEmpty()) {
       Connection c = available.remove(available.size() - 1);
@@ -76,11 +73,6 @@ public class SimpleConnectionPool {
     throw new SQLException("Connection pool exhausted (max " + maxSize + ")");
   }
 
-/**
- * Повертає з'єднання, обгорнуте в PooledConnection.
- * При виклику close() на ньому — з'єднання автоматично повертається в пул.
- * Дозволяє писати: {@code try (Connection c = pool.borrowConnection())}.
- */
   public Connection borrowConnection() throws SQLException {
     return new PooledConnection(getConnection(), this);
   }
