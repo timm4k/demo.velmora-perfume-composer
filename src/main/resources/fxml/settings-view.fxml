@@ -65,10 +65,10 @@
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
     AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
     <children>
-      <VBox layoutX="44.0" layoutY="36.0" spacing="4.0">
-        <Label text="Settings" style="-fx-font-family: 'Garamond','Times New Roman',serif; -fx-font-size: 36; -fx-text-fill: #1C1917;" />
+      <VBox AnchorPane.leftAnchor="44.0" AnchorPane.topAnchor="36.0" spacing="4.0">
+        <Label text="Settings" styleClass="font-serif text-4xl text-primary" />
         <Rectangle width="50.0" height="2.0" fill="#E2A998" arcWidth="2" arcHeight="2" />
-        <Label text="ACCOUNT &amp; PREFERENCES" style="-fx-font-size: 12; -fx-letter-spacing: 4; -fx-text-fill: #78A0A0;" />
+        <Label text="ACCOUNT &amp; PREFERENCES" styleClass="text-sm tracking-4 text-teal" />
       </VBox>
 
       <ScrollPane fitToWidth="true" fitToHeight="false"

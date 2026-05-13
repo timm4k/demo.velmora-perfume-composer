@@ -2,13 +2,12 @@ package velmora.composer.ui.controller;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -49,17 +48,15 @@ public class ComposerController {
   @FXML private TextField formulaName;
   @FXML private Label formulaStatus;
 
-  @FXML private VBox topRows;
-  @FXML private VBox heartRows;
-  @FXML private VBox baseRows;
+  @FXML private FlowPane topChips;
+  @FXML private FlowPane heartChips;
+  @FXML private FlowPane baseChips;
   @FXML private Label topCount;
   @FXML private Label heartCount;
   @FXML private Label baseCount;
   @FXML private Label topCountBar;
   @FXML private Label heartCountBar;
   @FXML private Label baseCountBar;
-  @FXML private Label totalPct;
-  @FXML private Label balanceMsg;
 
   @FXML private Label harmonyScore;
   @FXML private Label complexityScore;
@@ -139,7 +136,7 @@ public class ComposerController {
 
   private void setupMaterialClick() {
     materialsList.setOnMouseClicked(event -> {
-      if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+      if (event.getButton() == MouseButton.PRIMARY) {
         Note selected = materialsList.getSelectionModel().getSelectedItem();
         if (selected != null) {
           addNoteToPyramid(selected);
@@ -173,63 +170,39 @@ public class ComposerController {
   }
 
   private void updateAll() {
-    populateRows();
+    renderChips();
     updateCounts();
-    updatePercentageDisplay();
     updateAnalysis();
   }
 
-  private void populateRows() {
-    populateZone(topRows, currentTopNotes);
-    populateZone(heartRows, currentHeartNotes);
-    populateZone(baseRows, currentBaseNotes);
+  private void renderChips() {
+    renderChipPane(topChips, currentTopNotes);
+    renderChipPane(heartChips, currentHeartNotes);
+    renderChipPane(baseChips, currentBaseNotes);
   }
 
-  private void populateZone(VBox container, ObservableList<Note> notes) {
-    container.getChildren().clear();
+  private void renderChipPane(FlowPane pane, ObservableList<Note> notes) {
+    pane.getChildren().clear();
     for (Note note : notes) {
-      HBox row = createNoteRow(note);
-      container.getChildren().add(row);
+      pane.getChildren().add(createChip(note, pane == topChips ? NoteType.TOP
+          : pane == heartChips ? NoteType.HEART : NoteType.BASE, notes));
     }
   }
 
-  private HBox createNoteRow(Note note) {
-    HBox row = new HBox(8);
-    row.setAlignment(Pos.CENTER_LEFT);
-    row.setStyle("-fx-padding: 2 4;");
-
-    Circle dot = new Circle(5);
-    dot.setFill(parseColor(note.getColorCode()));
-
-    Label name = new Label(note.getName());
-    name.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #1C1917;");
-    name.setPrefWidth(110);
-
-    Slider slider = new Slider(0, 100, percentages.getOrDefault(note.getId(), 10));
-    slider.setShowTickLabels(false);
-    slider.setShowTickMarks(false);
-    slider.setPrefWidth(100);
-    slider.setStyle("-fx-control-inner-background: " + toRgba(note.getColorCode(), 0.3) + ";");
-
-    Label pctLabel = new Label(String.format("%d%%", (int) slider.getValue()));
-    pctLabel.setStyle("-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1C1917;");
-    pctLabel.setPrefWidth(40);
-
-    Label removeLabel = new Label("✕");
-    removeLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #C4BFB9; -fx-cursor: hand; -fx-padding: 2 6;");
-    removeLabel.setOnMouseClicked(e -> removeNoteFromPyramid(note));
-
-    ChangeListener<Number> listener = (obs, old, val) -> {
-      int v = (int) Math.round(val.doubleValue());
-      percentages.put(note.getId(), v);
-      pctLabel.setText(v + "%");
-      updatePercentageDisplay();
-      updateAnalysis();
-    };
-    slider.valueProperty().addListener(listener);
-
-    row.getChildren().addAll(dot, name, slider, pctLabel, removeLabel);
-    return row;
+  private Label createChip(Note note, NoteType type, ObservableList<Note> source) {
+    Label chip = new Label(note.getName());
+    chip.getStyleClass().add("note-chip");
+    chip.getStyleClass().add(
+        type == NoteType.TOP ? "top-note"
+        : type == NoteType.HEART ? "heart-note"
+        : "base-note"
+    );
+    chip.setOnMouseClicked(e -> {
+      source.remove(note);
+      percentages.remove(note.getId());
+      updateAll();
+    });
+    return chip;
   }
 
   private void updateCounts() {
@@ -244,24 +217,6 @@ public class ComposerController {
     heartCountBar.setText(String.valueOf(heart));
     baseCountBar.setText(String.valueOf(base));
     selectedCount.setText(String.valueOf(total));
-  }
-
-  private void updatePercentageDisplay() {
-    int total = percentages.values().stream().mapToInt(Integer::intValue).sum();
-    totalPct.setText(total + "%");
-    if (total == 0) {
-      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #D9534F;");
-      balanceMsg.setText("— add notes");
-      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #A8A29E; -fx-font-style: italic;");
-    } else if (total == 100) {
-      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;");
-      balanceMsg.setText("✓ balanced");
-      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #5A9E8F; -fx-font-weight: bold;");
-    } else {
-      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #E2A998;");
-      balanceMsg.setText("needs " + Math.abs(100 - total) + "% more");
-      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #E2A998; -fx-font-style: italic;");
-    }
   }
 
   private void updateAnalysis() {
@@ -387,15 +342,20 @@ public class ComposerController {
       formulaStatus.setText("NO NOTES");
       return;
     }
-    int totalPctVal = percentages.values().stream().mapToInt(Integer::intValue).sum();
-    if (totalPctVal != 100) {
-      formulaStatus.setText("BALANCE: " + totalPctVal + "% (needs 100%)");
-      return;
+    int topSize = currentTopNotes.size();
+    int heartSize = currentHeartNotes.size();
+    int baseSize = currentBaseNotes.size();
+    int totalSize = topSize + heartSize + baseSize;
+
+    Map<Long, Integer> autoPct = new HashMap<>();
+    if (totalSize > 0) {
+      for (Note n : currentTopNotes)
+        autoPct.put(n.getId(), (int) Math.round(25.0 / topSize));
+      for (Note n : currentHeartNotes)
+        autoPct.put(n.getId(), (int) Math.round(45.0 / heartSize));
+      for (Note n : currentBaseNotes)
+        autoPct.put(n.getId(), (int) Math.round(30.0 / baseSize));
     }
-    List<Note> allSelected = new ArrayList<>();
-    allSelected.addAll(currentTopNotes);
-    allSelected.addAll(currentHeartNotes);
-    allSelected.addAll(currentBaseNotes);
 
     User userRef = new User();
     userRef.setId(userSession.getUserId());
@@ -405,10 +365,22 @@ public class ComposerController {
     composition.setPublic(false);
     composition.setUser(userRef);
 
-    for (Note note : allSelected) {
+    for (Note note : currentTopNotes) {
       CompositionItem item = new CompositionItem();
       item.setNoteId(note.getId());
-      item.setPercentage(percentages.getOrDefault(note.getId(), 0));
+      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
+      composition.getItems().add(item);
+    }
+    for (Note note : currentHeartNotes) {
+      CompositionItem item = new CompositionItem();
+      item.setNoteId(note.getId());
+      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
+      composition.getItems().add(item);
+    }
+    for (Note note : currentBaseNotes) {
+      CompositionItem item = new CompositionItem();
+      item.setNoteId(note.getId());
+      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
       composition.getItems().add(item);
     }
     try {
@@ -440,15 +412,6 @@ public class ComposerController {
     if (colorCode == null || colorCode.isBlank()) return Color.GRAY;
     try { return Color.web(colorCode); }
     catch (Exception e) { return Color.GRAY; }
-  }
-
-  private static String toRgba(String colorCode, double opacity) {
-    Color c = parseColor(colorCode);
-    return String.format("rgba(%d,%d,%d,%.1f)",
-        (int) (c.getRed() * 255),
-        (int) (c.getGreen() * 255),
-        (int) (c.getBlue() * 255),
-        opacity);
   }
 
   private static class MaterialCell extends ListCell<Note> {

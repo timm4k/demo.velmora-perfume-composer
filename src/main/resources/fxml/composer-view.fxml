@@ -159,22 +159,19 @@
                      -fx-border-color: #DDD9D1;
                      -fx-border-width: 0 1 0 0;">
 
-    <VBox layoutX="20.0" layoutY="28.0" spacing="3.0">
+    <VBox AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="28.0" spacing="3.0">
       <HBox spacing="8.0" alignment="CENTER_LEFT">
         <Rectangle width="20.0" height="1.0" fill="#DDD9D1" />
         <Label text="MATERIAL LIBRARY" styleClass="panel-header" />
       </HBox>
-      <Label text="Raw Materials"
-             style="-fx-font-family: 'Garamond','Times New Roman',serif;
-                    -fx-font-size: 22; -fx-text-fill: #1C1917;" />
+      <Label text="Raw Materials" styleClass="font-serif text-2xl text-primary" />
       <HBox alignment="CENTER_RIGHT">
         <Label fx:id="materialCount" text="9 materials"
-               style="-fx-font-size: 10; -fx-text-fill: #A8A29E;
-                      -fx-font-style: italic;" />
+               styleClass="text-xs text-muted font-italic" />
       </HBox>
     </VBox>
 
-    <HBox layoutX="20.0" layoutY="110.0" spacing="6.0">
+    <HBox AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="110.0" spacing="6.0">
       <Button text="ALL"   styleClass="filter-tab" fx:id="filterAll"
               style="-fx-background-color: #1C1917; -fx-text-fill: #FAFAF8;
                      -fx-border-color: #1C1917;" />
