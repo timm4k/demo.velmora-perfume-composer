@@ -318,17 +318,17 @@
     <VBox AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0"
           AnchorPane.bottomAnchor="0.0"
           styleClass="chart-container"
-          spacing="8.0" prefHeight="148.0">
+          spacing="8.0" prefHeight="200.0">
       <HBox alignment="CENTER_LEFT" spacing="8.0">
         <Circle radius="3.0" styleClass="deco-dot-peach" />
-        <Label text="EVAPORATION PROFILE" styleClass="panel-header" />
+        <Label text="COMPOSITION INSIGHTS" styleClass="panel-header" />
       </HBox>
-      <StackPane fx:id="evaporationChart" VBox.vgrow="ALWAYS"
-                 style="-fx-background-color: transparent;">
-        <Label text="Add notes to see evaporation curve"
-               style="-fx-font-size: 11; -fx-font-style: italic;
-                      -fx-text-fill: #C4BFB9;" />
-      </StackPane>
+      <VBox fx:id="insightsContainer" VBox.vgrow="ALWAYS" spacing="4.0"
+            style="-fx-padding: 8 0 0 0;">
+        <Label text="Add notes to see synergy insights"
+               style="-fx-font-size: 12; -fx-font-style: italic;
+                      -fx-text-fill: #A8A29E;" />
+      </VBox>
     </VBox>
   </AnchorPane>
 

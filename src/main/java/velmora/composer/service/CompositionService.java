@@ -21,34 +21,23 @@ public class CompositionService {
 
   @Transactional
   public Composition saveComposition(Composition composition) {
-    validateTotalPercentage(composition.getItems());
+    List<CompositionItem> items = composition.getItems();
+    if (items == null || items.isEmpty()) {
+      throw new IllegalStateException("Composition must have at least one note");
+    }
     composition.setUpdatedAt(LocalDateTime.now());
 
-    List<CompositionItem> items = new ArrayList<>(composition.getItems());
+    List<CompositionItem> detached = new ArrayList<>(items);
     composition.getItems().clear();
 
     Composition saved = compositionRepository.save(composition);
 
-    for (CompositionItem item : items) {
+    for (CompositionItem item : detached) {
       item.setCompositionId(saved.getId());
       saved.getItems().add(item);
     }
 
     return compositionRepository.save(saved);
-  }
-
-  private void validateTotalPercentage(List<CompositionItem> items) {
-    if (items == null || items.isEmpty()) {
-      throw new IllegalStateException("Composition must have at least one note");
-    }
-
-    double total = items.stream()
-        .mapToDouble(CompositionItem::getPercentage)
-        .sum();
-
-    if (Math.abs(total - 100.0) > 0.001) {
-      throw new IllegalStateException("Composition balance error: Total percentage must be 100%");
-    }
   }
 
   public Map<NoteType, List<CompositionItem>> getFragrancePyramid(Composition composition) {

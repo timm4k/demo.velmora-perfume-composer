@@ -23,6 +23,7 @@ import velmora.composer.model.Role;
 import velmora.composer.model.User;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.service.CompositionService;
+import velmora.composer.service.SynergyService;
 import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
 
@@ -32,6 +33,7 @@ public class ComposerController {
 
   private final NoteRepository noteRepository;
   private final CompositionService compositionService;
+  private final SynergyService synergyService;
   private final UserSession userSession;
   private final ViewManager viewManager;
 
@@ -78,7 +80,7 @@ public class ComposerController {
   @FXML private Label familyCount;
   @FXML private Label moleculeCount;
 
-  @FXML private StackPane evaporationChart;
+  @FXML private VBox insightsContainer;
   @FXML private HBox adminLink;
 
   private final ObservableList<Note> allNotes = FXCollections.observableArrayList();
@@ -87,7 +89,6 @@ public class ComposerController {
   private final ObservableList<Note> currentBaseNotes = FXCollections.observableArrayList();
   private FilteredList<Note> filteredNotes;
 
-  private final Map<Long, Integer> percentages = new HashMap<>();
   private Button activeFilter;
 
   @FXML
@@ -153,7 +154,6 @@ public class ComposerController {
     };
     if (!targetList.contains(note)) {
       targetList.add(note);
-      percentages.put(note.getId(), 10);
     }
     updateAll();
   }
@@ -165,7 +165,6 @@ public class ComposerController {
       case BASE -> currentBaseNotes;
     };
     targetList.remove(note);
-    percentages.remove(note.getId());
     updateAll();
   }
 
@@ -199,7 +198,6 @@ public class ComposerController {
     );
     chip.setOnMouseClicked(e -> {
       source.remove(note);
-      percentages.remove(note.getId());
       updateAll();
     });
     return chip;
@@ -220,10 +218,11 @@ public class ComposerController {
   }
 
   private void updateAnalysis() {
-    int top = currentTopNotes.size();
-    int heart = currentHeartNotes.size();
-    int base = currentBaseNotes.size();
-    int total = top + heart + base;
+    List<Note> all = allNotes();
+    int total = all.size();
+    long top = countByType(NoteType.TOP);
+    long heart = countByType(NoteType.HEART);
+    long base = countByType(NoteType.BASE);
 
     if (total == 0) {
       harmonyScore.setText("—");
@@ -236,48 +235,123 @@ public class ComposerController {
       familyCount.setText("0");
       moleculeCount.setText("0");
       resetBars();
+      formulaStatus.setText("");
       return;
     }
 
-    int harmony = calcHarmony(top, heart, base);
-    harmonyScore.setText(String.valueOf(harmony));
+    double topR = (double) top / total;
+    double heartR = (double) heart / total;
+    double baseR = (double) base / total;
 
-    int complexity = Math.min(total * 14, 100);
-    complexityScore.setText(String.valueOf(complexity));
+    int balance = calcBalance(topR, heartR, baseR);
+    harmonyScore.setText(String.valueOf(balance));
 
-    int longevity = base > 0 ? 40 + base * 15 : 20;
-    longevity = Math.min(longevity, 100);
-    longevityScore.setText(String.valueOf(longevity));
+    int families = (int) all.stream().map(Note::getCategory).filter(Objects::nonNull).distinct().count();
+    int cplx = Math.min(40 + families * 10 + (total > 6 ? 10 : 0), 100);
+    complexityScore.setText(String.valueOf(cplx));
+
+    int avgIntensity = (int) all.stream()
+        .mapToInt(n -> n.getIntensity() != null ? n.getIntensity() : 5)
+        .average().orElse(0);
+    int lo = (int) (base > 0 ? 40 + base * 12 : 15);
+    longevityScore.setText(String.valueOf(Math.min(lo, 100)));
 
     noteCount.setText(String.valueOf(total));
+    int totalInt = all.stream().mapToInt(n -> n.getIntensity() != null ? n.getIntensity() : 5).sum();
+    totalIntensity.setText(String.valueOf(totalInt));
+    moleculeCount.setText(String.valueOf(total));
 
-    int intensity = currentTopNotes.stream().mapToInt(n -> n.getIntensity() != null ? n.getIntensity() : 5).sum()
-        + currentHeartNotes.stream().mapToInt(n -> n.getIntensity() != null ? n.getIntensity() : 5).sum()
-        + currentBaseNotes.stream().mapToInt(n -> n.getIntensity() != null ? n.getIntensity() : 5).sum();
-    totalIntensity.setText(String.valueOf(intensity));
-
-    if (base > 0) {
-      estLongevity.setText(base >= 3 ? "8-12h" : base >= 2 ? "6-8h" : "4-6h");
-    } else {
+    if (base == 0) {
       estLongevity.setText("1-2h");
+    } else if (base <= 2) {
+      estLongevity.setText("4-6h");
+    } else {
+      estLongevity.setText("8-12h");
     }
-    sillage.setText(total >= 5 ? "Moderate" : "Soft");
+    sillage.setText(avgIntensity >= 6 ? "Strong" : avgIntensity >= 4 ? "Moderate" : "Soft");
 
     updateFamilyDistribution();
-    moleculeCount.setText(String.valueOf(total));
+
+    if (balance < 40) {
+      formulaStatus.setText("⚠ Unbalanced — add missing pyramid layers");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #E2A998;");
+    } else if (topR > 0.6) {
+      formulaStatus.setText("⚠ Too top-heavy — needs more heart/base");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #E2A998;");
+    } else if (baseR < 0.1 && total > 3) {
+      formulaStatus.setText("⚠ Weak base — composition may lack longevity");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #E2A998;");
+    } else {
+      formulaStatus.setText("✓ Good structure");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;");
+    }
+
+    renderSynergyInsights(all);
   }
 
-  private int calcHarmony(int top, int heart, int base) {
-    if (top == 0 || heart == 0 || base == 0) return 30;
-    int total = top + heart + base;
-    double topPct = (double) top / total * 100;
-    double heartPct = (double) heart / total * 100;
-    double basePct = (double) base / total * 100;
-    int score = 100;
-    score -= Math.abs(topPct - 25) * 0.8;
-    score -= Math.abs(heartPct - 45) * 0.6;
-    score -= Math.abs(basePct - 30) * 0.7;
+  private void renderSynergyInsights(List<Note> notes) {
+    insightsContainer.getChildren().clear();
+    if (notes.size() < 2) {
+      Label hint = new Label("Add at least 2 notes to see synergy insights");
+      hint.setStyle("-fx-font-size: 12; -fx-font-style: italic; -fx-text-fill: #A8A29E;");
+      insightsContainer.getChildren().add(hint);
+      return;
+    }
+
+    var result = synergyService.calculate(notes);
+    Label scoreLabel = new Label("Synergy: " + result.score() + "/100");
+    scoreLabel.setStyle("-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: " +
+        (result.score() >= 60 ? "#5A9E8F;" : result.score() >= 40 ? "#E2A998;" : "#D9534F;") +
+        " -fx-padding: 0 0 6 0;");
+    insightsContainer.getChildren().add(scoreLabel);
+
+    for (var ins : result.conflicts()) {
+      Label l = new Label("✗ " + ins.explanation());
+      l.setWrapText(true);
+      l.setStyle("-fx-font-size: 12; -fx-text-fill: #D9534F; -fx-padding: 0 0 4 4;");
+      insightsContainer.getChildren().add(l);
+    }
+
+    int shown = 0;
+    for (var ins : result.good()) {
+      if (shown >= 5) break;
+      Label l = new Label("✓ " + ins.explanation());
+      l.setWrapText(true);
+      l.setStyle("-fx-font-size: 12; -fx-text-fill: #5A9E8F; -fx-padding: 0 0 4 4;");
+      insightsContainer.getChildren().add(l);
+      shown++;
+    }
+
+    for (String w : result.warnings()) {
+      Label l = new Label(w);
+      l.setStyle("-fx-font-size: 12; -fx-text-fill: #E2A998; -fx-padding: 0 0 2 4;");
+      insightsContainer.getChildren().add(l);
+    }
+  }
+
+  private int calcBalance(double topR, double heartR, double baseR) {
+    if (topR == 0 || heartR == 0 || baseR == 0) return 30;
+    double score = 100;
+    score -= Math.abs(topR - 0.25) * 80;
+    score -= Math.abs(heartR - 0.50) * 60;
+    score -= Math.abs(baseR - 0.25) * 70;
     return Math.max(0, Math.min(100, (int) score));
+  }
+
+  private long countByType(NoteType type) {
+    return switch (type) {
+      case TOP -> currentTopNotes.size();
+      case HEART -> currentHeartNotes.size();
+      case BASE -> currentBaseNotes.size();
+    };
+  }
+
+  private List<Note> allNotes() {
+    List<Note> all = new ArrayList<>();
+    all.addAll(currentTopNotes);
+    all.addAll(currentHeartNotes);
+    all.addAll(currentBaseNotes);
+    return all;
   }
 
   private void updateFamilyDistribution() {
@@ -335,26 +409,14 @@ public class ComposerController {
     String name = formulaName.getText().trim();
     if (name.isEmpty()) {
       formulaStatus.setText("NAME REQUIRED");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #D9534F;");
       return;
     }
-    int total = currentTopNotes.size() + currentHeartNotes.size() + currentBaseNotes.size();
-    if (total == 0) {
+    List<Note> all = allNotes();
+    if (all.isEmpty()) {
       formulaStatus.setText("NO NOTES");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #D9534F;");
       return;
-    }
-    int topSize = currentTopNotes.size();
-    int heartSize = currentHeartNotes.size();
-    int baseSize = currentBaseNotes.size();
-    int totalSize = topSize + heartSize + baseSize;
-
-    Map<Long, Integer> autoPct = new HashMap<>();
-    if (totalSize > 0) {
-      for (Note n : currentTopNotes)
-        autoPct.put(n.getId(), (int) Math.round(25.0 / topSize));
-      for (Note n : currentHeartNotes)
-        autoPct.put(n.getId(), (int) Math.round(45.0 / heartSize));
-      for (Note n : currentBaseNotes)
-        autoPct.put(n.getId(), (int) Math.round(30.0 / baseSize));
     }
 
     User userRef = new User();
@@ -365,22 +427,9 @@ public class ComposerController {
     composition.setPublic(false);
     composition.setUser(userRef);
 
-    for (Note note : currentTopNotes) {
+    for (Note note : all) {
       CompositionItem item = new CompositionItem();
       item.setNoteId(note.getId());
-      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
-      composition.getItems().add(item);
-    }
-    for (Note note : currentHeartNotes) {
-      CompositionItem item = new CompositionItem();
-      item.setNoteId(note.getId());
-      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
-      composition.getItems().add(item);
-    }
-    for (Note note : currentBaseNotes) {
-      CompositionItem item = new CompositionItem();
-      item.setNoteId(note.getId());
-      item.setPercentage(autoPct.getOrDefault(note.getId(), 0));
       composition.getItems().add(item);
     }
     try {
