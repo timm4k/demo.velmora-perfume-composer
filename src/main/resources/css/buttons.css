@@ -1,0 +1,119 @@
+.btn {
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+  -fx-cursor: hand;
+  -fx-background-radius: 4;
+  -fx-border-radius: 4;
+  -fx-padding: 14 28;
+  -fx-border-width: 1;
+  -fx-border-color: transparent;
+}
+
+.btn-primary {
+  -fx-background-color: -velmora-text;
+  -fx-text-fill: -velmora-white;
+  -fx-letter-spacing: 1.5;
+}
+
+.btn-primary:hover {
+  -fx-background-color: #2D2926;
+}
+
+.btn-primary:pressed {
+  -fx-background-color: #3D3A37;
+}
+
+.btn-primary:disabled {
+  -fx-opacity: 0.35;
+  -fx-cursor: default;
+}
+
+.btn-secondary {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-letter-spacing: 1.5;
+  -fx-border-color: -velmora-accent-purple;
+}
+
+.btn-secondary:hover {
+  -fx-background-color: rgba(164, 160, 197, 0.12);
+}
+
+.btn-ghost {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-text-secondary;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-letter-spacing: 2;
+  -fx-background-radius: 0;
+  -fx-border-radius: 0;
+}
+
+.btn-ghost:hover {
+  -fx-text-fill: -velmora-text;
+}
+
+.btn-danger {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-error;
+  -fx-letter-spacing: 2;
+  -fx-border-color: rgba(192, 57, 43, 0.5);
+  -fx-background-radius: 1;
+  -fx-border-radius: 1;
+}
+
+.btn-danger:hover {
+  -fx-background-color: -velmora-error;
+  -fx-text-fill: white;
+  -fx-border-color: -velmora-error;
+}
+
+.btn-teal {
+  -fx-background-color: -velmora-accent-teal;
+  -fx-text-fill: white;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-letter-spacing: 3;
+}
+
+.btn-teal:hover {
+  -fx-background-color: derive(-velmora-accent-teal, -12%);
+}
+
+.btn-teal:pressed {
+  -fx-background-color: derive(-velmora-accent-teal, -24%);
+}
+
+.btn-peach {
+  -fx-background-color: -velmora-accent-peach;
+  -fx-text-fill: white;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-letter-spacing: 3;
+}
+
+.btn-peach:hover {
+  -fx-background-color: derive(-velmora-accent-peach, -12%);
+}
+
+.filter-tab {
+  -fx-background-color: transparent;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 2;
+  -fx-padding: 6 14;
+  -fx-cursor: hand;
+  -fx-border-color: -velmora-border;
+  -fx-border-width: 1;
+  -fx-border-radius: 1;
+  -fx-background-radius: 1;
+}
+
+.filter-tab:hover {
+  -fx-background-color: rgba(164, 160, 197, 0.1);
+  -fx-text-fill: -velmora-text;
+}
+
+.filter-tab.active {
+  -fx-background-color: -velmora-text;
+  -fx-text-fill: -velmora-surface;
+  -fx-border-color: -velmora-text;
+}

@@ -1,0 +1,35 @@
+.card {
+  -fx-background-color: -velmora-surface;
+  -fx-background-radius: 3;
+  -fx-padding: 24;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 3;
+}
+
+.card-purple {
+  -fx-border-color: rgba(164, 160, 197, 0.45);
+}
+
+.card-teal {
+  -fx-border-color: rgba(120, 160, 160, 0.45);
+}
+
+.analysis-card {
+  -fx-background-color: -velmora-surface;
+  -fx-background-radius: 3;
+  -fx-padding: 20;
+  -fx-spacing: 14;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 3;
+}
+
+.settings-card {
+  -fx-background-color: rgba(255, 255, 255, 0.82);
+  -fx-background-radius: 3;
+  -fx-padding: 28;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 3;
+}

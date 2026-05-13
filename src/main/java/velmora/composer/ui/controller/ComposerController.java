@@ -1,25 +1,16 @@
 package velmora.composer.ui.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -29,6 +20,7 @@ import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionItem;
 import velmora.composer.model.Note;
 import velmora.composer.model.NoteType;
+import velmora.composer.model.Role;
 import velmora.composer.model.User;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.service.CompositionService;
@@ -57,18 +49,17 @@ public class ComposerController {
   @FXML private TextField formulaName;
   @FXML private Label formulaStatus;
 
-  @FXML private VBox topZone;
-  @FXML private VBox heartZone;
-  @FXML private VBox baseZone;
-  @FXML private FlowPane topChips;
-  @FXML private FlowPane heartChips;
-  @FXML private FlowPane baseChips;
+  @FXML private VBox topRows;
+  @FXML private VBox heartRows;
+  @FXML private VBox baseRows;
   @FXML private Label topCount;
   @FXML private Label heartCount;
   @FXML private Label baseCount;
   @FXML private Label topCountBar;
   @FXML private Label heartCountBar;
   @FXML private Label baseCountBar;
+  @FXML private Label totalPct;
+  @FXML private Label balanceMsg;
 
   @FXML private Label harmonyScore;
   @FXML private Label complexityScore;
@@ -91,6 +82,7 @@ public class ComposerController {
   @FXML private Label moleculeCount;
 
   @FXML private StackPane evaporationChart;
+  @FXML private HBox adminLink;
 
   private final ObservableList<Note> allNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentTopNotes = FXCollections.observableArrayList();
@@ -98,11 +90,14 @@ public class ComposerController {
   private final ObservableList<Note> currentBaseNotes = FXCollections.observableArrayList();
   private FilteredList<Note> filteredNotes;
 
+  private final Map<Long, Integer> percentages = new HashMap<>();
   private Button activeFilter;
 
   @FXML
   public void initialize() {
     userInitials.setText(userSession.getInitials() != null ? userSession.getInitials() : "?");
+    adminLink.setVisible(userSession.getRole() == Role.ADMIN);
+    adminLink.setManaged(userSession.getRole() == Role.ADMIN);
     loadNotes();
     setupFilterButtons();
     setupMaterialClick();
@@ -131,7 +126,6 @@ public class ComposerController {
     } else {
       filteredNotes.setPredicate(n -> n.getType() == type);
     }
-
     for (var btn : new Button[]{filterAll, filterTop, filterHeart, filterBase}) {
       btn.setStyle(null);
     }
@@ -148,68 +142,94 @@ public class ComposerController {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
         Note selected = materialsList.getSelectionModel().getSelectedItem();
         if (selected != null) {
-          toggleNoteInPyramid(selected);
+          addNoteToPyramid(selected);
         }
       }
     });
   }
 
-  private void toggleNoteInPyramid(Note note) {
-    switch (note.getType()) {
-      case TOP -> toggleInList(note, currentTopNotes);
-      case HEART -> toggleInList(note, currentHeartNotes);
-      case BASE -> toggleInList(note, currentBaseNotes);
+  private void addNoteToPyramid(Note note) {
+    List<Note> targetList = switch (note.getType()) {
+      case TOP -> currentTopNotes;
+      case HEART -> currentHeartNotes;
+      case BASE -> currentBaseNotes;
+    };
+    if (!targetList.contains(note)) {
+      targetList.add(note);
+      percentages.put(note.getId(), 10);
     }
     updateAll();
   }
 
-  private void toggleInList(Note note, ObservableList<Note> list) {
-    if (list.contains(note)) {
-      list.remove(note);
-    } else {
-      list.add(note);
-    }
+  private void removeNoteFromPyramid(Note note) {
+    List<Note> targetList = switch (note.getType()) {
+      case TOP -> currentTopNotes;
+      case HEART -> currentHeartNotes;
+      case BASE -> currentBaseNotes;
+    };
+    targetList.remove(note);
+    percentages.remove(note.getId());
+    updateAll();
   }
 
   private void updateAll() {
-    updateZoneChips();
+    populateRows();
     updateCounts();
+    updatePercentageDisplay();
     updateAnalysis();
   }
 
-  private void updateZoneChips() {
-    populateChips(topChips, currentTopNotes);
-    populateChips(heartChips, currentHeartNotes);
-    populateChips(baseChips, currentBaseNotes);
+  private void populateRows() {
+    populateZone(topRows, currentTopNotes);
+    populateZone(heartRows, currentHeartNotes);
+    populateZone(baseRows, currentBaseNotes);
   }
 
-  private void populateChips(FlowPane pane, ObservableList<Note> notes) {
-    pane.getChildren().clear();
+  private void populateZone(VBox container, ObservableList<Note> notes) {
+    container.getChildren().clear();
     for (Note note : notes) {
-      HBox chip = createChip(note);
-      chip.setOnMouseClicked(e -> {
-        toggleNoteInPyramid(note);
-      });
-      pane.getChildren().add(chip);
+      HBox row = createNoteRow(note);
+      container.getChildren().add(row);
     }
   }
 
-  private HBox createChip(Note note) {
-    HBox chip = new HBox(6);
-    chip.setAlignment(Pos.CENTER_LEFT);
-    chip.setStyle("-fx-background-radius: 6; -fx-padding: 4 10; -fx-cursor: hand;"
-        + "-fx-background-color: " + toRgba(note.getColorCode(), 0.2) + ";"
-        + "-fx-border-color: " + toRgba(note.getColorCode(), 0.4) + ";"
-        + "-fx-border-width: 1; -fx-border-radius: 6;");
+  private HBox createNoteRow(Note note) {
+    HBox row = new HBox(8);
+    row.setAlignment(Pos.CENTER_LEFT);
+    row.setStyle("-fx-padding: 2 4;");
 
-    Circle dot = new Circle(4);
+    Circle dot = new Circle(5);
     dot.setFill(parseColor(note.getColorCode()));
 
     Label name = new Label(note.getName());
-    name.setStyle("-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #1C1917;");
+    name.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #1C1917;");
+    name.setPrefWidth(110);
 
-    chip.getChildren().addAll(dot, name);
-    return chip;
+    Slider slider = new Slider(0, 100, percentages.getOrDefault(note.getId(), 10));
+    slider.setShowTickLabels(false);
+    slider.setShowTickMarks(false);
+    slider.setPrefWidth(100);
+    slider.setStyle("-fx-control-inner-background: " + toRgba(note.getColorCode(), 0.3) + ";");
+
+    Label pctLabel = new Label(String.format("%d%%", (int) slider.getValue()));
+    pctLabel.setStyle("-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1C1917;");
+    pctLabel.setPrefWidth(40);
+
+    Label removeLabel = new Label("✕");
+    removeLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #C4BFB9; -fx-cursor: hand; -fx-padding: 2 6;");
+    removeLabel.setOnMouseClicked(e -> removeNoteFromPyramid(note));
+
+    ChangeListener<Number> listener = (obs, old, val) -> {
+      int v = (int) Math.round(val.doubleValue());
+      percentages.put(note.getId(), v);
+      pctLabel.setText(v + "%");
+      updatePercentageDisplay();
+      updateAnalysis();
+    };
+    slider.valueProperty().addListener(listener);
+
+    row.getChildren().addAll(dot, name, slider, pctLabel, removeLabel);
+    return row;
   }
 
   private void updateCounts() {
@@ -217,7 +237,6 @@ public class ComposerController {
     int heart = currentHeartNotes.size();
     int base = currentBaseNotes.size();
     int total = top + heart + base;
-
     topCount.setText(String.valueOf(top));
     heartCount.setText(String.valueOf(heart));
     baseCount.setText(String.valueOf(base));
@@ -225,6 +244,24 @@ public class ComposerController {
     heartCountBar.setText(String.valueOf(heart));
     baseCountBar.setText(String.valueOf(base));
     selectedCount.setText(String.valueOf(total));
+  }
+
+  private void updatePercentageDisplay() {
+    int total = percentages.values().stream().mapToInt(Integer::intValue).sum();
+    totalPct.setText(total + "%");
+    if (total == 0) {
+      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #D9534F;");
+      balanceMsg.setText("— add notes");
+      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #A8A29E; -fx-font-style: italic;");
+    } else if (total == 100) {
+      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;");
+      balanceMsg.setText("✓ balanced");
+      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #5A9E8F; -fx-font-weight: bold;");
+    } else {
+      totalPct.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #E2A998;");
+      balanceMsg.setText("needs " + Math.abs(100 - total) + "% more");
+      balanceMsg.setStyle("-fx-font-size: 10; -fx-text-fill: #E2A998; -fx-font-style: italic;");
+    }
   }
 
   private void updateAnalysis() {
@@ -272,7 +309,6 @@ public class ComposerController {
     sillage.setText(total >= 5 ? "Moderate" : "Soft");
 
     updateFamilyDistribution();
-
     moleculeCount.setText(String.valueOf(total));
   }
 
@@ -294,23 +330,19 @@ public class ComposerController {
     allSelected.addAll(currentTopNotes);
     allSelected.addAll(currentHeartNotes);
     allSelected.addAll(currentBaseNotes);
-
     long citrus = countByCategory(allSelected, "Citrus");
     long floral = countByCategory(allSelected, "Floral");
     long woody = countByCategory(allSelected, "Woody");
     long earthy = countByCategory(allSelected, "Earthy");
     long total = allSelected.size();
-
     Set<String> presentFamilies = allSelected.stream()
         .map(n -> n.getCategory() != null ? n.getCategory() : "Other")
         .collect(Collectors.toSet());
     familyCount.setText(String.valueOf(presentFamilies.size()));
-
     if (total == 0) {
       resetBars();
       return;
     }
-
     setBar(citrusBar, citrusPct, citrus, total);
     setBar(floralBar, floralPct, floral, total);
     setBar(woodyBar, woodyPct, woody, total);
@@ -333,14 +365,10 @@ public class ComposerController {
   }
 
   private void resetBars() {
-    citrusBar.setWidth(0);
-    floralBar.setWidth(0);
-    woodyBar.setWidth(0);
-    earthyBar.setWidth(0);
-    citrusPct.setText("0%");
-    floralPct.setText("0%");
-    woodyPct.setText("0%");
-    earthyPct.setText("0%");
+    citrusBar.setWidth(0); floralBar.setWidth(0);
+    woodyBar.setWidth(0); earthyBar.setWidth(0);
+    citrusPct.setText("0%"); floralPct.setText("0%");
+    woodyPct.setText("0%"); earthyPct.setText("0%");
   }
 
   private void updateMaterialCount() {
@@ -354,42 +382,42 @@ public class ComposerController {
       formulaStatus.setText("NAME REQUIRED");
       return;
     }
-
     int total = currentTopNotes.size() + currentHeartNotes.size() + currentBaseNotes.size();
     if (total == 0) {
       formulaStatus.setText("NO NOTES");
       return;
     }
-
+    int totalPctVal = percentages.values().stream().mapToInt(Integer::intValue).sum();
+    if (totalPctVal != 100) {
+      formulaStatus.setText("BALANCE: " + totalPctVal + "% (needs 100%)");
+      return;
+    }
     List<Note> allSelected = new ArrayList<>();
     allSelected.addAll(currentTopNotes);
     allSelected.addAll(currentHeartNotes);
     allSelected.addAll(currentBaseNotes);
 
-    int basePct = 100 / total;
-    int remainder = 100 - basePct * total;
-
     User userRef = new User();
     userRef.setId(userSession.getUserId());
-
     Composition composition = new Composition();
     composition.setName(name);
     composition.setDescription("Created in Velmora Olfactory Lab");
     composition.setPublic(false);
     composition.setUser(userRef);
 
-    for (int i = 0; i < total; i++) {
+    for (Note note : allSelected) {
       CompositionItem item = new CompositionItem();
-      item.setNoteId(allSelected.get(i).getId());
-      item.setPercentage(basePct + (i < remainder ? 1 : 0));
+      item.setNoteId(note.getId());
+      item.setPercentage(percentages.getOrDefault(note.getId(), 0));
       composition.getItems().add(item);
     }
-
     try {
       compositionService.saveComposition(composition);
-      formulaStatus.setText("SAVED");
+      formulaStatus.setText("SAVED ✓");
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;");
     } catch (Exception e) {
       formulaStatus.setText("ERROR: " + e.getMessage());
+      formulaStatus.setStyle("-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #D9534F;");
     }
   }
 
@@ -403,6 +431,11 @@ public class ComposerController {
     viewManager.showSettings();
   }
 
+  @FXML
+  public void handleAdmin() {
+    viewManager.showAdmin();
+  }
+
   private static Color parseColor(String colorCode) {
     if (colorCode == null || colorCode.isBlank()) return Color.GRAY;
     try { return Color.web(colorCode); }
@@ -412,9 +445,9 @@ public class ComposerController {
   private static String toRgba(String colorCode, double opacity) {
     Color c = parseColor(colorCode);
     return String.format("rgba(%d,%d,%d,%.1f)",
-        (int)(c.getRed() * 255),
-        (int)(c.getGreen() * 255),
-        (int)(c.getBlue() * 255),
+        (int) (c.getRed() * 255),
+        (int) (c.getGreen() * 255),
+        (int) (c.getBlue() * 255),
         opacity);
   }
 
@@ -428,17 +461,15 @@ public class ComposerController {
       } else {
         HBox box = new HBox(8);
         box.setAlignment(Pos.CENTER_LEFT);
-
         Circle dot = new Circle(5);
         dot.setFill(parseColor(note.getColorCode()));
-
         Label name = new Label(note.getName());
         name.setStyle("-fx-font-size: 13; -fx-font-weight: 500; -fx-text-fill: #1C1917;");
-
         Label type = new Label(note.getType().name());
         type.setStyle("-fx-font-size: 9; -fx-text-fill: #B0ADA8; -fx-font-weight: bold;");
-
-        box.getChildren().addAll(dot, name, type);
+        Label cat = new Label(note.getCategory() != null ? note.getCategory() : "");
+        cat.setStyle("-fx-font-size: 9; -fx-text-fill: #A4A0C5; -fx-font-style: italic;");
+        box.getChildren().addAll(dot, name, type, cat);
         setGraphic(box);
       }
     }

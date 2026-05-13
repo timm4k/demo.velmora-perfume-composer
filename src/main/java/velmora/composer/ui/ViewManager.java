@@ -24,9 +24,25 @@ public class ViewManager {
     root = new BorderPane();
     Scene scene = new Scene(root);
 
-    var cssUrl = getClass().getResource("/css/velmora.css");
-    if (cssUrl != null) {
-      scene.getStylesheets().add(cssUrl.toExternalForm());
+    String[] cssFiles = {
+        "/css/theme.css",
+        "/css/typography.css",
+        "/css/buttons.css",
+        "/css/cards.css",
+        "/css/forms.css",
+        "/css/sidebar.css",
+        "/css/components.css",
+        "/css/pages/auth.css",
+        "/css/pages/composer.css",
+        "/css/pages/settings.css"
+    };
+    for (String css : cssFiles) {
+      var url = getClass().getResource(css);
+      if (url != null) {
+        scene.getStylesheets().add(url.toExternalForm());
+      } else {
+        System.err.println("[VIEW] CSS not found: " + css);
+      }
     }
 
     primaryStage.setScene(scene);
@@ -49,6 +65,10 @@ public class ViewManager {
 
   public void showSettings() {
     loadContent("/fxml/settings-view.fxml");
+  }
+
+  public void showAdmin() {
+    loadContent("/fxml/admin-view.fxml");
   }
 
   private void loadContent(String fxmlPath) {

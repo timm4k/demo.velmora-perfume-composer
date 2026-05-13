@@ -14,24 +14,12 @@
 
     <StackPane prefHeight="90.0">
       <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 24;" spacing="12.0">
-        <StackPane prefWidth="36.0" prefHeight="36.0"
-                   style="-fx-background-color: rgba(164,160,197,0.18);
-                          -fx-background-radius: 8;
-                          -fx-border-color: rgba(164,160,197,0.4);
-                          -fx-border-width: 1; -fx-border-radius: 8;">
-          <Label fx:id="userInitials" text="?"
-                 style="-fx-font-family: 'Garamond','Times New Roman',serif;
-                        -fx-font-size: 16; -fx-font-weight: bold;
-                        -fx-text-fill: #A4A0C5;" />
+        <StackPane prefWidth="36.0" prefHeight="36.0" styleClass="sidebar-avatar">
+          <Label fx:id="userInitials" text="?" styleClass="font-serif font-bold text-lg text-purple" />
         </StackPane>
         <VBox spacing="1.0">
-          <Label text="VELMORA"
-                 style="-fx-font-family: 'Garamond','Times New Roman',serif;
-                        -fx-font-size: 14; -fx-font-weight: bold;
-                        -fx-text-fill: #1C1917; -fx-letter-spacing: 3;" />
-          <Label text="OLFACTORY LAB"
-                 style="-fx-font-size: 9; -fx-letter-spacing: 2;
-                        -fx-text-fill: #A8A29E;" />
+          <Label text="VELMORA" styleClass="brand-heading" />
+          <Label text="OLFACTORY LAB" styleClass="brand-subtitle" />
         </VBox>
       </HBox>
     </StackPane>
@@ -40,8 +28,7 @@
                style="-fx-translate-x: 20;" />
 
     <VBox spacing="4.0" style="-fx-padding: 16 16 0 16;">
-      <Label text="MOLECULE MAP" style="-fx-font-size: 8; -fx-letter-spacing: 3;
-             -fx-text-fill: #C4BFB9; -fx-padding: 8 0 4 4;" />
+      <Label text="MOLECULE MAP" styleClass="sidebar-section-heading" />
       <HBox spacing="6.0" alignment="CENTER_LEFT" style="-fx-padding: 4 4 0 4;">
         <Circle radius="6.0" style="-fx-fill: rgba(226,169,152,0.7);" />
         <Circle radius="5.0" style="-fx-fill: rgba(164,160,197,0.6);" />
@@ -57,7 +44,7 @@
         <Circle radius="5.0" style="-fx-fill: rgba(164,160,197,0.5);" />
         <Circle radius="7.0" style="-fx-fill: rgba(120,160,160,0.5);" />
         <Circle radius="4.0" style="-fx-fill: rgba(226,169,152,0.4);" />
-        <Label text="4 NOTES" style="-fx-font-size: 8; -fx-text-fill: #C4BFB9;
+        <Label text="4 NOTES" style="-fx-font-size: 10; -fx-text-fill: #C4BFB9;
                -fx-letter-spacing: 1;" />
       </HBox>
     </VBox>
@@ -67,58 +54,61 @@
 
     <VBox spacing="2.0" style="-fx-padding: 12 12 0 12;" VBox.vgrow="ALWAYS">
       <HBox spacing="12.0" alignment="CENTER_LEFT"
-            style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;
-                   -fx-background-color: rgba(164,160,197,0.14);
-                   -fx-border-color: rgba(164,160,197,0.4);
-                   -fx-border-width: 1; -fx-border-radius: 4;">
-        <Label text="✦" style="-fx-font-size: 13; -fx-text-fill: #A4A0C5;" />
+            styleClass="sidebar-icon sidebar-icon-active">
+        <Label text="✦" styleClass="nav-icon-active" />
         <VBox spacing="1.0">
-          <Label text="Composer" style="-fx-font-size: 13; -fx-font-weight: 600;
-                 -fx-text-fill: #1C1917;" />
-          <Label text="FORMULA WORKBENCH"
-                 style="-fx-font-size: 8; -fx-letter-spacing: 1.5;
-                        -fx-text-fill: #A4A0C5;" />
+          <Label text="Composer" styleClass="nav-label-active" />
+          <Label text="FORMULA WORKBENCH" styleClass="nav-subtitle-active" />
         </VBox>
       </HBox>
 
       <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="sidebar-icon"
-            style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
-        <Label text="▭" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
+            >
+        <Label text="▭" styleClass="nav-icon" />
         <VBox spacing="1.0">
-          <Label text="Vault" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
+          <Label text="Vault" styleClass="nav-label" />
           <Label text="RAW MATERIALS"
-                 style="-fx-font-size: 8; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
+                 styleClass="nav-subtitle" />
         </VBox>
       </HBox>
 
       <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="sidebar-icon"
-            style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
-        <Label text="◈" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
+            >
+        <Label text="◈" styleClass="nav-icon" />
         <VBox spacing="1.0">
-          <Label text="Analytics" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
+          <Label text="Analytics" styleClass="nav-label" />
           <Label text="DATA VIEW"
-                 style="-fx-font-size: 8; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
+                 styleClass="nav-subtitle" />
         </VBox>
       </HBox>
 
       <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="sidebar-icon"
-            style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
-        <Label text="◷" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
+            >
+        <Label text="◷" styleClass="nav-icon" />
         <VBox spacing="1.0">
-          <Label text="History" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
+          <Label text="History" styleClass="nav-label" />
           <Label text="SESSIONS"
-                 style="-fx-font-size: 8; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
+                 styleClass="nav-subtitle" />
         </VBox>
       </HBox>
 
       <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="sidebar-icon"
             onMouseClicked="#handleSettings"
-            style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
-        <Label text="◎" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
+            >
+        <Label text="◎" styleClass="nav-icon" />
         <VBox spacing="1.0">
-          <Label text="Settings" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
-          <Label text="PREFERENCES"
-                 style="-fx-font-size: 8; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
+          <Label text="Settings" styleClass="nav-label" />
+          <Label text="PREFERENCES" styleClass="nav-subtitle" />
+        </VBox>
+      </HBox>
+
+      <HBox spacing="12.0" alignment="CENTER_LEFT" fx:id="adminLink"
+            styleClass="sidebar-icon"
+            onMouseClicked="#handleAdmin">
+        <Label text="⚙" styleClass="nav-icon-admin" />
+        <VBox spacing="1.0">
+          <Label text="Admin" styleClass="nav-label-admin" />
+          <Label text="NOTE DATABASE" styleClass="nav-subtitle-admin" />
         </VBox>
       </HBox>
     </VBox>
@@ -127,40 +117,37 @@
       <Rectangle width="180.0" height="1.0" fill="#DDD9D1"
                  style="-fx-translate-x: 20;" />
       <VBox spacing="3.0" style="-fx-padding: 14 12 0 12;">
-        <Label text="DIRECTORY" style="-fx-font-size: 8; -fx-letter-spacing: 3;
-               -fx-text-fill: #C4BFB9; -fx-padding: 0 0 4 8;" />
+        <Label text="DIRECTORY" styleClass="dir-heading" />
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(226,169,152,0.7);" />
-          <Label text="Bergamot" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Bergamot" styleClass="dir-item" />
         </HBox>
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(164,160,197,0.7);" />
-          <Label text="Pink Pepper" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Pink Pepper" styleClass="dir-item" />
         </HBox>
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(120,160,160,0.6);" />
-          <Label text="Neroli" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Neroli" styleClass="dir-item" />
         </HBox>
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(164,160,197,0.5);" />
-          <Label text="Iris Absolute" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Iris Absolute" styleClass="dir-item" />
         </HBox>
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(226,169,152,0.5);" />
-          <Label text="Rose Damascena" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Rose Damascena" styleClass="dir-item" />
         </HBox>
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 3 8;">
           <Circle radius="4.0" style="-fx-fill: rgba(120,160,160,0.5);" />
-          <Label text="Jasmine" style="-fx-font-size: 12; -fx-text-fill: #6B6560;" />
+          <Label text="Jasmine" styleClass="dir-item" />
         </HBox>
       </VBox>
 
-      <HBox spacing="6.0" alignment="CENTER_LEFT" style="-fx-padding: 14 20 0 20;">
-        <Label text="● ONLINE" style="-fx-font-size: 9; -fx-text-fill: #5A9E8F;
-               -fx-letter-spacing: 1;" />
+      <HBox spacing="6.0" alignment="CENTER_LEFT" styleClass="status-bar">
+        <Label text="● ONLINE" styleClass="status-online" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label text="?" style="-fx-font-size: 11; -fx-text-fill: #C4BFB9;
-               -fx-cursor: hand;" />
+        <Label text="?" styleClass="status-help" />
       </HBox>
     </VBox>
   </VBox>
@@ -209,7 +196,7 @@
                  -fx-background-color: rgba(255,255,255,0.8);">
       <Label text="SELECTED" styleClass="panel-header" />
       <Label fx:id="selectedCount" text="0"
-             style="-fx-font-size: 9; -fx-font-weight: bold;
+             style="-fx-font-size: 10; -fx-font-weight: bold;
                     -fx-text-fill: #A4A0C5;" />
     </HBox>
   </AnchorPane>
@@ -246,10 +233,10 @@
 
       <Button text="SAVE" onAction="#handleSave"
               styleClass="btn-accent-teal"
-              style="-fx-font-size: 9; -fx-padding: 8 20;" />
+              style="-fx-font-size: 10; -fx-padding: 8 20;" />
       <Button text="EXPORT" onAction="#handleExport"
               styleClass="btn-ghost"
-              style="-fx-font-size: 9; -fx-padding: 8 16;" />
+              style="-fx-font-size: 10; -fx-padding: 8 16;" />
     </HBox>
 
     <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -264,7 +251,7 @@
             <Label text="TOP  NOTES" styleClass="pyramid-zone-title" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="topCount" text="0"
-                   style="-fx-font-size: 9; -fx-text-fill: rgba(181,112,74,0.7);" />
+                   style="-fx-font-size: 10; -fx-text-fill: rgba(181,112,74,0.7);" />
           </HBox>
           <FlowPane fx:id="topChips" hgap="6" vgap="6"
                     style="-fx-padding: 6 0 0 0;" />
@@ -278,7 +265,7 @@
             <Label text="HEART  NOTES" styleClass="pyramid-zone-title" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="heartCount" text="0"
-                   style="-fx-font-size: 9; -fx-text-fill: rgba(107,103,168,0.7);" />
+                   style="-fx-font-size: 10; -fx-text-fill: rgba(107,103,168,0.7);" />
           </HBox>
           <FlowPane fx:id="heartChips" hgap="6" vgap="6"
                     style="-fx-padding: 6 0 0 0;" />
@@ -292,7 +279,7 @@
             <Label text="BASE  NOTES" styleClass="pyramid-zone-title" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="baseCount" text="0"
-                   style="-fx-font-size: 9; -fx-text-fill: rgba(61,112,112,0.7);" />
+                   style="-fx-font-size: 10; -fx-text-fill: rgba(61,112,112,0.7);" />
           </HBox>
           <FlowPane fx:id="baseChips" hgap="6" vgap="6"
                     style="-fx-padding: 6 0 0 0;" />
@@ -422,7 +409,7 @@
             <VBox spacing="6.0">
               <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Circle radius="4.0" style="-fx-fill: rgba(226,169,152,0.8);" />
-                <Label text="Citrus" style="-fx-font-size: 12; -fx-text-fill: #6B6560;"
+                <Label text="Citrus" styleClass="family-label"
                        prefWidth="60.0" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" fill="#EAE6DF"
@@ -437,7 +424,7 @@
               </HBox>
               <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Circle radius="4.0" style="-fx-fill: rgba(164,160,197,0.8);" />
-                <Label text="Floral" style="-fx-font-size: 12; -fx-text-fill: #6B6560;"
+                <Label text="Floral" styleClass="family-label"
                        prefWidth="60.0" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" fill="#EAE6DF"
@@ -452,7 +439,7 @@
               </HBox>
               <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Circle radius="4.0" style="-fx-fill: rgba(120,160,160,0.8);" />
-                <Label text="Woody" style="-fx-font-size: 12; -fx-text-fill: #6B6560;"
+                <Label text="Woody" styleClass="family-label"
                        prefWidth="60.0" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" fill="#EAE6DF"
@@ -467,7 +454,7 @@
               </HBox>
               <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Circle radius="4.0" style="-fx-fill: rgba(90,158,143,0.8);" />
-                <Label text="Earthy" style="-fx-font-size: 12; -fx-text-fill: #6B6560;"
+                <Label text="Earthy" styleClass="family-label"
                        prefWidth="60.0" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" fill="#EAE6DF"

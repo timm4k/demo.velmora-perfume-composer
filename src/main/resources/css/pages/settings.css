@@ -1,0 +1,5 @@
+.settings-toggle-row {
+  -fx-padding: 10 0;
+  -fx-border-color: transparent transparent -velmora-border-light transparent;
+  -fx-border-width: 0 0 1 0;
+}

@@ -2,6 +2,7 @@ package velmora.composer.ui;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import velmora.composer.model.Role;
 
 @Component
 @Data
@@ -10,6 +11,7 @@ public class UserSession {
   private String nickname;
   private String email;
   private String initials;
+  private Role role = Role.USER;
 
   public boolean isLoggedIn() {
     return userId != null;
@@ -20,5 +22,6 @@ public class UserSession {
     nickname = null;
     email = null;
     initials = null;
+    role = Role.USER;
   }
 }

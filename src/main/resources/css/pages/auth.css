@@ -1,0 +1,16 @@
+.auth-root {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+    #F4F1EC 0%, #EDE9E1 50%, #E8E3DA 100%);
+}
+
+.auth-brand-bg {
+  -fx-background-color: transparent;
+}
+
+.auth-card {
+  -fx-background-color: rgba(255, 255, 255, 0.88);
+  -fx-background-radius: 2;
+  -fx-border-color: -velmora-border;
+  -fx-border-width: 1;
+  -fx-border-radius: 2;
+}

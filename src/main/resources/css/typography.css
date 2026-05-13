@@ -1,0 +1,239 @@
+.text-purple    { -fx-text-fill: -velmora-accent-purple; }
+.text-teal      { -fx-text-fill: -velmora-accent-teal; }
+.text-peach     { -fx-text-fill: -velmora-accent-peach; }
+.text-muted     { -fx-text-fill: -velmora-text-muted; }
+.text-secondary { -fx-text-fill: -velmora-text-secondary; }
+.text-primary   { -fx-text-fill: -velmora-text; }
+.text-error     { -fx-text-fill: -velmora-error; }
+.text-success   { -fx-text-fill: -velmora-success; }
+
+.text-xs   { -fx-font-size: 10; }
+.text-sm   { -fx-font-size: 11; }
+.text-base { -fx-font-size: 13; }
+.text-md   { -fx-font-size: 14; }
+.text-lg   { -fx-font-size: 16; }
+.text-xl   { -fx-font-size: 20; }
+.text-2xl  { -fx-font-size: 24; }
+.text-3xl  { -fx-font-size: 32; }
+.text-4xl  { -fx-font-size: 36; }
+
+.font-bold    { -fx-font-weight: bold; }
+.font-semibold { -fx-font-weight: 600; }
+.font-mono    { -fx-font-family: 'Courier New', monospace; }
+.font-serif   { -fx-font-family: 'Garamond', 'Georgia', serif; }
+.font-italic  { -fx-font-style: italic; }
+
+.tracking-1 { -fx-letter-spacing: 1; }
+.tracking-2 { -fx-letter-spacing: 2; }
+.tracking-3 { -fx-letter-spacing: 3; }
+.tracking-4 { -fx-letter-spacing: 4; }
+
+.cursor-hand { -fx-cursor: hand; }
+
+.section-label {
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 3;
+}
+
+.section-label-purple {
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-letter-spacing: 3;
+}
+
+.field-label {
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-letter-spacing: 3;
+}
+
+.auth-form-title {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 28;
+  -fx-text-fill: -velmora-text;
+  -fx-letter-spacing: 2;
+}
+
+.auth-brand {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 72;
+  -fx-text-fill: -velmora-text;
+  -fx-letter-spacing: 18;
+}
+
+.auth-subtitle {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 11;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 7;
+}
+
+.auth-tagline {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 13;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-letter-spacing: 2;
+  -fx-font-style: italic;
+}
+
+.auth-switch-text {
+  -fx-font-size: 11;
+  -fx-text-fill: -velmora-text-muted;
+}
+
+.auth-switch-link {
+  -fx-font-size: 11;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-font-weight: bold;
+  -fx-border-color: transparent;
+  -fx-underline: false;
+}
+
+.auth-switch-link:hover {
+  -fx-text-fill: derive(-velmora-accent-purple, -25%);
+  -fx-underline: true;
+}
+
+.auth-error {
+  -fx-text-fill: -velmora-error;
+  -fx-font-size: 11;
+  -fx-font-style: italic;
+}
+
+.heading-hero {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 42;
+  -fx-text-fill: -velmora-text;
+  -fx-letter-spacing: 1;
+}
+
+.heading-section {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 24;
+  -fx-text-fill: -velmora-text;
+}
+
+.heading-sub {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-accent-teal;
+  -fx-letter-spacing: 5;
+}
+
+.label-bold          { -fx-font-weight: bold; }
+
+.label-muted {
+  -fx-text-fill: -velmora-text-muted;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 12;
+}
+
+.label-accent-purple { -fx-text-fill: -velmora-accent-purple; -fx-font-weight: 600; }
+.label-accent-teal   { -fx-text-fill: -velmora-accent-teal;   -fx-font-weight: 600; }
+
+.panel-header {
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 3;
+  -fx-text-fill: -velmora-text-muted;
+}
+
+.pyramid-zone-title {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 3;
+  -fx-text-fill: -velmora-text-secondary;
+}
+
+.pyramid-zone-empty {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-font-style: italic;
+}
+
+.score-text {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 28;
+  -fx-text-fill: -velmora-text;
+}
+
+.metric-value {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 32;
+  -fx-text-fill: -velmora-text;
+}
+
+.metric-label {
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 2;
+  -fx-text-fill: -velmora-text-muted;
+}
+
+.material-name {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 14;
+  -fx-font-weight: 600;
+  -fx-text-fill: -velmora-text;
+}
+
+.material-family {
+  -fx-font-size: 10;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 2;
+  -fx-text-fill: -velmora-text-muted;
+}
+
+.material-score {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-accent-purple;
+  -fx-font-style: italic;
+}
+
+.settings-section-header {
+  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
+  -fx-font-size: 20;
+  -fx-text-fill: -velmora-text;
+  -fx-padding: 0 0 6 0;
+  -fx-border-color: transparent transparent -velmora-accent-peach transparent;
+  -fx-border-width: 0 0 1 0;
+}
+
+.settings-toggle-title {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 14;
+  -fx-text-fill: -velmora-text;
+}
+
+.settings-toggle-desc {
+  -fx-font-size: 11;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-font-style: italic;
+}
+
+.version-label {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 13;
+  -fx-text-fill: -velmora-text-secondary;
+}
+
+.version-value {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 13;
+  -fx-text-fill: -velmora-text;
+  -fx-font-weight: 600;
+}
+
+.version-pro {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 13;
+  -fx-text-fill: -velmora-accent-peach;
+  -fx-font-weight: bold;
+}

@@ -52,13 +52,13 @@ CREATE TABLE perfumes (
 -- =============================================================================
 CREATE TABLE compositions (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE, -- NULL для системних формул
-    perfume_id BIGINT REFERENCES perfumes(id) ON DELETE CASCADE, -- NULL для авторських ароматів юзера
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    perfume_id BIGINT REFERENCES perfumes(id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
     description TEXT,
     is_public BOOLEAN DEFAULT FALSE,
     last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_perfume_formula UNIQUE (perfume_id) -- Один парфум — одна офіційна піраміда
+    CONSTRAINT unique_perfume_formula UNIQUE (perfume_id)
 );
 
 -- =============================================================================

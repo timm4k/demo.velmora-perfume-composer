@@ -1,0 +1,216 @@
+.deco-line {
+  -fx-stroke: -velmora-border;
+  -fx-stroke-width: 1;
+}
+
+.deco-line-purple {
+  -fx-stroke: -velmora-accent-purple;
+  -fx-stroke-width: 1;
+  -fx-opacity: 0.5;
+}
+
+.deco-line-teal {
+  -fx-stroke: -velmora-accent-teal;
+  -fx-stroke-width: 1;
+  -fx-opacity: 0.5;
+}
+
+.deco-line-peach {
+  -fx-stroke: -velmora-accent-peach;
+  -fx-stroke-width: 1;
+  -fx-opacity: 0.5;
+}
+
+.deco-dot {
+  -fx-fill: -velmora-accent-purple;
+  -fx-opacity: 0.55;
+}
+
+.deco-dot-teal {
+  -fx-fill: -velmora-accent-teal;
+  -fx-opacity: 0.55;
+}
+
+.deco-dot-peach {
+  -fx-fill: -velmora-accent-peach;
+  -fx-opacity: 0.55;
+}
+
+.deco-glow-purple {
+  -fx-fill: -velmora-accent-purple;
+  -fx-opacity: 0.07;
+  -fx-mouse-transparent: true;
+}
+
+.deco-glow-teal {
+  -fx-fill: -velmora-accent-teal;
+  -fx-opacity: 0.07;
+  -fx-mouse-transparent: true;
+}
+
+.deco-glow-peach {
+  -fx-fill: -velmora-accent-peach;
+  -fx-opacity: 0.07;
+  -fx-mouse-transparent: true;
+}
+
+.deco-accent-purple {
+  -fx-background-color: rgba(164, 160, 197, 0.2);
+  -fx-background-radius: 2;
+  -fx-padding: 3 10;
+  -fx-text-fill: derive(-velmora-accent-purple, -20%);
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1;
+  -fx-border-color: rgba(164, 160, 197, 0.4);
+  -fx-border-width: 1;
+  -fx-border-radius: 2;
+}
+
+.deco-accent-teal {
+  -fx-background-color: rgba(120, 160, 160, 0.2);
+  -fx-background-radius: 2;
+  -fx-padding: 3 10;
+  -fx-text-fill: derive(-velmora-accent-teal, -20%);
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1;
+  -fx-border-color: rgba(120, 160, 160, 0.4);
+  -fx-border-width: 1;
+  -fx-border-radius: 2;
+}
+
+.deco-accent-peach {
+  -fx-background-color: rgba(226, 169, 152, 0.2);
+  -fx-background-radius: 2;
+  -fx-padding: 3 10;
+  -fx-text-fill: derive(-velmora-accent-peach, -25%);
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+  -fx-letter-spacing: 1;
+  -fx-border-color: rgba(226, 169, 152, 0.4);
+  -fx-border-width: 1;
+  -fx-border-radius: 2;
+}
+
+.list-view {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+.list-view .list-cell {
+  -fx-background-color: transparent;
+  -fx-padding: 10 12;
+  -fx-text-fill: -velmora-text;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 13;
+  -fx-cursor: hand;
+  -fx-border-color: transparent transparent -velmora-border-light transparent;
+  -fx-border-width: 0 0 1 0;
+}
+
+.list-view .list-cell:hover {
+  -fx-background-color: rgba(164, 160, 197, 0.09);
+}
+
+.list-view .list-cell:selected {
+  -fx-background-color: rgba(164, 160, 197, 0.17);
+  -fx-text-fill: -velmora-text;
+  -fx-border-color: transparent transparent -velmora-accent-purple transparent;
+}
+
+.list-view .scroll-bar {
+  -fx-background-color: transparent;
+  -fx-pref-width: 3;
+}
+
+.list-view .scroll-bar .thumb {
+  -fx-background-color: -velmora-accent-purple;
+  -fx-background-radius: 3;
+  -fx-opacity: 0.35;
+}
+
+.list-view .scroll-bar .increment-button,
+.list-view .scroll-bar .decrement-button {
+  -fx-pref-height: 0;
+  -fx-pref-width: 0;
+  -fx-opacity: 0;
+}
+
+.hyperlink {
+  -fx-border-color: transparent;
+  -fx-underline: false;
+  -fx-cursor: hand;
+  -fx-padding: 0;
+}
+
+.hyperlink:hover {
+  -fx-underline: true;
+}
+
+.tooltip {
+  -fx-background-color: #1C1917;
+  -fx-text-fill: #F4F1EC;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 11;
+  -fx-background-radius: 2;
+  -fx-padding: 6 12;
+}
+
+.separator {
+  -fx-background-color: -velmora-border;
+  -fx-pref-height: 1;
+}
+
+.separator-purple {
+  -fx-background-color: rgba(164, 160, 197, 0.4);
+  -fx-pref-height: 1;
+}
+
+.separator-teal {
+  -fx-background-color: rgba(120, 160, 160, 0.4);
+  -fx-pref-height: 1;
+}
+
+.scroll-pane {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+  -fx-background-color: transparent;
+  -fx-pref-width: 3;
+}
+
+.scroll-pane .scroll-bar .thumb {
+  -fx-background-color: -velmora-accent-purple;
+  -fx-background-radius: 3;
+  -fx-opacity: 0.3;
+}
+
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+  -fx-pref-height: 0;
+  -fx-pref-width: 0;
+  -fx-opacity: 0;
+}
+
+.comp-item {
+  -fx-background-color: rgba(255,255,255,0.7);
+  -fx-background-radius: 3;
+  -fx-padding: 12 18;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 3;
+  -fx-cursor: hand;
+}
+
+.comp-item:hover {
+  -fx-border-color: rgba(164, 160, 197, 0.55);
+}

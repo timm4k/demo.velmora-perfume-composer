@@ -1,0 +1,155 @@
+.pyramid-container {
+  -fx-background-color: rgba(255,255,255,0.6);
+  -fx-background-radius: 4;
+  -fx-padding: 20;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 4;
+}
+
+.pyramid-zone {
+  -fx-background-radius: 4;
+  -fx-border-radius: 4;
+  -fx-border-width: 1;
+  -fx-padding: 14;
+  -fx-spacing: 6;
+}
+
+.pyramid-zone.top-zone {
+  -fx-background-color: rgba(226, 169, 152, 0.14);
+  -fx-border-color: rgba(226, 169, 152, 0.45);
+  -fx-max-width: 200;
+}
+
+.pyramid-zone.top-zone:hover {
+  -fx-background-color: rgba(226, 169, 152, 0.24);
+}
+
+.pyramid-zone.heart-zone {
+  -fx-background-color: rgba(164, 160, 197, 0.14);
+  -fx-border-color: rgba(164, 160, 197, 0.45);
+  -fx-max-width: 280;
+}
+
+.pyramid-zone.heart-zone:hover {
+  -fx-background-color: rgba(164, 160, 197, 0.24);
+}
+
+.pyramid-zone.base-zone {
+  -fx-background-color: rgba(120, 160, 160, 0.14);
+  -fx-border-color: rgba(120, 160, 160, 0.45);
+  -fx-max-width: 360;
+}
+
+.pyramid-zone.base-zone:hover {
+  -fx-background-color: rgba(120, 160, 160, 0.24);
+}
+
+.note-chip {
+  -fx-background-radius: 2;
+  -fx-padding: 5 12;
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-text-fill: -velmora-text;
+  -fx-cursor: hand;
+}
+
+.note-chip.top-note {
+  -fx-background-color: rgba(226, 169, 152, 0.22);
+  -fx-border-color: rgba(226, 169, 152, 0.55);
+  -fx-border-width: 1;
+  -fx-text-fill: derive(#B5704A, -10%);
+}
+
+.note-chip.heart-note {
+  -fx-background-color: rgba(164, 160, 197, 0.22);
+  -fx-border-color: rgba(164, 160, 197, 0.55);
+  -fx-border-width: 1;
+  -fx-text-fill: derive(#6B67A8, -10%);
+}
+
+.note-chip.base-note {
+  -fx-background-color: rgba(120, 160, 160, 0.22);
+  -fx-border-color: rgba(120, 160, 160, 0.55);
+  -fx-border-width: 1;
+  -fx-text-fill: derive(#3D7070, -10%);
+}
+
+.score-circle {
+  -fx-stroke: -velmora-accent-teal;
+  -fx-stroke-width: 2;
+  -fx-fill: transparent;
+}
+
+.analysis-status {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 11;
+  -fx-padding: 6 14;
+  -fx-background-radius: 2;
+  -fx-font-weight: 600;
+  -fx-letter-spacing: 1;
+}
+
+.analysis-status.good {
+  -fx-background-color: rgba(90, 158, 143, 0.14);
+  -fx-text-fill: derive(#5A9E8F, -30%);
+  -fx-border-color: rgba(90, 158, 143, 0.5);
+  -fx-border-width: 1;
+}
+
+.analysis-status.warning {
+  -fx-background-color: rgba(200, 149, 74, 0.14);
+  -fx-text-fill: derive(#C8954A, -30%);
+  -fx-border-color: rgba(200, 149, 74, 0.5);
+  -fx-border-width: 1;
+}
+
+.analysis-status.error {
+  -fx-background-color: rgba(192, 57, 43, 0.1);
+  -fx-text-fill: derive(#C0392B, -20%);
+  -fx-border-color: rgba(192, 57, 43, 0.45);
+  -fx-border-width: 1;
+}
+
+.material-list-item {
+  -fx-background-color: transparent;
+  -fx-padding: 10 14;
+  -fx-cursor: hand;
+  -fx-border-color: transparent transparent -velmora-border-light transparent;
+  -fx-border-width: 0 0 1 0;
+}
+
+.material-list-item:hover {
+  -fx-background-color: rgba(164, 160, 197, 0.08);
+}
+
+.chart-container {
+  -fx-background-color: rgba(255,255,255,0.5);
+  -fx-background-radius: 3;
+  -fx-border-color: -velmora-border-light;
+  -fx-border-width: 1;
+  -fx-border-radius: 3;
+  -fx-padding: 16;
+}
+
+.family-bar-fill-citrus {
+  -fx-fill: -velmora-accent-peach;
+}
+
+.family-bar-fill-floral {
+  -fx-fill: -velmora-accent-purple;
+}
+
+.family-bar-fill-woody {
+  -fx-fill: -velmora-accent-teal;
+}
+
+.family-bar-fill-earthy {
+  -fx-fill: rgba(90, 158, 143, 0.7);
+}
+
+.family-label {
+  -fx-font-size: 12;
+  -fx-text-fill: #6B6560;
+}

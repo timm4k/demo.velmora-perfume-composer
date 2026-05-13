@@ -41,6 +41,7 @@ public class AuthFacade {
     userSession.setUserId(user.getId());
     userSession.setNickname(user.getNickname());
     userSession.setEmail(user.getEmail());
+    userSession.setRole(user.getRole());
     userSession.setInitials(
         user.getNickname() != null && !user.getNickname().isEmpty()
             ? user.getNickname().substring(0, 1).toUpperCase()

@@ -19,7 +19,7 @@
         </StackPane>
         <VBox spacing="1.0">
           <Label text="VELMORA" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1C1917; -fx-letter-spacing: 3;" />
-          <Label text="OLFACTORY LAB" style="-fx-font-size: 9; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;" />
+          <Label text="OLFACTORY LAB" style="-fx-font-size: 10; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;" />
         </VBox>
       </HBox>
     </StackPane>
@@ -56,7 +56,7 @@
       <VBox spacing="4.0" style="-fx-padding: 16 12 0 12;">
         <Label text="ACCOUNT" style="-fx-font-size: 10; -fx-letter-spacing: 3; -fx-text-fill: #C4BFB9; -fx-padding: 0 0 4 8;" />
         <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 4 8;">
-          <Button text="LOG OUT" onAction="#handleLogout" styleClass="btn-danger" />
+          <Button text="LOG OUT" onAction="#handleLogout" styleClass="btn btn-danger" />
         </HBox>
       </VBox>
     </VBox>
@@ -95,7 +95,7 @@
                 </VBox>
               </HBox>
 
-              <Rectangle width="Infinity" height="1.0" style="-fx-fill: rgba(120,160,160,0.4);" />
+              <Separator styleClass="separator-teal" />
 
               <VBox spacing="5.0">
                 <Label text="DISPLAY NICKNAME" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #78A0A0; -fx-letter-spacing: 2;" />
@@ -107,7 +107,7 @@
                 <TextField fx:id="emailField" promptText="you@example.com" />
               </VBox>
 
-              <Rectangle width="Infinity" height="1.0" style="-fx-fill: rgba(120,160,160,0.4);" />
+              <Separator styleClass="separator-teal" />
 
               <Label text="CHANGE PASSWORD" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #78A0A0;" />
 

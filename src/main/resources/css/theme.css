@@ -1,0 +1,24 @@
+.root {
+  -velmora-bg:             #F4F1EC;
+  -velmora-bg-warm:        #EDE9E1;
+  -velmora-bg-deep:        #E5E0D6;
+  -velmora-surface:        #FAFAF8;
+  -velmora-text:           #1C1917;
+  -velmora-text-secondary: #6B6560;
+  -velmora-text-muted:     #A8A29E;
+  -velmora-accent-purple:  #A4A0C5;
+  -velmora-accent-teal:    #78A0A0;
+  -velmora-accent-peach:   #E2A998;
+  -velmora-border:         #DDD9D1;
+  -velmora-border-light:   #EAE6DF;
+  -velmora-white:          #FFFFFF;
+  -velmora-error:          #C0392B;
+  -fx-font-size: 14;
+  -velmora-success:        #5A9E8F;
+  -velmora-warning:        #C8954A;
+  -velmora-glow-purple:    rgba(164, 160, 197, 0.22);
+  -velmora-glow-teal:      rgba(120, 160, 160, 0.22);
+  -velmora-glow-peach:     rgba(226, 169, 152, 0.22);
+  -fx-background-color:    -velmora-bg;
+  -fx-font-family:         'Garamond', 'Georgia', 'Times New Roman', serif;
+}
