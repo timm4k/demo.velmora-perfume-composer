@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import velmora.composer.model.Composition;
 import velmora.composer.model.User;
 import velmora.composer.repository.CompositionRepository;
+import velmora.composer.service.PoolDemoService;
 import velmora.composer.service.UserService;
 import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
@@ -27,6 +28,7 @@ public class SettingsController {
 
   private final UserService userService;
   private final CompositionRepository compositionRepository;
+  private final PoolDemoService poolDemoService;
   private final ViewManager viewManager;
   private final UserSession userSession;
 
@@ -35,6 +37,9 @@ public class SettingsController {
   @FXML private Label profileName;
   @FXML private Label profileEmail;
   @FXML private Label compCount;
+  @FXML private Label poolAvailable;
+  @FXML private Label poolUsed;
+  @FXML private Label poolMax;
   @FXML private TextField nicknameField;
   @FXML private TextField emailField;
   @FXML private PasswordField currentPasswordField;
@@ -55,6 +60,7 @@ public class SettingsController {
     }
     loadUser();
     loadCompositions();
+    showPoolStatus();
   }
 
   private void loadUser() {
@@ -102,6 +108,13 @@ public class SettingsController {
         }
       }
     });
+  }
+
+  private void showPoolStatus() {
+    var status = poolDemoService.getStatus();
+    poolAvailable.setText(String.valueOf(status.available()));
+    poolUsed.setText(String.valueOf(status.used()));
+    poolMax.setText(String.valueOf(status.maxSize()));
   }
 
   @FXML

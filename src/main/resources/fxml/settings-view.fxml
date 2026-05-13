@@ -140,6 +140,28 @@
               <ListView fx:id="compositionsList" prefHeight="200.0" />
             </VBox>
 
+            <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4); -fx-border-color: #DDD9D1; -fx-border-width: 1; -fx-border-radius: 8;" spacing="16.0">
+              <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Rectangle width="4.0" height="22.0" fill="#78A0A0" arcWidth="2" arcHeight="2" />
+                <Label text="DATABASE POOL" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #78A0A0;" />
+              </HBox>
+              <HBox spacing="24.0" alignment="CENTER_LEFT">
+                <VBox spacing="2.0">
+                  <Label text="AVAILABLE" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
+                  <Label fx:id="poolAvailable" text="0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;" />
+                </VBox>
+                <VBox spacing="2.0">
+                  <Label text="IN USE" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
+                  <Label fx:id="poolUsed" text="0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #E2A998;" />
+                </VBox>
+                <VBox spacing="2.0">
+                  <Label text="MAX SIZE" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
+                  <Label fx:id="poolMax" text="10" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
+                </VBox>
+              </HBox>
+              <Label text="Pool-based JDBC access path: Controller → Service → NoteDao → SimpleConnectionPool → Supabase" style="-fx-font-size: 11; -fx-text-fill: #B0ADA8; -fx-font-style: italic;" />
+            </VBox>
+
           </VBox>
         </content>
       </ScrollPane>
