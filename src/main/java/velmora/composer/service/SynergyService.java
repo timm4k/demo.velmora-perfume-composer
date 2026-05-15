@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import velmora.composer.model.Note;
 import velmora.composer.repository.FamilySynergyRepository;
 
+/**
+ * Аналізує сумісність нот за родинами (family_synergy).
+ * Використовує кешовані запити до БД, рахує score + diversity bonus.
+ */
 @Service
 @RequiredArgsConstructor
 public class SynergyService {

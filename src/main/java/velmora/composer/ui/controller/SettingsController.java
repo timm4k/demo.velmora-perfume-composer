@@ -32,7 +32,6 @@ public class SettingsController {
   private final ViewManager viewManager;
   private final UserSession userSession;
 
-  @FXML private Label userInitials;
   @FXML private Label profileInitials;
   @FXML private Label profileName;
   @FXML private Label profileEmail;
@@ -66,7 +65,6 @@ public class SettingsController {
   private void loadUser() {
     currentUser = userService.findById(userSession.getUserId());
     String initials = userSession.getInitials() != null ? userSession.getInitials() : "?";
-    userInitials.setText(initials);
     profileInitials.setText(initials);
     profileName.setText(currentUser.getNickname());
     profileEmail.setText(currentUser.getEmail());
@@ -129,44 +127,48 @@ public class SettingsController {
     String oldPass = currentPasswordField.getText();
     String newPass = newPasswordField.getText();
 
-    try {
-      boolean changed = false;
-
-      if (!newNickname.equals(currentUser.getNickname())) {
-        currentUser = userService.updateNickname(currentUser.getId(), newNickname);
-        profileName.setText(currentUser.getNickname());
-        userSession.setNickname(newNickname);
-        userSession.setInitials(newNickname.isEmpty() ? "?" : newNickname.substring(0, 1).toUpperCase());
-        userInitials.setText(userSession.getInitials());
-        profileInitials.setText(userSession.getInitials());
-        changed = true;
-      }
-
-      if (!newEmail.equals(currentUser.getEmail())) {
-        currentUser = userService.updateEmail(currentUser.getId(), newEmail);
-        profileEmail.setText(currentUser.getEmail());
-        userSession.setEmail(newEmail);
-        changed = true;
-      }
-
-      if (!oldPass.isEmpty() && !newPass.isEmpty()) {
-        currentUser = userService.updatePassword(currentUser.getId(), oldPass, newPass);
-        currentPasswordField.clear();
-        newPasswordField.clear();
-        changed = true;
-      } else if (!oldPass.isEmpty() || !newPass.isEmpty()) {
-        showFeedback("Fill in both current and new password to change");
-        return;
-      }
-
-      if (changed) {
-        showFeedback("Settings saved successfully");
-      } else {
-        showFeedback("No changes to save");
-      }
-    } catch (Exception e) {
-      showFeedback(e.getMessage());
+    if (!oldPass.isEmpty() && newPass.isEmpty()) {
+      showFeedback("Fill in both current and new password to change");
+      return;
     }
+    if (oldPass.isEmpty() && !newPass.isEmpty()) {
+      showFeedback("Fill in both current and new password to change");
+      return;
+    }
+    if (!newPass.isEmpty() && newPass.length() < 6) {
+      showFeedback("Password must be at least 6 characters");
+      return;
+    }
+
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        if (!newNickname.equals(currentUser.getNickname())) {
+          currentUser = userService.updateNickname(currentUser.getId(), newNickname);
+        }
+        if (!newEmail.equals(currentUser.getEmail())) {
+          currentUser = userService.updateEmail(currentUser.getId(), newEmail);
+        }
+        if (!oldPass.isEmpty()) {
+          currentUser = userService.updatePassword(currentUser.getId(), oldPass, newPass);
+        }
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> {
+      profileName.setText(currentUser.getNickname());
+      profileEmail.setText(currentUser.getEmail());
+      userSession.setNickname(currentUser.getNickname());
+      userSession.setEmail(currentUser.getEmail());
+      userSession.setInitials(currentUser.getNickname().isEmpty()
+          ? "?" : currentUser.getNickname().substring(0, 1).toUpperCase());
+      profileInitials.setText(userSession.getInitials());
+      currentPasswordField.clear();
+      newPasswordField.clear();
+      showFeedback("Settings saved successfully");
+    });
+    task.setOnFailed(e -> showFeedback(task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   private void showFeedback(String message) {

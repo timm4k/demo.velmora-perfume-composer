@@ -1,6 +1,7 @@
 package velmora.composer.ui.controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -25,10 +26,11 @@ public class AdminController {
   private final UserSession userSession;
   private final ViewManager viewManager;
 
-  @FXML private Label userInitials;
   @FXML private Label adminMessage;
   @FXML private ListView<Note> notesList;
   @FXML private Label notesCount;
+
+  private final ObservableList<Note> notesObservable = FXCollections.observableArrayList();
 
   @FXML private TextField editName;
   @FXML private ComboBox<String> editCategory;
@@ -45,7 +47,6 @@ public class AdminController {
 
   @FXML
   public void initialize() {
-    userInitials.setText(userSession.getInitials() != null ? userSession.getInitials() : "?");
     if (userSession.getRole() != Role.ADMIN) {
       adminMessage.setText("Admin access required");
       notesList.setDisable(true);
@@ -65,7 +66,8 @@ public class AdminController {
   private void loadNotes() {
     var items = noteRepository.findAll();
     notesCount.setText(String.valueOf(items.size()));
-    notesList.setItems(FXCollections.observableArrayList(items));
+    notesObservable.setAll(items);
+    notesList.setItems(notesObservable);
     notesList.setCellFactory(lv -> new ListCell<>() {
       @Override
       protected void updateItem(Note n, boolean empty) {
@@ -131,10 +133,22 @@ public class AdminController {
     if (userSession.getRole() != Role.ADMIN) return;
     Note selected = notesList.getSelectionModel().getSelectedItem();
     if (selected == null) return;
-    noteRepository.delete(selected);
-    editorPanel.setVisible(false);
-    editorPanel.setManaged(false);
-    loadNotes();
+
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        noteRepository.delete(selected);
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> {
+      editorPanel.setVisible(false);
+      editorPanel.setManaged(false);
+      loadNotes();
+    });
+    task.setOnFailed(e -> adminMessage.setText(
+        "Delete failed: " + task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   @FXML
@@ -150,10 +164,22 @@ public class AdminController {
     note.setIntensity(editIntensity.getValue());
     note.setColorCode(editColor.getText().trim());
     note.setDescription(editDescription.getText().trim());
-    noteRepository.save(note);
-    editorPanel.setVisible(false);
-    editorPanel.setManaged(false);
-    loadNotes();
+
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        noteRepository.save(note);
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> {
+      editorPanel.setVisible(false);
+      editorPanel.setManaged(false);
+      loadNotes();
+    });
+    task.setOnFailed(e -> adminMessage.setText(
+        "Save failed: " + task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   @FXML

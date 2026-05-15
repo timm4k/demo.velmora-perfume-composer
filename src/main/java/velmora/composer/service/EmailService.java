@@ -8,6 +8,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Відправляє email-листи з кодом підтвердження реєстрації.
+ * При відсутності конфігурації SMTP логує код в консоль (dev mode).
+ * Генерує 6-значні коди через SecureRandom.
+ */
 @Service
 public class EmailService {
 

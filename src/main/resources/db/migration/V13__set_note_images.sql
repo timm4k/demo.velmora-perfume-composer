@@ -1,0 +1,15 @@
+UPDATE notes SET image_path = 'citrus.png'    WHERE category = 'Citrus';
+UPDATE notes SET image_path = 'fruit.png'     WHERE category = 'Fruit';
+UPDATE notes SET image_path = 'green.png'     WHERE category = 'Green';
+UPDATE notes SET image_path = 'spicy.png'     WHERE category = 'Spicy';
+UPDATE notes SET image_path = 'ozonic.png'    WHERE category = 'Ozonic';
+UPDATE notes SET image_path = 'synthetic.png' WHERE category = 'Synthetic';
+UPDATE notes SET image_path = 'floral.png'    WHERE category = 'Floral';
+UPDATE notes SET image_path = 'gourmand.png'  WHERE category = 'Gourmand';
+UPDATE notes SET image_path = 'tobacco.png'   WHERE category = 'Tobacco';
+UPDATE notes SET image_path = 'smoky.png'     WHERE category = 'Smoky';
+UPDATE notes SET image_path = 'woody.png'     WHERE category = 'Woody';
+UPDATE notes SET image_path = 'musky.png'     WHERE category = 'Musky';
+UPDATE notes SET image_path = 'amber.png'     WHERE category = 'Amber';
+UPDATE notes SET image_path = 'earthy.png'    WHERE category = 'Earthy';
+UPDATE notes SET image_path = 'leather.png'   WHERE category = 'Leather';

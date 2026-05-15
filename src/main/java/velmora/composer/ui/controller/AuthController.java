@@ -65,16 +65,22 @@ public class AuthController {
 
     if (!validateLogin(email, password)) return;
 
-    try {
-      LoginRequest request = LoginRequest.builder()
-          .email(email)
-          .password(password)
-          .build();
-      authFacade.login(request);
-      viewManager.showMain();
-    } catch (Exception e) {
-      showError(loginError, e.getMessage());
-    }
+    LoginRequest request = LoginRequest.builder()
+        .email(email)
+        .password(password)
+        .build();
+
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        authFacade.login(request);
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> viewManager.showMain());
+    task.setOnFailed(e -> showError(loginError,
+        task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   @FXML
@@ -87,19 +93,26 @@ public class AuthController {
 
     if (!validateRegistration(nickname, email, password)) return;
 
-    try {
-      RegistrationRequest request = RegistrationRequest.builder()
-          .nickname(nickname)
-          .email(email)
-          .password(password)
-          .build();
-      authFacade.register(request);
+    RegistrationRequest request = RegistrationRequest.builder()
+        .nickname(nickname)
+        .email(email)
+        .password(password)
+        .build();
 
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        authFacade.register(request);
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> {
       pendingEmail = email;
       switchToVerify();
-    } catch (Exception e) {
-      showError(regError, e.getMessage());
-    }
+    });
+    task.setOnFailed(e -> showError(regError,
+        task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   @FXML
@@ -113,12 +126,17 @@ public class AuthController {
       return;
     }
 
-    try {
-      authFacade.verifyEmail(pendingEmail, code);
-      viewManager.showMain();
-    } catch (Exception e) {
-      showError(verifyError, e.getMessage());
-    }
+    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Void call() {
+        authFacade.verifyEmail(pendingEmail, code);
+        return null;
+      }
+    };
+    task.setOnSucceeded(e -> viewManager.showMain());
+    task.setOnFailed(e -> showError(verifyError,
+        task.getException().getMessage()));
+    new Thread(task).start();
   }
 
   @FXML

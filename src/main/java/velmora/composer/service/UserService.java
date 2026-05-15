@@ -19,6 +19,15 @@ public class UserService {
 
   @Transactional
   public User register(String nickname, String email, String rawPassword) {
+    if (nickname == null || nickname.trim().length() < 2) {
+      throw new IllegalArgumentException("Nickname must be at least 2 characters");
+    }
+    if (email == null || !email.contains("@") || !email.contains(".")) {
+      throw new IllegalArgumentException("Invalid email format");
+    }
+    if (rawPassword == null || rawPassword.length() < 6) {
+      throw new IllegalArgumentException("Password must be at least 6 characters");
+    }
     if (userRepository.findByEmail(email).isPresent()) {
       throw new IllegalArgumentException("Email already registered");
     }
@@ -26,8 +35,8 @@ public class UserService {
     String code = emailService.generateCode();
 
     User user = User.builder()
-        .nickname(nickname)
-        .email(email)
+        .nickname(nickname.trim())
+        .email(email.trim().toLowerCase())
         .password(passwordEncoder.encode(rawPassword))
         .role(Role.USER)
         .enabled(false)
@@ -37,7 +46,7 @@ public class UserService {
 
     User saved = userRepository.save(user);
 
-    emailService.sendVerificationEmail(email, code);
+    emailService.sendVerificationEmail(email.trim().toLowerCase(), code);
 
     return saved;
   }

@@ -68,7 +68,7 @@
       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
       style="-fx-padding: 0 80;">
       <VBox fx:id="loginForm" spacing="22.0" maxWidth="360.0">
-        <Label text="WELCOME BACK" styleClass="auth-form-title" />
+        <Label text="WELCOME" styleClass="auth-form-title" />
         <Rectangle width="40.0" height="2.0" fill="#E2A998" />
 
         <VBox spacing="5.0">

@@ -1,0 +1,237 @@
+.catalog-root {
+  -fx-background-color: #F8F6F2;
+}
+
+.catalog-heading {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 28;
+  -fx-text-fill: #2D2A24;
+  -fx-font-weight: 700;
+}
+
+.catalog-subtitle {
+  -fx-font-size: 12;
+  -fx-text-fill: #A8A29E;
+  -fx-font-style: italic;
+}
+
+.catalog-search {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 8;
+  -fx-border-color: #E2DDD4;
+  -fx-border-radius: 8;
+  -fx-padding: 8 14 8 14;
+  -fx-font-size: 12;
+  -fx-text-fill: #2D2A24;
+  -fx-prompt-text-fill: #C4BFB9;
+}
+
+.catalog-search:focused {
+  -fx-border-color: #A4A0C5;
+}
+
+/* ── Perfume Cards ── */
+
+.perfume-card {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 12;
+  -fx-border-radius: 12;
+  -fx-border-color: rgba(221,217,209,0.5);
+  -fx-border-width: 1;
+  -fx-padding: 0 0 12 0;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 6, 0, 0, 2);
+}
+
+.perfume-card:hover {
+  -fx-border-color: #A4A0C5;
+  -fx-effect: dropshadow(gaussian, rgba(164,160,197,0.15), 12, 0, 0, 4);
+  -fx-translate-y: -2;
+}
+
+.perfume-card-image {
+  -fx-background-color: #F0EDE6;
+  -fx-background-radius: 12 12 0 0;
+  -fx-min-height: 180;
+}
+
+.perfume-card-placeholder {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 42;
+  -fx-text-fill: #C4BFB9;
+  -fx-font-weight: 700;
+}
+
+.perfume-card-brand-badge {
+  -fx-background-color: rgba(45,42,36,0.7);
+  -fx-background-radius: 4;
+  -fx-text-fill: white;
+  -fx-font-size: 9;
+  -fx-font-weight: 700;
+  -fx-padding: 2 8 2 8;
+  -fx-letter-spacing: 1;
+}
+
+.perfume-card-rating-badge {
+  -fx-background-color: rgba(45,42,36,0.6);
+  -fx-background-radius: 4;
+  -fx-text-fill: #F0C040;
+  -fx-font-size: 10;
+  -fx-font-weight: 700;
+  -fx-padding: 2 6 2 6;
+}
+
+.perfume-card-name {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 15;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2D2A24;
+  -fx-padding: 0 12 0 12;
+}
+
+.perfume-card-family {
+  -fx-font-size: 10;
+  -fx-text-fill: #A8A29E;
+  -fx-font-weight: 600;
+  -fx-letter-spacing: 1;
+  -fx-padding: 0 12 0 12;
+}
+
+/* ── Modal Overlay ── */
+
+.modal-overlay {
+  -fx-background-color: rgba(45,42,36,0.5);
+}
+
+.modal-glass {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 16;
+  -fx-border-radius: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 24, 0, 0, 8);
+}
+
+.modal-close {
+  -fx-font-size: 16;
+  -fx-text-fill: #B0ADA8;
+  -fx-cursor: hand;
+  -fx-padding: 4 8;
+}
+
+.modal-close:hover {
+  -fx-text-fill: #D9534F;
+}
+
+.modal-title {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 24;
+  -fx-font-weight: 700;
+  -fx-text-fill: #2D2A24;
+}
+
+.modal-brand {
+  -fx-font-size: 12;
+  -fx-text-fill: #A8A29E;
+  -fx-font-weight: 600;
+  -fx-letter-spacing: 1;
+}
+
+.modal-image {
+  -fx-background-color: #F0EDE6;
+  -fx-background-radius: 8;
+  -fx-min-height: 200;
+  -fx-max-height: 200;
+}
+
+.modal-image-placeholder {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 48;
+  -fx-text-fill: #C4BFB9;
+  -fx-font-weight: 700;
+}
+
+.modal-section-title {
+  -fx-font-size: 10;
+  -fx-text-fill: #A8A29E;
+  -fx-font-weight: 700;
+  -fx-letter-spacing: 1;
+}
+
+.modal-pyramid {
+  -fx-background-color: #F8F6F2;
+  -fx-background-radius: 8;
+  -fx-padding: 12 16 12 16;
+}
+
+.modal-phase-label {
+  -fx-font-size: 10;
+  -fx-font-weight: 700;
+  -fx-text-fill: #8A8680;
+  -fx-letter-spacing: 1;
+}
+
+.modal-phase-notes {
+  -fx-font-size: 12;
+  -fx-text-fill: #4B4B4B;
+  -fx-font-style: italic;
+}
+
+.modal-meta {
+  -fx-padding: 4 0 0 0;
+  -fx-flex-wrap: wrap;
+}
+
+.modal-meta-chip {
+  -fx-background-color: #F0EDE6;
+  -fx-background-radius: 6;
+  -fx-padding: 6 12 6 12;
+  -fx-min-width: 60;
+}
+
+.modal-meta-title {
+  -fx-font-size: 8;
+  -fx-text-fill: #A8A29E;
+  -fx-font-weight: 700;
+  -fx-letter-spacing: 1;
+}
+
+.modal-meta-value {
+  -fx-font-size: 12;
+  -fx-text-fill: #2D2A24;
+  -fx-font-weight: 600;
+}
+
+.modal-desc {
+  -fx-font-size: 11;
+  -fx-text-fill: #6B6762;
+  -fx-line-spacing: 2;
+}
+
+.btn-similar {
+  -fx-background-color: #A4A0C5;
+  -fx-background-radius: 8;
+  -fx-text-fill: white;
+  -fx-font-size: 12;
+  -fx-font-weight: 700;
+  -fx-padding: 10 20 10 20;
+  -fx-cursor: hand;
+  -fx-max-width: Infinity;
+}
+
+.btn-similar:hover {
+  -fx-background-color: #8B87B4;
+}
+
+.modal-similar-result {
+  -fx-padding: 8 0 0 0;
+}
+
+.modal-similar-pct {
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-size: 24;
+  -fx-font-weight: 700;
+}
+
+.modal-similar-text {
+  -fx-font-size: 11;
+  -fx-text-fill: #6B6762;
+  -fx-font-style: italic;
+}

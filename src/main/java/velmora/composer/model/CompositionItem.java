@@ -22,7 +22,8 @@ public class CompositionItem {
   @Column(name = "note_id")
   private Long noteId;
 
-  private Integer percentage;
+  @Column(nullable = false)
+  private Integer percentage = 0;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "composition_id", insertable = false, updatable = false)

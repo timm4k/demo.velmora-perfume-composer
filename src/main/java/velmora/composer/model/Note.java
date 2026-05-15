@@ -30,4 +30,15 @@ public class Note {
 
   @Column(name = "color_code")
   private String colorCode;
+
+  @Column(name = "image_path")
+  private String imagePath;
+
+  private String origin;
+
+  @Column(name = "longevity_hours")
+  private Integer longevityHours;
+
+  @Column(name = "volatility_score")
+  private Integer volatilityScore;
 }

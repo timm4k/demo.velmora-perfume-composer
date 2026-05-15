@@ -3,67 +3,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
+<AnchorPane prefHeight="800.0" prefWidth="1180.0" xmlns="http://javafx.com/javafx/21"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="velmora.composer.ui.controller.SettingsController"
   style="-fx-background-color: #F4F1EC;">
 
-  <VBox prefWidth="220.0" styleClass="sidebar"
-    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-    <StackPane prefHeight="90.0">
-      <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 24;" spacing="12.0">
-        <StackPane prefWidth="36.0" prefHeight="36.0"
-          style="-fx-background-color: rgba(164,160,197,0.18); -fx-background-radius: 8;
-                 -fx-border-color: rgba(164,160,197,0.4); -fx-border-width: 1; -fx-border-radius: 8;">
-          <Label fx:id="userInitials" text="?" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
-        </StackPane>
-        <VBox spacing="1.0">
-          <Label text="VELMORA" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1C1917; -fx-letter-spacing: 3;" />
-          <Label text="OLFACTORY LAB" style="-fx-font-size: 10; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;" />
-        </VBox>
-      </HBox>
-    </StackPane>
-
-    <Rectangle width="180.0" height="1.0" fill="#DDD9D1" style="-fx-translate-x: 20;" />
-
-    <VBox spacing="2.0" style="-fx-padding: 20 12 0 12;" VBox.vgrow="ALWAYS">
-      <Label text="NAVIGATION" style="-fx-font-size: 10; -fx-letter-spacing: 3; -fx-text-fill: #C4BFB9; -fx-padding: 0 0 8 8;" />
-
-      <HBox spacing="12.0" alignment="CENTER_LEFT"
-        onMouseClicked="#handleBack"
-        style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;">
-        <Label text="✦" style="-fx-font-size: 13; -fx-text-fill: #A8A29E;" />
-        <VBox spacing="1.0">
-          <Label text="Composer" style="-fx-font-size: 13; -fx-text-fill: #6B6560;" />
-          <Label text="FORMULA WORKBENCH" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #C4BFB9;" />
-        </VBox>
-      </HBox>
-
-      <HBox spacing="12.0" alignment="CENTER_LEFT"
-        style="-fx-cursor: hand; -fx-padding: 10 14; -fx-background-radius: 4;
-               -fx-background-color: rgba(164,160,197,0.14);
-               -fx-border-color: rgba(164,160,197,0.4); -fx-border-width: 1; -fx-border-radius: 4;">
-        <Label text="◎" style="-fx-font-size: 13; -fx-text-fill: #A4A0C5;" />
-        <VBox spacing="1.0">
-          <Label text="Settings" style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #1C1917;" />
-          <Label text="PREFERENCES" style="-fx-font-size: 10; -fx-letter-spacing: 1.5; -fx-text-fill: #A4A0C5;" />
-        </VBox>
-      </HBox>
-    </VBox>
-
-    <VBox spacing="0.0" style="-fx-padding: 0 0 24 0;">
-      <Rectangle width="180.0" height="1.0" fill="#DDD9D1" style="-fx-translate-x: 20;" />
-      <VBox spacing="4.0" style="-fx-padding: 16 12 0 12;">
-        <Label text="ACCOUNT" style="-fx-font-size: 10; -fx-letter-spacing: 3; -fx-text-fill: #C4BFB9; -fx-padding: 0 0 4 8;" />
-        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 4 8;">
-          <Button text="LOG OUT" onAction="#handleLogout" styleClass="btn btn-danger" />
-        </HBox>
-      </VBox>
-    </VBox>
-  </VBox>
-
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-    AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
+    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
     <children>
       <VBox AnchorPane.leftAnchor="44.0" AnchorPane.topAnchor="36.0" spacing="4.0">
         <Label text="Settings" styleClass="font-serif text-4xl text-primary" />
@@ -125,7 +71,6 @@
               <Label fx:id="saveFeedback" style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;" managed="false" visible="false" wrapText="true" />
 
               <HBox spacing="12.0" alignment="CENTER_RIGHT">
-                <Button text="BACK TO COMPOSER" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #A4A0C5; -fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 1.5; -fx-cursor: hand;" />
                 <Button text="SAVE CHANGES" onAction="#handleSave" style="-fx-background-color: #78A0A0; -fx-text-fill: white; -fx-font-size: 12; -fx-font-weight: bold; -fx-letter-spacing: 1.5; -fx-padding: 12 28; -fx-cursor: hand; -fx-background-radius: 4;" />
               </HBox>
             </VBox>

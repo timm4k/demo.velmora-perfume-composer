@@ -5,15 +5,28 @@
   -fx-border-width: 0 1 0 0;
 }
 
-.sidebar-logo {
-  -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
-  -fx-font-size: 26;
-  -fx-text-fill: -velmora-text;
-  -fx-cursor: hand;
+.brand-block {
+  -fx-padding: 24 20 24 24;
 }
 
-.sidebar-logo:hover {
-  -fx-text-fill: -velmora-accent-purple;
+.brand-logo {
+  -fx-opacity: 0.92;
+}
+
+.brand-title {
+  -fx-font-size: 26;
+  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2B2B2B;
+  -fx-letter-spacing: 2;
+}
+
+.brand-subtitle {
+  -fx-font-size: 10;
+  -fx-font-family: "Inter", sans-serif;
+  -fx-font-weight: 500;
+  -fx-letter-spacing: 3;
+  -fx-text-fill: #9E9890;
 }
 
 .sidebar-icon {
@@ -33,33 +46,11 @@
   -fx-border-radius: 4;
 }
 
-.sidebar-avatar {
-  -fx-background-color: rgba(164, 160, 197, 0.18);
-  -fx-background-radius: 8;
-  -fx-border-color: rgba(164, 160, 197, 0.4);
-  -fx-border-width: 1;
-  -fx-border-radius: 8;
-}
-
 .sidebar-section-heading {
   -fx-font-size: 10;
   -fx-letter-spacing: 3;
   -fx-text-fill: #C4BFB9;
   -fx-padding: 8 0 4 4;
-}
-
-.brand-heading {
-  -fx-font-family: 'Garamond','Times New Roman',serif;
-  -fx-font-size: 14;
-  -fx-font-weight: bold;
-  -fx-text-fill: #1C1917;
-  -fx-letter-spacing: 3;
-}
-
-.brand-subtitle {
-  -fx-font-size: 10;
-  -fx-letter-spacing: 2;
-  -fx-text-fill: #A8A29E;
 }
 
 .status-bar {

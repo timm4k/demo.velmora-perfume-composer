@@ -3,39 +3,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
+<AnchorPane prefHeight="800.0" prefWidth="1180.0" xmlns="http://javafx.com/javafx/21"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="velmora.composer.ui.controller.AdminController"
   style="-fx-background-color: #F4F1EC;">
 
-  <VBox prefWidth="220.0" styleClass="sidebar"
-    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-    <StackPane prefHeight="90.0">
-      <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 24;" spacing="12.0">
-        <StackPane prefWidth="36.0" prefHeight="36.0" styleClass="sidebar-avatar">
-          <Label fx:id="userInitials" text="?" styleClass="font-serif font-bold text-lg text-purple" />
-        </StackPane>
-        <VBox spacing="1.0">
-          <Label text="VELMORA" styleClass="brand-heading" />
-          <Label text="ADMIN PANEL" styleClass="brand-subtitle" />
-        </VBox>
-      </HBox>
-    </StackPane>
-    <Rectangle width="180.0" height="1.0" fill="#DDD9D1" style="-fx-translate-x: 20;" />
-    <VBox spacing="2.0" style="-fx-padding: 20 12 0 12;" VBox.vgrow="ALWAYS">
-      <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="sidebar-icon"
-            onMouseClicked="#handleBack">
-        <Label text="←" styleClass="nav-icon" />
-        <VBox spacing="1.0">
-          <Label text="Back to Composer" styleClass="nav-label" />
-          <Label text="FORMULA WORKBENCH" styleClass="nav-subtitle" />
-        </VBox>
-      </HBox>
-    </VBox>
-  </VBox>
-
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-    AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
+    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
     <children>
       <VBox AnchorPane.leftAnchor="44.0" AnchorPane.topAnchor="36.0" spacing="4.0">
         <Label text="Admin Panel" styleClass="font-serif text-4xl text-primary" />

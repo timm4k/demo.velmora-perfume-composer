@@ -29,6 +29,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Role role;
 
+  @Builder.Default
   @Column(name = "is_confirmed")
   private boolean enabled = false;
 

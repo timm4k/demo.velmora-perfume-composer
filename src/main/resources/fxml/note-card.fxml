@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox prefWidth="240" prefHeight="320" styleClass="note-card"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+  <!-- IMAGE AREA -->
+  <StackPane fx:id="cardImage" prefHeight="160" styleClass="card-image-container">
+    <Label fx:id="cardEmoji" text="✦" style="-fx-font-size: 40; -fx-text-fill: #D4C8B8;" />
+    <VBox styleClass="card-image-overlay" VBox.vgrow="ALWAYS">
+      <Region VBox.vgrow="ALWAYS" />
+      <HBox spacing="6" style="-fx-padding: 0 12 10 12;">
+        <Label fx:id="cardBadge" styleClass="card-badge" />
+        <Label fx:id="cardCategoryBadge" styleClass="badge-category" />
+      </HBox>
+    </VBox>
+  </StackPane>
+
+  <!-- BODY -->
+  <VBox styleClass="card-body" VBox.vgrow="ALWAYS">
+    <Label fx:id="cardName" styleClass="card-name" />
+
+    <Region VBox.vgrow="ALWAYS" />
+
+    <Label fx:id="cardDescription" styleClass="card-description" wrapText="true"
+           maxHeight="36" />
+
+    <Region VBox.vgrow="ALWAYS" />
+
+    <HBox fx:id="cardIntensityDots" spacing="4" styleClass="card-intensity" />
+  </VBox>
+</VBox>

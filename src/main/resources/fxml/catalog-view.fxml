@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane prefHeight="800.0" prefWidth="1100.0"
+           xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="velmora.composer.ui.controller.CatalogController"
+           styleClass="catalog-root">
+
+  <!-- Main content -->
+  <AnchorPane StackPane.alignment="TOP_LEFT">
+    <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          spacing="0.0">
+
+      <!-- Header -->
+      <VBox style="-fx-padding: 32 48 16 48;" spacing="4.0">
+        <HBox spacing="12.0" alignment="CENTER_LEFT">
+          <Rectangle width="3.0" height="20.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
+          <Label text="Perfume Catalog" styleClass="catalog-heading" />
+          <Region HBox.hgrow="ALWAYS" />
+          <Label fx:id="catalogCount" text="0 fragrances" styleClass="catalog-subtitle" />
+        </HBox>
+        <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+          <Button text="←  Back to Composer" onAction="#handleBack" styleClass="btn-ghost-lux" />
+          <Label text="BRAND" style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+          <ComboBox fx:id="brandFilter" promptText="All" prefWidth="130"
+                    style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #E2DDD4; -fx-border-radius: 6; -fx-font-size: 11;" />
+          <Label text="FAMILY" style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+          <ComboBox fx:id="familyFilter" promptText="All" prefWidth="130"
+                    style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #E2DDD4; -fx-border-radius: 6; -fx-font-size: 11;" />
+          <Region HBox.hgrow="ALWAYS" />
+          <TextField fx:id="searchField" promptText="Search perfumes..."
+                     styleClass="catalog-search" prefWidth="240.0" />
+        </HBox>
+      </VBox>
+
+      <Rectangle height="1.0" style="-fx-fill: rgba(221,217,209,0.4);"
+                 AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="48.0" />
+
+      <!-- Grid -->
+      <ScrollPane fx:id="gridScroll" fitToWidth="true" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: transparent; -fx-padding: 0;"
+                  styleClass="thin-scroll">
+        <FlowPane fx:id="catalogGrid" hgap="16.0" vgap="16.0"
+                  style="-fx-padding: 28 48 48 48;"
+                  alignment="TOP_LEFT" />
+      </ScrollPane>
+
+    </VBox>
+  </AnchorPane>
+
+  <!-- Modal overlay -->
+  <StackPane fx:id="modalOverlay" visible="false" managed="false"
+             styleClass="modal-overlay" StackPane.alignment="CENTER">
+    <VBox fx:id="modalContent" maxWidth="520.0" maxHeight="700.0"
+          styleClass="modal-glass" spacing="12.0"
+          style="-fx-padding: 24 28 28 28;">
+    </VBox>
+  </StackPane>
+
+</StackPane>

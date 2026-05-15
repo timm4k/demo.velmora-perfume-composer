@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="800.0"
+  prefWidth="1280.0"
+  xmlns="http://javafx.com/javafx/21"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="velmora.composer.ui.controller.VaultController"
+  style="-fx-background-color: #F4F1EC;">
+
+  <VBox AnchorPane.topAnchor="0.0"
+    AnchorPane.bottomAnchor="0.0"
+    AnchorPane.leftAnchor="0.0"
+    AnchorPane.rightAnchor="0.0"
+    spacing="0">
+
+    <HBox alignment="CENTER_LEFT"
+      styleClass="filter-bar"
+      style="-fx-padding: 18 34 14 34;">
+
+      <TextField fx:id="searchField"
+        promptText="Search ingredients..."
+        styleClass="filter-search" />
+
+      <Region HBox.hgrow="ALWAYS" />
+
+      <Label text="PHASE"
+        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+
+      <Button fx:id="filterAll"
+        text="ALL"
+        styleClass="filter-btn-active" />
+
+      <Button fx:id="filterTop"
+        text="TOP"
+        styleClass="filter-btn" />
+
+      <Button fx:id="filterHeart"
+        text="HEART"
+        styleClass="filter-btn" />
+
+      <Button fx:id="filterBase"
+        text="BASE"
+        styleClass="filter-btn" />
+
+      <Region prefWidth="18" />
+
+      <Label text="INTENSITY"
+        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+
+      <Slider fx:id="intensitySlider"
+        min="1"
+        max="10"
+        value="1"
+        prefWidth="100"
+        showTickLabels="false"
+        showTickMarks="false"
+        styleClass="vault-slider" />
+
+      <Label fx:id="intensityLabel"
+        text="1+"
+        style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #A4A0C5; -fx-min-width: 30;" />
+
+      <Label text="CATEGORY"
+        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+
+      <ComboBox fx:id="categoryFilter"
+        prefWidth="120"
+        promptText="All"
+        style="-fx-background-color: rgba(255,255,255,0.65); -fx-background-radius: 18; -fx-font-size: 12;" />
+    </HBox>
+
+    <!-- MAIN CONTENT AREA -->
+    <HBox VBox.vgrow="ALWAYS"
+      spacing="0"
+      style="-fx-padding: 0 34 24 34;">
+
+      <!-- CATALOG SCROLL -->
+      <ScrollPane fx:id="scrollPane"
+        fitToWidth="true"
+        pannable="true"
+        styleClass="vault-scroll"
+        HBox.hgrow="ALWAYS"
+        style="-fx-background-color: transparent; -fx-background: transparent;">
+
+        <TilePane fx:id="cardGrid"
+          prefColumns="4"
+          prefTileWidth="250"
+          prefTileHeight="290"
+          hgap="26"
+          vgap="26"
+          alignment="TOP_LEFT"
+          styleClass="card-grid"
+          style="-fx-padding: 0 12 0 12;" />
+      </ScrollPane>
+
+      <!-- GAP між каталогом і панеллю -->
+      <Region fx:id="panelGap"
+        prefWidth="24"
+        minWidth="24"
+        maxWidth="24"
+        visible="false"
+        managed="false" />
+
+      <!-- DETAIL PANEL -->
+      <VBox fx:id="detailPanel"
+        prefWidth="320"
+        minWidth="320"
+        maxWidth="320"
+        spacing="0"
+        visible="false"
+        managed="false"
+        style="-fx-background-color: rgba(255,255,255,0.72);
+                -fx-background-radius: 34;
+                -fx-border-radius: 34;
+                -fx-padding: 22 22 24 22;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 26, 0.2, 0, 6);">
+
+        <Label text="← Back to grid"
+          onMouseClicked="#closeDetail"
+          style="-fx-font-size: 10;
+                 -fx-font-weight: bold;
+                 -fx-letter-spacing: 2;
+                 -fx-text-fill: #A4A0C5;
+                 -fx-cursor: hand;
+                 -fx-padding: 0 0 14 2;" />
+
+        <!-- IMAGE CONTAINER -->
+        <StackPane fx:id="detailImageContainer"
+          prefHeight="168"
+          minHeight="168"
+          maxHeight="168"
+          maxWidth="Infinity"
+          alignment="CENTER"
+          style="-fx-background-color: rgba(240,236,230,0.5);
+                 -fx-background-radius: 20;">
+
+          <Label fx:id="detailImagePlaceholder"
+            text="✦"
+            alignment="CENTER"
+            style="-fx-font-size: 44;
+                   -fx-text-fill: #D4C8B8;" />
+        </StackPane>
+
+        <VBox spacing="0"
+          style="-fx-padding: 18 2 0 2;">
+
+          <Label fx:id="detailCategory"
+            style="-fx-font-size: 12;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #78A0A0;
+                   -fx-letter-spacing: 1.5;" />
+
+          <Label fx:id="detailName"
+            wrapText="true"
+            style="-fx-font-size: 18;
+                   -fx-font-family: 'Cormorant Garamond';
+                   -fx-text-fill: #1F1A17;
+                   -fx-padding: 10 0 18 0;" />
+
+          <Label text="DESCRIPTION"
+            style="-fx-font-size: 11;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #B89B8B;
+                   -fx-letter-spacing: 1.5;" />
+
+          <Label fx:id="detailDescription"
+            wrapText="true"
+            style="-fx-font-size: 13;
+                   -fx-line-spacing: 3;
+                   -fx-text-fill: #5B534D;
+                   -fx-padding: 10 0 18 0;" />
+
+          <Label text="OLFACTORY PROFILE"
+            style="-fx-font-size: 11;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #B89B8B;
+                   -fx-letter-spacing: 1.5;" />
+
+          <VBox spacing="12"
+            style="-fx-padding: 14 0 20 0;">
+
+            <HBox alignment="CENTER_LEFT">
+              <Label text="Phase"
+                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Label fx:id="detailPhase"
+                style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT">
+              <Label text="Intensity"
+                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <HBox fx:id="detailIntensityDots" spacing="4" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT">
+              <Label text="Origin"
+                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Label fx:id="detailOrigin"
+                style="-fx-font-size: 13; -fx-text-fill: #1F1A17;" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT">
+              <Label text="Longevity"
+                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Label fx:id="detailLongevity"
+                style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
+            </HBox>
+          </VBox>
+
+          <Label text="SCENT TIMELINE"
+            style="-fx-font-size: 11;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #B89B8B;
+                   -fx-letter-spacing: 1.5;" />
+
+          <VBox spacing="10"
+            style="-fx-padding: 14 0 22 0;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+              <Label text="TOP  0-15m"
+                minWidth="92"
+                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Rectangle fx:id="tlTop"
+                width="68" height="6"
+                arcWidth="12" arcHeight="12"
+                fill="#E2A998" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+              <Label text="HEART 15m-3h"
+                minWidth="92"
+                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Rectangle fx:id="tlHeart"
+                width="96" height="6"
+                arcWidth="12" arcHeight="12"
+                fill="#A4A0C5" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+              <Label text="BASE  3h+"
+                minWidth="92"
+                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Rectangle fx:id="tlBase"
+                width="120" height="6"
+                arcWidth="12" arcHeight="12"
+                fill="#78A0A0" />
+            </HBox>
+          </VBox>
+
+          <Button text="+ Add to Composition"
+            onAction="#handleAddToComposition"
+            maxWidth="Infinity"
+            prefHeight="42"
+            style="-fx-background-color: #161210;
+                   -fx-background-radius: 14;
+                   -fx-text-fill: white;
+                   -fx-font-size: 14;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;" />
+        </VBox>
+      </VBox>
+    </HBox>
+  </VBox>
+</AnchorPane>

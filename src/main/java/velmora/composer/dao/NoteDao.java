@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import velmora.composer.pool.SimpleConnectionPool;
 
 /**
- * JDBC DAO, що використовує SimpleConnectionPool
- * Співіснує з Spring Data JPA репозиторіями для демонстрації пулу
+ * JDBC DAO, що використовує SimpleConnectionPool.
+ * Співіснує з Spring Data JPA репозиторіями для демонстрації пулу.
  *
  * Потік: Controller -> Service -> NoteDao -> Pool -> Supabase
  */

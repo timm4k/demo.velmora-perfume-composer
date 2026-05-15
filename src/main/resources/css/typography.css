@@ -7,15 +7,15 @@
 .text-error     { -fx-text-fill: -velmora-error; }
 .text-success   { -fx-text-fill: -velmora-success; }
 
-.text-xs   { -fx-font-size: 10; }
-.text-sm   { -fx-font-size: 11; }
-.text-base { -fx-font-size: 13; }
-.text-md   { -fx-font-size: 14; }
-.text-lg   { -fx-font-size: 16; }
-.text-xl   { -fx-font-size: 20; }
-.text-2xl  { -fx-font-size: 24; }
-.text-3xl  { -fx-font-size: 32; }
-.text-4xl  { -fx-font-size: 36; }
+.text-xs   { -fx-font-size: 12; }
+.text-sm   { -fx-font-size: 13; }
+.text-base { -fx-font-size: 15; }
+.text-md   { -fx-font-size: 16; }
+.text-lg   { -fx-font-size: 18; }
+.text-xl   { -fx-font-size: 22; }
+.text-2xl  { -fx-font-size: 26; }
+.text-3xl  { -fx-font-size: 34; }
+.text-4xl  { -fx-font-size: 38; }
 
 .font-bold    { -fx-font-weight: bold; }
 .font-semibold { -fx-font-weight: 600; }
@@ -31,21 +31,21 @@
 .cursor-hand { -fx-cursor: hand; }
 
 .section-label {
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 3;
 }
 
 .section-label-purple {
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-accent-purple;
   -fx-letter-spacing: 3;
 }
 
 .field-label {
-  -fx-font-size: 12;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-text-muted;
   -fx-letter-spacing: 3;
@@ -53,40 +53,40 @@
 
 .auth-form-title {
   -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
-  -fx-font-size: 28;
+  -fx-font-size: 32;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 2;
 }
 
 .auth-brand {
   -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
-  -fx-font-size: 72;
+  -fx-font-size: 76;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 18;
 }
 
 .auth-subtitle {
   -fx-font-family: 'Garamond', 'Cormorant Garamond Bold', 'Times New Roman', serif;
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 7;
 }
 
 .auth-tagline {
   -fx-font-family: 'Garamond', 'Georgia', serif;
-  -fx-font-size: 13;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-text-muted;
   -fx-letter-spacing: 2;
   -fx-font-style: italic;
 }
 
 .auth-switch-text {
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-text-fill: -velmora-text-muted;
 }
 
 .auth-switch-link {
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-text-fill: -velmora-accent-purple;
   -fx-font-weight: bold;
   -fx-border-color: transparent;
@@ -100,7 +100,7 @@
 
 .auth-error {
   -fx-text-fill: -velmora-error;
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-font-style: italic;
 }
 
@@ -119,7 +119,7 @@
 
 .heading-sub {
   -fx-font-family: 'Garamond', 'Georgia', serif;
-  -fx-font-size: 12;
+  -fx-font-size: 14;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 5;
 }
@@ -129,14 +129,14 @@
 .label-muted {
   -fx-text-fill: -velmora-text-muted;
   -fx-font-family: 'Garamond', 'Georgia', serif;
-  -fx-font-size: 12;
+  -fx-font-size: 14;
 }
 
 .label-accent-purple { -fx-text-fill: -velmora-accent-purple; -fx-font-weight: 600; }
 .label-accent-teal   { -fx-text-fill: -velmora-accent-teal;   -fx-font-weight: 600; }
 
 .panel-header {
-  -fx-font-size: 10;
+  -fx-font-size: 12;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
   -fx-text-fill: -velmora-text-muted;
@@ -144,7 +144,7 @@
 
 .pyramid-zone-title {
   -fx-font-family: 'Garamond', 'Georgia', serif;
-  -fx-font-size: 10;
+  -fx-font-size: 13;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
   -fx-text-fill: -velmora-text-secondary;
@@ -152,7 +152,7 @@
 
 .pyramid-zone-empty {
   -fx-font-family: 'Garamond', 'Georgia', serif;
-  -fx-font-size: 12;
+  -fx-font-size: 14;
   -fx-text-fill: -velmora-text-muted;
   -fx-font-style: italic;
 }
@@ -170,7 +170,7 @@
 }
 
 .metric-label {
-  -fx-font-size: 10;
+  -fx-font-size: 12;
   -fx-font-weight: bold;
   -fx-letter-spacing: 2;
   -fx-text-fill: -velmora-text-muted;
@@ -213,7 +213,7 @@
 }
 
 .settings-toggle-desc {
-  -fx-font-size: 11;
+  -fx-font-size: 13;
   -fx-text-fill: -velmora-text-muted;
   -fx-font-style: italic;
 }

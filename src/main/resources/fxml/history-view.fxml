@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1100.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="velmora.composer.ui.controller.HistoryController"
+            styleClass="history-root">
+
+  <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+        spacing="0.0">
+
+    <!-- Header -->
+    <VBox style="-fx-padding: 32 48 20 48;" spacing="4.0">
+      <HBox spacing="12.0" alignment="CENTER_LEFT">
+        <Rectangle width="3.0" height="20.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
+        <Label text="Composition History" styleClass="history-heading" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="historyCount" text="0 sessions" styleClass="history-subtitle" />
+      </HBox>
+      <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+        <Button text="←  Back to Composer" onAction="#handleBack" styleClass="btn-ghost-lux" />
+      </HBox>
+    </VBox>
+
+    <Rectangle height="1.0" style="-fx-fill: rgba(221,217,209,0.4);"
+               AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="48.0" />
+
+    <!-- Scrollable timeline -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-padding: 0;"
+                styleClass="thin-scroll">
+      <VBox spacing="0.0" style="-fx-padding: 24 48 48 48;">
+        <VBox fx:id="historyContainer" spacing="0.0" />
+        <Label text="End of history" styleClass="history-end" />
+      </VBox>
+    </ScrollPane>
+
+  </VBox>
+</AnchorPane>

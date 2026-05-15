@@ -13,6 +13,11 @@ import velmora.composer.model.CompositionItem;
 import velmora.composer.model.NoteType;
 import velmora.composer.repository.CompositionRepository;
 
+/**
+ * Бізнес-логіка роботи з композиціями.
+ * Валідує ноти, керує транзакцією збереження, аналізує піраміду аромату.
+ * Використовує CompositionRepository (Spring Data JPA).
+ */
 @Service
 @RequiredArgsConstructor
 public class CompositionService {
@@ -22,9 +27,30 @@ public class CompositionService {
   @Transactional
   public Composition saveComposition(Composition composition) {
     List<CompositionItem> items = composition.getItems();
+
+    if (composition.getName() == null || composition.getName().trim().isEmpty()) {
+      throw new IllegalStateException("Composition name must not be empty");
+    }
     if (items == null || items.isEmpty()) {
       throw new IllegalStateException("Composition must have at least one note");
     }
+    if (items.size() > 50) {
+      throw new IllegalStateException("Composition cannot exceed 50 notes");
+    }
+
+    int totalPercentage = 0;
+    for (CompositionItem item : items) {
+      if (item.getPercentage() != null) {
+        if (item.getPercentage() < 0 || item.getPercentage() > 100) {
+          throw new IllegalStateException("Percentage must be between 0 and 100");
+        }
+        totalPercentage += item.getPercentage();
+      }
+    }
+    if (totalPercentage > 100) {
+      throw new IllegalStateException("Total percentage exceeds 100%");
+    }
+
     composition.setUpdatedAt(LocalDateTime.now());
 
     List<CompositionItem> detached = new ArrayList<>(items);
