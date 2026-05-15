@@ -27,18 +27,11 @@ public class PoolDemoService {
     return noteDao.countByCategory(category);
   }
 
-  /**
-   * Прогрів пулу — виконує простий запит, щоб переконатись,
-   * що з'єднання працюють і пул функціонує.
-   */
   public void warmUp() {
     pool.getAvailableCount();
     System.out.println("[DEMO] Pool warmed up: " + getStatus());
   }
 
-  /**
-   * Імітує навантаження — виконує кілька запитів через пул.
-   */
   public void simulateLoad() {
     System.out.println("[DEMO] Starting load simulation");
     for (int i = 0; i < 3; i++) {

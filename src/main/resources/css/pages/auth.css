@@ -14,3 +14,56 @@
   -fx-border-width: 1;
   -fx-border-radius: 2;
 }
+
+.auth-brand {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 46;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1C1917;
+  -fx-letter-spacing: 8;
+}
+
+.auth-subtitle {
+  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-size: 14;
+  -fx-letter-spacing: 6;
+  -fx-text-fill: #A4A0C5;
+}
+
+.auth-tagline {
+  -fx-font-size: 13;
+  -fx-font-style: italic;
+  -fx-text-fill: #B5ADA4;
+}
+
+.auth-form-title {
+  -fx-font-size: 22;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1C1917;
+  -fx-letter-spacing: 3;
+}
+
+.field-label {
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+  -fx-text-fill: #8A847E;
+  -fx-letter-spacing: 2;
+}
+
+.auth-error {
+  -fx-font-size: 14;
+  -fx-font-weight: bold;
+  -fx-text-fill: #C44A4A;
+  -fx-padding: 6 0 0 0;
+}
+
+.auth-switch-text {
+  -fx-font-size: 14;
+  -fx-text-fill: #8A847E;
+}
+
+.auth-switch-link {
+  -fx-font-size: 14;
+  -fx-font-weight: bold;
+  -fx-text-fill: #A4A0C5;
+}

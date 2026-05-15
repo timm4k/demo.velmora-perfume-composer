@@ -33,8 +33,11 @@ public class User {
   @Column(name = "is_confirmed")
   private boolean enabled = false;
 
-  @Column(name = "invite_code")
-  private String inviteCode;
+  @Column(name = "verification_code_hash")
+  private String verificationCode;
+
+  @Column(name = "verification_expires_at")
+  private LocalDateTime verificationExpiresAt;
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;

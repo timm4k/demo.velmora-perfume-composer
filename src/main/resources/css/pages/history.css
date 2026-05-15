@@ -22,7 +22,6 @@
   -fx-padding: 16 0 0 32;
 }
 
-/* ── Cards ── */
 .history-card {
   -fx-padding: 8 0 8 0;
   -fx-cursor: hand;
@@ -36,7 +35,6 @@
   -fx-margin: 0 -8;
 }
 
-/* Timeline dot & line */
 .history-dot {
   -fx-fill: #A4A0C5;
   -fx-stroke: #C8C4D8;
@@ -52,7 +50,6 @@
   -fx-background-radius: 1;
 }
 
-/* Card content */
 .history-name {
   -fx-font-family: "Cormorant Garamond", serif;
   -fx-font-size: 17;
@@ -60,7 +57,6 @@
   -fx-text-fill: #2D2A24;
 }
 
-/* Status badges */
 .history-status {
   -fx-font-size: 10;
   -fx-font-weight: 700;
@@ -86,7 +82,6 @@
   -fx-background-color: #D9534F;
 }
 
-/* Meta row */
 .history-meta {
   -fx-padding: 0;
 }

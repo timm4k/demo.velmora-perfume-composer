@@ -10,7 +10,6 @@
             fx:controller="velmora.composer.ui.controller.ComposerController"
             styleClass="composer-root">
 
-  <!-- ═══ LEFT PANEL — Material Library (380px) ═══ -->
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="0.0"
               prefWidth="380.0" minWidth="380.0" maxWidth="380.0"
@@ -52,7 +51,6 @@
     </VBox>
   </AnchorPane>
 
-  <!-- ═══ CENTER — Atmospheric Molecular Field + Pyramid + Analysis ═══ -->
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="340.0"
               style="-fx-background-color: transparent;">
@@ -139,7 +137,6 @@
     </VBox>
   </AnchorPane>
 
-  <!-- ═══ RIGHT PANEL — Live Analysis ═══ -->
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
               AnchorPane.rightAnchor="0.0"
               prefWidth="340.0"

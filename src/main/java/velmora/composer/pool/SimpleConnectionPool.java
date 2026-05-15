@@ -7,19 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Легковаговий JDBC connection pool для демонстрації роботи з pooling.
+ *JDBC connection pool для демонстрації роботи з pooling
  * Використовується паралельно з HikariCP (Spring Data JPA) для JDBC-запитів
  * через NoteDao, щоб показати розуміння механізму пулінгу.
  *
  * Керує фіксованим набором з'єднань (borrow/return), реалізує
- * ліниве створення нових конекшнів при вичерпанні пулу.
+ * створення нових конекшнів при вичерпанні пулу
  *
  * Архітектура:
  *   UI -> Service -> DAO -> SimpleConnectionPool -> Supabase (Postgres)
- *
- * УВАГА: У проєкті одночасно існує два pool'и — HikariCP (Spring JPA)
- * та цей кастомний пул. Це зроблено навмисно для демонстрації: HikariCP
- * використовується JPA-репозиторіями, SimpleConnectionPool — JDBC DAO.
  */
 public class SimpleConnectionPool {
 
@@ -58,9 +54,6 @@ public class SimpleConnectionPool {
     }
   }
 
-/**
- * Повертає з'єднання з пулу (ручне звільнення через releaseConnection).
- */
   public synchronized Connection getConnection() throws SQLException {
     while (!available.isEmpty()) {
       Connection c = available.remove(available.size() - 1);
@@ -81,11 +74,6 @@ public class SimpleConnectionPool {
     throw new SQLException("Connection pool exhausted (max " + maxSize + ")");
   }
 
-/**
- * Повертає з'єднання, обгорнуте в PooledConnection.
- * При виклику close() на ньому — з'єднання автоматично повертається в пул.
- * Дозволяє писати: {@code try (Connection c = pool.borrowConnection())}.
- */
   public Connection borrowConnection() throws SQLException {
     return new PooledConnection(getConnection(), this);
   }

@@ -112,6 +112,7 @@ public class ComposerController {
   private final ObservableList<Note> currentBaseNotes = FXCollections.observableArrayList();
   private FilteredList<Note> filteredNotes;
   private Button activeFilter;
+  private Long editingCompositionId;
   private static final double PERF_BAR_MAX = 160.0;
 
   @FXML
@@ -146,9 +147,12 @@ public class ComposerController {
       for (Long id : ids) {
         noteRepository.findById(id).ifPresent(this::addNoteToPyramid);
       }
-      compositionState.getCurrentNoteIds().clear();
-      compositionState.getCurrentNoteNames().clear();
     }
+    if (compositionState.getFormulaName() != null) {
+      formulaName.setText(compositionState.getFormulaName());
+    }
+    editingCompositionId = compositionState.getEditCompositionId();
+    compositionState.clear();
   }
 
   // ── Filter pills ─────────────────────────────────
@@ -779,6 +783,11 @@ public class ComposerController {
 
   @FXML
   public void handleSave() {
+    if (userSession.getUserId() == null) {
+      formulaStatus.setText("LOG IN TO SAVE");
+      formulaStatus.getStyleClass().add("status-badge-warn");
+      return;
+    }
     String name = formulaName.getText().trim();
     if (name.isEmpty()) {
       formulaStatus.setText("NAME REQUIRED");
@@ -793,7 +802,13 @@ public class ComposerController {
     }
     User userRef = new User();
     userRef.setId(userSession.getUserId());
-    Composition composition = new Composition();
+    Composition composition;
+    if (editingCompositionId != null) {
+      composition = new Composition();
+      composition.setId(editingCompositionId);
+    } else {
+      composition = new Composition();
+    }
     composition.setName(name);
     composition.setDescription("Created in Velmora Olfactory Lab");
     composition.setPublic(false);
@@ -817,6 +832,7 @@ public class ComposerController {
     task.setOnSucceeded(e -> {
       formulaStatus.setText("SAVED ✓");
       formulaStatus.getStyleClass().remove("status-badge-warn");
+      editingCompositionId = null;
     });
     task.setOnFailed(e -> {
       formulaStatus.setText("ERROR: " + task.getException().getMessage());

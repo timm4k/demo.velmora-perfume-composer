@@ -40,7 +40,8 @@ public class UserService {
         .password(passwordEncoder.encode(rawPassword))
         .role(Role.USER)
         .enabled(false)
-        .inviteCode(code)
+        .verificationCode(passwordEncoder.encode(code))
+        .verificationExpiresAt(LocalDateTime.now().plusMinutes(15))
         .createdAt(LocalDateTime.now())
         .build();
 
@@ -76,12 +77,18 @@ public class UserService {
       return user;
     }
 
-    if (code == null || !code.equals(user.getInviteCode())) {
+    if (code == null || !passwordEncoder.matches(code, user.getVerificationCode())) {
       throw new IllegalArgumentException("Invalid verification code");
     }
 
+    if (user.getVerificationExpiresAt() != null
+        && LocalDateTime.now().isAfter(user.getVerificationExpiresAt())) {
+      throw new IllegalArgumentException("Verification code has expired");
+    }
+
     user.setEnabled(true);
-    user.setInviteCode(null);
+    user.setVerificationCode(null);
+    user.setVerificationExpiresAt(null);
     return userRepository.save(user);
   }
 

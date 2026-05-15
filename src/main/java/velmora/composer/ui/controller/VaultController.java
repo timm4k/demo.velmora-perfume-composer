@@ -318,12 +318,12 @@ public class VaultController {
         var imgStream = getClass().getResourceAsStream("/images/notes/" + note.getImagePath());
         if (imgStream != null) {
           ImageView iv = new ImageView(new Image(imgStream));
-          iv.setFitWidth(276);
+          iv.setFitWidth(336);
           iv.setFitHeight(168);
           iv.setPreserveRatio(false);
           iv.setSmooth(true);
           iv.setCache(true);
-          Rectangle detailClip = new Rectangle(276, 168);
+          Rectangle detailClip = new Rectangle(336, 168);
           detailClip.setArcWidth(20);
           detailClip.setArcHeight(20);
           iv.setClip(detailClip);

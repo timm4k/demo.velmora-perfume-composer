@@ -11,18 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionItem;
 import velmora.composer.model.NoteType;
+import velmora.composer.model.User;
 import velmora.composer.repository.CompositionRepository;
+import velmora.composer.repository.UserRepository;
 
-/**
- * Бізнес-логіка роботи з композиціями.
- * Валідує ноти, керує транзакцією збереження, аналізує піраміду аромату.
- * Використовує CompositionRepository (Spring Data JPA).
- */
 @Service
 @RequiredArgsConstructor
 public class CompositionService {
 
   private final CompositionRepository compositionRepository;
+  private final UserRepository userRepository;
 
   @Transactional
   public Composition saveComposition(Composition composition) {
@@ -49,6 +47,11 @@ public class CompositionService {
     }
     if (totalPercentage > 100) {
       throw new IllegalStateException("Total percentage exceeds 100%");
+    }
+
+    if (composition.getUser() != null && composition.getUser().getId() != null) {
+      User managed = userRepository.getReferenceById(composition.getUser().getId());
+      composition.setUser(managed);
     }
 
     composition.setUpdatedAt(LocalDateTime.now());

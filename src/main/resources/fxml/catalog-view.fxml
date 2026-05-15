@@ -9,13 +9,11 @@
            fx:controller="velmora.composer.ui.controller.CatalogController"
            styleClass="catalog-root">
 
-  <!-- Main content -->
   <AnchorPane StackPane.alignment="TOP_LEFT">
     <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           spacing="0.0">
 
-      <!-- Header -->
       <VBox style="-fx-padding: 32 48 16 48;" spacing="4.0">
         <HBox spacing="12.0" alignment="CENTER_LEFT">
           <Rectangle width="3.0" height="20.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
@@ -40,7 +38,6 @@
       <Rectangle height="1.0" style="-fx-fill: rgba(221,217,209,0.4);"
                  AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="48.0" />
 
-      <!-- Grid -->
       <ScrollPane fx:id="gridScroll" fitToWidth="true" VBox.vgrow="ALWAYS"
                   style="-fx-background-color: transparent; -fx-padding: 0;"
                   styleClass="thin-scroll">
@@ -52,7 +49,6 @@
     </VBox>
   </AnchorPane>
 
-  <!-- Modal overlay -->
   <StackPane fx:id="modalOverlay" visible="false" managed="false"
              styleClass="modal-overlay" StackPane.alignment="CENTER">
     <VBox fx:id="modalContent" maxWidth="520.0" maxHeight="700.0"

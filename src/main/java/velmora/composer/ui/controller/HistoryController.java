@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import velmora.composer.model.Composition;
 import velmora.composer.repository.CompositionRepository;
+import velmora.composer.state.CompositionState;
 import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
 
@@ -32,6 +33,7 @@ public class HistoryController {
   private final CompositionRepository compositionRepository;
   private final UserSession userSession;
   private final ViewManager viewManager;
+  private final CompositionState compositionState;
 
   @FXML private VBox historyContainer;
   @FXML private Label historyCount;
@@ -47,6 +49,14 @@ public class HistoryController {
   }
 
   private void loadHistory() {
+    if (userSession.getUserId() == null) {
+      historyCount.setText("0 sessions");
+      historyContainer.getChildren().clear();
+      Label empty = new Label("Log in to see your saved compositions");
+      empty.setStyle("-fx-font-size: 13; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
+      historyContainer.getChildren().add(empty);
+      return;
+    }
     Task<List<Composition>> task = new Task<>() {
       @Override protected List<Composition> call() {
         return compositionRepository.findByUserIdOrderByUpdatedAtDesc(userSession.getUserId());
@@ -60,6 +70,12 @@ public class HistoryController {
   private void renderCards(List<Composition> compositions) {
     historyContainer.getChildren().clear();
     historyCount.setText(compositions.size() + " sessions");
+    if (compositions.isEmpty()) {
+      Label empty = new Label("No saved compositions yet. Create one in the Composer!");
+      empty.setStyle("-fx-font-size: 13; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
+      historyContainer.getChildren().add(empty);
+      return;
+    }
     for (int i = 0; i < compositions.size(); i++) {
       HBox card = createHistoryCard(compositions.get(i), i == compositions.size() - 1);
       historyContainer.getChildren().add(card);
@@ -128,7 +144,9 @@ public class HistoryController {
     cm.getItems().addAll(open, duplicate, new SeparatorMenuItem(), rename, delete, export);
 
     card.setOnMouseClicked(e -> {
-      if (e.getButton() == MouseButton.SECONDARY) {
+      if (e.getButton() == MouseButton.PRIMARY) {
+        handleOpen(comp);
+      } else if (e.getButton() == MouseButton.SECONDARY) {
         cm.show(card, e.getScreenX(), e.getScreenY());
       }
     });
@@ -146,7 +164,14 @@ public class HistoryController {
   }
 
   private void handleOpen(Composition comp) {
-    System.out.println("[HISTORY] Open: " + comp.getId());
+    compositionState.setFormulaName(comp.getName());
+    compositionState.setEditCompositionId(comp.getId());
+    compositionState.setCurrentNoteIds(
+        comp.getItems().stream().map(i -> i.getNote().getId()).collect(java.util.stream.Collectors.toList())
+    );
+    compositionState.setCurrentNoteNames(
+        comp.getItems().stream().map(i -> i.getNote().getName()).collect(java.util.stream.Collectors.toList())
+    );
     viewManager.showMain();
   }
 

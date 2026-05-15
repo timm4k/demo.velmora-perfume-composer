@@ -10,9 +10,9 @@ import velmora.composer.service.UserService;
 import velmora.composer.ui.UserSession;
 
 /**
- * Фасад автентифікації — єдина точка входу для UI.
- * Координує UserService (логіка) та UserSession (стан сесії).
- * Перетворює User -> UserDto для передачі в UI.
+ * Фасад автентифікації — єдина точка входу для UI
+ * Координує UserService (логіка) та UserSession (стан сесії)
+ * Перетворює User -> UserDto для передачі в UI
  */
 @Component
 @RequiredArgsConstructor

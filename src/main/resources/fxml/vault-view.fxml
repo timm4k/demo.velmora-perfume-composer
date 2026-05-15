@@ -98,19 +98,17 @@
           style="-fx-padding: 0 12 0 12;" />
       </ScrollPane>
 
-      <!-- GAP між каталогом і панеллю -->
       <Region fx:id="panelGap"
-        prefWidth="24"
-        minWidth="24"
-        maxWidth="24"
+        prefWidth="10"
+        minWidth="10"
+        maxWidth="10"
         visible="false"
         managed="false" />
 
-      <!-- DETAIL PANEL -->
       <VBox fx:id="detailPanel"
-        prefWidth="320"
-        minWidth="320"
-        maxWidth="320"
+        prefWidth="380"
+        minWidth="380"
+        maxWidth="380"
         spacing="0"
         visible="false"
         managed="false"
@@ -129,7 +127,6 @@
                  -fx-cursor: hand;
                  -fx-padding: 0 0 14 2;" />
 
-        <!-- IMAGE CONTAINER -->
         <StackPane fx:id="detailImageContainer"
           prefHeight="168"
           minHeight="168"
