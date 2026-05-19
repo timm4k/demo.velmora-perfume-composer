@@ -8,7 +8,7 @@
       xmlns:fx="http://javafx.com/fxml/1">
 
   <StackPane fx:id="cardImage" prefHeight="160" styleClass="card-image-container">
-    <Label fx:id="cardEmoji" text="✦" style="-fx-font-size: 40; -fx-text-fill: #D4C8B8;" />
+    <Label fx:id="cardEmoji" text="✦" style=" -fx-font-size: 46; -fx-text-fill: #D4C8B8;" />
     <VBox styleClass="card-image-overlay" VBox.vgrow="ALWAYS">
       <Region VBox.vgrow="ALWAYS" />
       <HBox spacing="6" style="-fx-padding: 0 12 10 12;">

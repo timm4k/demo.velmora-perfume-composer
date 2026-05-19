@@ -22,7 +22,7 @@
     <VBox alignment="CENTER" spacing="0">
       <HBox spacing="10.0" alignment="CENTER" style="-fx-padding: 0 0 28 0;">
         <Rectangle width="28.0" height="1.0" fill="#A4A0C5" opacity="0.6" />
-        <Label text="EST. MMXXIV" style="-fx-font-size: 10; -fx-letter-spacing: 4; -fx-text-fill: #A4A0C5;" />
+        <Label text="EST. MMXXIV" style=" -fx-font-size: 16; -fx-letter-spacing: 4; -fx-text-fill: #A4A0C5;" />
         <Rectangle width="28.0" height="1.0" fill="#A4A0C5" opacity="0.6" />
       </HBox>
 
@@ -45,7 +45,7 @@
       </VBox>
 
       <Label text="&quot;Where science meets scent.&quot;"
-        style="-fx-font-size: 12; -fx-font-style: italic; -fx-text-fill: #A0968C; -fx-padding: 24 40 0 40;"
+        style=" -fx-font-size: 18; -fx-font-style: italic; -fx-text-fill: #A0968C; -fx-padding: 24 40 0 40;"
         wrapText="true" alignment="CENTER" />
     </VBox>
 
@@ -125,12 +125,12 @@
         <Rectangle width="40.0" height="2.0" fill="#E2A998" />
 
         <Label fx:id="verifyInfoText" text="We sent a 6-digit code to your email address."
-          wrapText="true" style="-fx-font-size: 13; -fx-font-style: italic; -fx-text-fill: #A0968C;" />
+          wrapText="true" style=" -fx-font-size: 19; -fx-font-style: italic; -fx-text-fill: #A0968C;" />
 
         <VBox spacing="5.0">
           <Label text="VERIFICATION CODE" styleClass="field-label" />
           <TextField fx:id="verifyCode" promptText="0 0 0 0 0 0" alignment="CENTER"
-            style="-fx-font-family: 'Garamond', 'Georgia', serif; -fx-font-size: 28;
+            style="-fx-font-family: 'Garamond', 'Georgia', serif; -fx-font-size: 34;
                    -fx-font-weight: bold; -fx-letter-spacing: 14; -fx-text-fill: #1C1917;" />
         </VBox>
 

@@ -4,19 +4,19 @@
 
 .history-heading {
   -fx-font-family: "Cormorant Garamond", serif;
-  -fx-font-size: 28;
+  -fx-font-size: 34;
   -fx-text-fill: #2D2A24;
   -fx-font-weight: 700;
 }
 
 .history-subtitle {
-  -fx-font-size: 12;
+  -fx-font-size: 18;
   -fx-text-fill: #A8A29E;
   -fx-font-style: italic;
 }
 
 .history-end {
-  -fx-font-size: 10;
+  -fx-font-size: 16;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
   -fx-padding: 16 0 0 32;
@@ -52,13 +52,13 @@
 
 .history-name {
   -fx-font-family: "Cormorant Garamond", serif;
-  -fx-font-size: 17;
+  -fx-font-size: 23;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
 }
 
 .history-status {
-  -fx-font-size: 10;
+  -fx-font-size: 16;
   -fx-font-weight: 700;
   -fx-letter-spacing: 1;
   -fx-padding: 2 10 2 10;
@@ -87,12 +87,12 @@
 }
 
 .history-date {
-  -fx-font-size: 11;
+  -fx-font-size: 17;
   -fx-text-fill: #B0ADA8;
 }
 
 .history-notes {
-  -fx-font-size: 11;
+  -fx-font-size: 17;
   -fx-text-fill: #B0ADA8;
   -fx-font-weight: 600;
 }

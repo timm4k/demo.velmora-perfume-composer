@@ -91,7 +91,7 @@ public class SettingsController {
           dot.setFill(Color.web("#78A0A0"));
 
           Label name = new Label(c.getName());
-          name.setStyle("-fx-font-size: 13; -fx-font-weight: 500;");
+          name.setStyle("-fx-font-size: 19; -fx-font-weight: 500;");
           HBox.setHgrow(name, Priority.ALWAYS);
 
           Label date = new Label(
@@ -99,7 +99,7 @@ public class SettingsController {
                   ? c.getCreatedAt().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
                   : ""
           );
-          date.setStyle("-fx-font-size: 11; -fx-text-fill: #B0ADA8;");
+          date.setStyle("-fx-font-size: 17; -fx-text-fill: #B0ADA8;");
 
           box.getChildren().addAll(dot, name, date);
           setGraphic(box);
@@ -160,8 +160,9 @@ public class SettingsController {
       profileEmail.setText(currentUser.getEmail());
       userSession.setNickname(currentUser.getNickname());
       userSession.setEmail(currentUser.getEmail());
-      userSession.setInitials(currentUser.getNickname().isEmpty()
-          ? "?" : currentUser.getNickname().substring(0, 1).toUpperCase());
+      String nick = currentUser.getNickname();
+      userSession.setInitials(nick != null && !nick.isEmpty()
+          ? nick.substring(0, 1).toUpperCase() : "?");
       profileInitials.setText(userSession.getInitials());
       currentPasswordField.clear();
       newPasswordField.clear();

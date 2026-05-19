@@ -53,7 +53,7 @@ public class HistoryController {
       historyCount.setText("0 sessions");
       historyContainer.getChildren().clear();
       Label empty = new Label("Log in to see your saved compositions");
-      empty.setStyle("-fx-font-size: 13; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
+      empty.setStyle("-fx-font-size: 19; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
       historyContainer.getChildren().add(empty);
       return;
     }
@@ -71,8 +71,8 @@ public class HistoryController {
     historyContainer.getChildren().clear();
     historyCount.setText(compositions.size() + " sessions");
     if (compositions.isEmpty()) {
-      Label empty = new Label("No saved compositions yet. Create one in the Composer!");
-      empty.setStyle("-fx-font-size: 13; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
+      Label empty = new Label("No saved compositions yet. Create one in the Composer");
+      empty.setStyle("-fx-font-size: 19; -fx-text-fill: #B0ADA8; -fx-padding: 40 0 0 0; -fx-font-style: italic;");
       historyContainer.getChildren().add(empty);
       return;
     }
@@ -157,6 +157,7 @@ public class HistoryController {
   private String deriveStatus(Composition comp) {
     if (comp.getDescription() != null && comp.getDescription().contains("EXPERIMENTAL"))
       return "EXPERIMENTAL";
+    if (comp.getCreatedAt() == null || comp.getUpdatedAt() == null) return "DRAFT";
     long days = Duration.between(comp.getCreatedAt(), comp.getUpdatedAt()).toDays();
     if (days <= 1) return "DRAFT";
     if (days <= 7) return "REFINED";
@@ -166,12 +167,21 @@ public class HistoryController {
   private void handleOpen(Composition comp) {
     compositionState.setFormulaName(comp.getName());
     compositionState.setEditCompositionId(comp.getId());
-    compositionState.setCurrentNoteIds(
-        comp.getItems().stream().map(i -> i.getNote().getId()).collect(java.util.stream.Collectors.toList())
-    );
-    compositionState.setCurrentNoteNames(
-        comp.getItems().stream().map(i -> i.getNote().getName()).collect(java.util.stream.Collectors.toList())
-    );
+    var items = comp.getItems();
+    if (items != null) {
+      compositionState.setCurrentNoteIds(
+          items.stream()
+              .filter(i -> i.getNote() != null)
+              .map(i -> i.getNote().getId())
+              .collect(java.util.stream.Collectors.toList())
+      );
+      compositionState.setCurrentNoteNames(
+          items.stream()
+              .filter(i -> i.getNote() != null)
+              .map(i -> i.getNote().getName() != null ? i.getNote().getName() : "")
+              .collect(java.util.stream.Collectors.toList())
+      );
+    }
     viewManager.showMain();
   }
 
@@ -179,7 +189,7 @@ public class HistoryController {
     Task<Void> task = new Task<>() {
       @Override protected Void call() {
         Composition copy = new Composition();
-        copy.setName(comp.getName() + " (copy)");
+        copy.setName((comp.getName() != null ? comp.getName() : "Untitled") + " (copy)");
         copy.setDescription(comp.getDescription());
         copy.setUser(comp.getUser());
         copy.setItems(comp.getItems());

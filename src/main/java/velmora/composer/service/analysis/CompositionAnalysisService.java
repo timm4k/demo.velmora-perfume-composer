@@ -1,0 +1,196 @@
+package velmora.composer.service.analysis;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import velmora.composer.model.Note;
+
+@Component
+@RequiredArgsConstructor
+public class CompositionAnalysisService {
+
+  public AnalysisResult analyze(List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+    List<Note> all = new ArrayList<>();
+    all.addAll(topNotes);
+    all.addAll(heartNotes);
+    all.addAll(baseNotes);
+
+    int total = all.size();
+    if (total == 0) {
+      return AnalysisResult.empty();
+    }
+
+    long topCount = topNotes.size();
+    long heartCount = heartNotes.size();
+    long baseCount = baseNotes.size();
+
+    double topRatio = (double) topCount / total;
+    double heartRatio = (double) heartCount / total;
+    double baseRatio = (double) baseCount / total;
+
+    double avgIntensity = all.stream()
+        .filter(n -> n.getIntensity() != null)
+        .mapToInt(Note::getIntensity)
+        .average()
+        .orElse(5.0);
+
+    long families = all.stream()
+        .map(Note::getCategory)
+        .filter(Objects::nonNull)
+        .distinct()
+        .count();
+
+    double topHours = topNotes.stream()
+        .filter(n -> n.getIntensity() != null)
+        .mapToInt(Note::getIntensity)
+        .average()
+        .orElse(5) * 0.5;
+
+    double heartHours = heartNotes.stream()
+        .filter(n -> n.getIntensity() != null)
+        .mapToInt(Note::getIntensity)
+        .average()
+        .orElse(5) * 1.2;
+
+    double baseHours = baseNotes.stream()
+        .filter(n -> n.getIntensity() != null)
+        .mapToInt(Note::getIntensity)
+        .average()
+        .orElse(5) * 2.0;
+
+    double totalLongevity = topHours * 0.2 + heartHours * 0.35 + baseHours * 0.45;
+
+    int harmony = calcBalance(topRatio, heartRatio, baseRatio);
+    int longevityScore = Math.min((int) (totalLongevity * 15), 100);
+    int complexityScore = Math.min(30 + (int) families * 14 + total * 4, 100);
+    int projectionScore = Math.min((int) avgIntensity * 15, 100);
+    int overall = (int) (harmony * 0.25 + longevityScore * 0.30 + complexityScore * 0.20 + projectionScore * 0.25);
+
+    String sillage = avgIntensity >= 8 ? "Heavy" : avgIntensity >= 6 ? "Strong" : avgIntensity >= 4 ? "Moderate" : "Soft";
+    String estLongevity = fmtLongevity(totalLongevity);
+    String dominantProfile = detectDominantProfile(all);
+    String topInsight = generateTopAnalysis(topNotes);
+    String heartInsight = generateHeartAnalysis(heartNotes);
+    String baseInsight = generateBaseAnalysis(baseNotes);
+
+    long citrus = countByCategory(all, "Citrus");
+    long floral = countByCategory(all, "Floral");
+    long woody = countByCategory(all, "Woody");
+    long earthy = countByCategory(all, "Earthy");
+
+    String topDisp = topHours > 0 ? String.format("%.1fh", topHours) : "—";
+    String heartDisp = heartHours > 0 ? String.format("%.1fh", heartHours) : "—";
+    String baseDisp = baseHours > 0 ? String.format("%.1fh", baseHours) : "—";
+
+    return new AnalysisResult(total, topCount, heartCount, baseCount,
+        avgIntensity, families, topDisp, heartDisp, baseDisp,
+        totalLongevity, estLongevity, harmony, longevityScore,
+        complexityScore, projectionScore, overall, sillage,
+        dominantProfile, topInsight, heartInsight, baseInsight,
+        citrus, floral, woody, earthy, all);
+  }
+
+  private int calcBalance(double topR, double heartR, double baseR) {
+    if (topR == 0 || heartR == 0 || baseR == 0) return 25;
+    double score = 100;
+    score -= Math.abs(topR - 0.30) * 50;
+    score -= Math.abs(heartR - 0.50) * 40;
+    score -= Math.abs(baseR - 0.20) * 50;
+    return Math.max(0, Math.min(100, (int) score));
+  }
+
+  private String detectDominantProfile(List<Note> notes) {
+    Map<String, Long> famCount = notes.stream()
+        .map(n -> n.getCategory() != null ? n.getCategory() : "Other")
+        .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+    String topFam = famCount.entrySet().stream()
+        .max(Map.Entry.comparingByValue())
+        .map(Map.Entry::getKey)
+        .orElse("Balanced");
+
+    long spicy = notes.stream().filter(n -> {
+      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Spicy") || c.equalsIgnoreCase("Woody"));
+    }).count();
+    long fresh = notes.stream().filter(n -> {
+      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Citrus") || c.equalsIgnoreCase("Green") || c.equalsIgnoreCase("Aromatic"));
+    }).count();
+    long sweet = notes.stream().filter(n -> {
+      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Floral") || c.equalsIgnoreCase("Gourmand"));
+    }).count();
+
+    StringBuilder sb = new StringBuilder();
+    if (spicy > fresh && spicy > sweet) sb.append("Smoky ");
+    if (sweet > spicy && sweet > fresh) sb.append("Sweet ");
+    if (fresh > spicy && fresh > sweet) sb.append("Fresh ");
+    sb.append(topFam).append(" Amber");
+    return sb.toString().trim();
+  }
+
+  private String generateTopAnalysis(List<Note> tops) {
+    List<String> parts = new ArrayList<>();
+    for (Note n : tops) {
+      String cat = n.getCategory() != null ? n.getCategory() : "";
+      switch (cat.toLowerCase()) {
+        case "citrus" -> parts.add(n.getName() + " brings bright citrus lift");
+        case "green" -> parts.add(n.getName() + " offers fresh green vibrancy");
+        case "aromatic" -> parts.add(n.getName() + " provides herbal aromatic clarity");
+        case "spicy" -> parts.add(n.getName() + " adds spicy top notes");
+        case "floral" -> parts.add(n.getName() + " opens with floral delicacy");
+        case "fruity" -> parts.add(n.getName() + " contributes fruity sweetness");
+        default -> parts.add(n.getName() + " opens the composition");
+      }
+    }
+    return String.join("; ", parts) + ".";
+  }
+
+  private String generateHeartAnalysis(List<Note> hearts) {
+    List<String> parts = new ArrayList<>();
+    for (Note n : hearts) {
+      String cat = n.getCategory() != null ? n.getCategory() : "";
+      switch (cat.toLowerCase()) {
+        case "floral" -> parts.add(n.getName() + " forms a floral heart");
+        case "spicy" -> parts.add(n.getName() + " introduces warmth and spice");
+        case "woody" -> parts.add(n.getName() + " adds a woody transition");
+        case "gourmand" -> parts.add(n.getName() + " brings gourmand richness");
+        case "oriental" -> parts.add(n.getName() + " deepens with oriental warmth");
+        default -> parts.add(n.getName() + " anchors the heart");
+      }
+    }
+    return String.join("; ", parts) + ".";
+  }
+
+  private String generateBaseAnalysis(List<Note> bases) {
+    List<String> parts = new ArrayList<>();
+    for (Note n : bases) {
+      String cat = n.getCategory() != null ? n.getCategory() : "";
+      switch (cat.toLowerCase()) {
+        case "woody" -> parts.add(n.getName() + " provides long woody fixation");
+        case "earthy" -> parts.add(n.getName() + " grounds with earthy depth");
+        case "musk" -> parts.add(n.getName() + " adds soft musky persistence");
+        case "amber" -> parts.add(n.getName() + " creates warm amber trail");
+        case "gourmand" -> parts.add(n.getName() + " leaves sweet gourmand imprint");
+        default -> parts.add(n.getName() + " extends the dry-down");
+      }
+    }
+    return String.join("; ", parts) + ".";
+  }
+
+  private long countByCategory(List<Note> notes, String category) {
+    return notes.stream()
+        .filter(n -> category.equalsIgnoreCase(n.getCategory()))
+        .count();
+  }
+
+  private String fmtLongevity(double value) {
+    if (value <= 2) return "1-2h";
+    if (value <= 4) return "2-4h";
+    if (value <= 6) return "4-6h";
+    if (value <= 8) return "6-8h";
+    if (value <= 12) return "8-12h";
+    return "12h+";
+  }
+}

@@ -24,7 +24,7 @@
         <Label text="Raw Materials" styleClass="composer-heading" />
         <HBox alignment="CENTER_RIGHT">
           <Label fx:id="materialCount" text="0 materials"
-                 style="-fx-font-size: 10; -fx-text-fill: #B0ADA8; -fx-font-style: italic;" />
+                 style=" -fx-font-size: 16; -fx-text-fill: #B0ADA8; -fx-font-style: italic;" />
         </HBox>
       </VBox>
 
@@ -39,14 +39,14 @@
                   style="-fx-background-color: transparent;"
                   styleClass="thin-scroll">
         <ListView fx:id="materialsList" VBox.vgrow="ALWAYS"
-                  style="-fx-background-color: transparent; -fx-padding: 0;"
+                  style="-fx-background-color: transparent;"
                   styleClass="thin-scroll" />
       </ScrollPane>
 
       <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="selected-bar" minHeight="40.0" prefHeight="40.0" maxHeight="40.0">
         <Label text="SELECTED" styleClass="section-sub" />
         <Label fx:id="selectedCount" text="0"
-               style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
+               style=" -fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
       </HBox>
     </VBox>
   </AnchorPane>
@@ -70,56 +70,62 @@
                  promptText="Untitled Formula"
                  styleClass="formula-field" />
       <Label fx:id="formulaStatus" text="" styleClass="status-badge" />
+      <Button fx:id="closeDraftBtn" text="✕" onAction="#handleCloseDraft"
+              visible="false" managed="false" styleClass="btn-ghost-sm" />
       <Region HBox.hgrow="ALWAYS" />
       <Button text="SAVE" onAction="#handleSave" styleClass="btn-save" />
       <Button text="EXPORT" onAction="#handleExport" styleClass="btn-ghost-lux" />
     </HBox>
 
-    <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="62.0" AnchorPane.bottomAnchor="230.0"
-          alignment="CENTER" spacing="14.0" style="-fx-padding: 16 40;">
+    <ScrollPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="62.0" AnchorPane.bottomAnchor="230.0"
+                fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER"
+                style="-fx-background-color: transparent; -fx-padding: 0; -fx-background-insets: 0;"
+                styleClass="thin-scroll">
+      <VBox spacing="14.0" style="-fx-padding: 60 0 40 0;" alignment="TOP_CENTER" fillWidth="false">
 
-      <VBox styleClass="zone-floating, zone-floating-top" fx:id="topZone"
-            maxWidth="380.0" minHeight="60.0">
-        <HBox alignment="CENTER_LEFT" spacing="8.0">
-          <Circle radius="5.0" style="-fx-fill: rgba(226,169,152,0.8);" />
-          <Label text="TOP NOTES" styleClass="zone-label" />
-          <Region HBox.hgrow="ALWAYS" />
-          <Label fx:id="topCount" text="0" styleClass="zone-count" />
-        </HBox>
-        <FlowPane fx:id="topChips" hgap="6" vgap="6" style="-fx-padding: 6 0 0 0;" />
-        <Label text="Drag ingredients here" styleClass="zone-placeholder" />
-      </VBox>
+        <VBox styleClass="zone-floating, zone-floating-top" fx:id="topZone">
+          <HBox alignment="CENTER_LEFT" spacing="8.0">
+            <Circle radius="5.0" style="-fx-fill: rgba(226,169,152,0.8);" />
+            <Label text="TOP NOTES" styleClass="zone-label" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="topCount" text="0" styleClass="zone-count" />
+          </HBox>
+          <TilePane fx:id="topChips" orientation="HORIZONTAL"
+                    prefColumns="4" hgap="6" vgap="6" />
+          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+        </VBox>
 
-      <VBox styleClass="zone-floating, zone-floating-heart" fx:id="heartZone"
-            maxWidth="380.0" minHeight="60.0">
-        <HBox alignment="CENTER_LEFT" spacing="8.0">
-          <Circle radius="5.0" style="-fx-fill: rgba(164,160,197,0.8);" />
-          <Label text="HEART NOTES" styleClass="zone-label" />
-          <Region HBox.hgrow="ALWAYS" />
-          <Label fx:id="heartCount" text="0" styleClass="zone-count" />
-        </HBox>
-        <FlowPane fx:id="heartChips" hgap="6" vgap="6" style="-fx-padding: 6 0 0 0;" />
-        <Label text="Drag ingredients here" styleClass="zone-placeholder" />
-      </VBox>
+        <VBox styleClass="zone-floating, zone-floating-heart" fx:id="heartZone">
+          <HBox alignment="CENTER_LEFT" spacing="8.0">
+            <Circle radius="5.0" style="-fx-fill: rgba(164,160,197,0.8);" />
+            <Label text="HEART NOTES" styleClass="zone-label" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="heartCount" text="0" styleClass="zone-count" />
+          </HBox>
+          <TilePane fx:id="heartChips" orientation="HORIZONTAL"
+                    prefColumns="4" hgap="6" vgap="6" />
+          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+        </VBox>
 
-      <VBox styleClass="zone-floating, zone-floating-base" fx:id="baseZone"
-            maxWidth="380.0" minHeight="60.0">
-        <HBox alignment="CENTER_LEFT" spacing="8.0">
-          <Circle radius="5.0" style="-fx-fill: rgba(120,160,160,0.8);" />
-          <Label text="BASE NOTES" styleClass="zone-label" />
-          <Region HBox.hgrow="ALWAYS" />
-          <Label fx:id="baseCount" text="0" styleClass="zone-count" />
-        </HBox>
-        <FlowPane fx:id="baseChips" hgap="6" vgap="6" style="-fx-padding: 6 0 0 0;" />
-        <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+        <VBox styleClass="zone-floating, zone-floating-base" fx:id="baseZone">
+          <HBox alignment="CENTER_LEFT" spacing="8.0">
+            <Circle radius="5.0" style="-fx-fill: rgba(120,160,160,0.8);" />
+            <Label text="BASE NOTES" styleClass="zone-label" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="baseCount" text="0" styleClass="zone-count" />
+          </HBox>
+          <TilePane fx:id="baseChips" orientation="HORIZONTAL"
+                    prefColumns="4" hgap="6" vgap="6" />
+          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+        </VBox>
       </VBox>
-    </VBox>
+    </ScrollPane>
 
     <VBox AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
           AnchorPane.bottomAnchor="0.0"
           prefHeight="270.0" styleClass="insight-panel"
-          spacing="6.0">
+          spacing="6.0" style="-fx-padding: 28 0 0 16;">
       <HBox alignment="CENTER_LEFT" spacing="8.0">
         <Circle radius="3.0" style="-fx-fill: rgba(164,160,197,0.6);" />
         <Label text="COMPOSITION INSIGHTS" styleClass="section-sub" />
@@ -131,7 +137,7 @@
         <VBox fx:id="insightsContainer" spacing="6.0"
               style="-fx-padding: 4 0 4 0;">
           <Label text="Add at least 2 notes to see analysis"
-                 style="-fx-font-size: 11; -fx-font-style: italic; -fx-text-fill: #B0ADA8;" />
+                 style=" -fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;" />
         </VBox>
       </ScrollPane>
     </VBox>
@@ -163,7 +169,7 @@
             </HBox>
             <VBox spacing="6.0">
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Harmony" styleClass="perf-label" prefWidth="70" />
+                <Label text="Harmony" styleClass="perf-label" prefWidth="90" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="harmonyBar" width="0" height="4.0" styleClass="perf-fill-teal" />
@@ -171,7 +177,7 @@
                 <Label fx:id="harmonyScore" text="—" styleClass="perf-value" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Longevity" styleClass="perf-label" prefWidth="70" />
+                <Label text="Longevity" styleClass="perf-label" prefWidth="90" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="longevityBar" width="0" height="4.0" styleClass="perf-fill-peach" />
@@ -179,7 +185,7 @@
                 <Label fx:id="longevityScore" text="—" styleClass="perf-value" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Complexity" styleClass="perf-label" prefWidth="70" />
+                <Label text="Complexity" styleClass="perf-label" prefWidth="110" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="complexityBar" width="0" height="4.0" styleClass="perf-fill-purple" />
@@ -187,7 +193,7 @@
                 <Label fx:id="complexityScore" text="—" styleClass="perf-value" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Projection" styleClass="perf-label" prefWidth="70" />
+                <Label text="Projection" styleClass="perf-label" prefWidth="90" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="projectionBar" width="0" height="4.0" styleClass="perf-fill-teal" />
@@ -205,39 +211,39 @@
             <VBox spacing="6.0">
               <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Circle radius="3.0" style="-fx-fill: rgba(226,169,152,0.8);" />
-                <Label text="Citrus" styleClass="fam-label" prefWidth="50" />
+                <Label text="Citrus" styleClass="fam-label" prefWidth="70" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="citrusBar" width="0" height="4.0" fill="rgba(226,169,152,0.7)" styleClass="fam-fill" />
                 </StackPane>
-                <Label fx:id="citrusPct" text="0%" styleClass="fam-pct" prefWidth="32" />
+                <Label fx:id="citrusPct" text="0%" styleClass="fam-pct" prefWidth="50" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Circle radius="3.0" style="-fx-fill: rgba(164,160,197,0.8);" />
-                <Label text="Floral" styleClass="fam-label" prefWidth="50" />
+                <Label text="Floral" styleClass="fam-label" prefWidth="70" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="floralBar" width="0" height="4.0" fill="rgba(164,160,197,0.7)" styleClass="fam-fill" />
                 </StackPane>
-                <Label fx:id="floralPct" text="0%" styleClass="fam-pct" prefWidth="32" />
+                <Label fx:id="floralPct" text="0%" styleClass="fam-pct" prefWidth="50" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Circle radius="3.0" style="-fx-fill: rgba(120,160,160,0.8);" />
-                <Label text="Woody" styleClass="fam-label" prefWidth="50" />
+                <Label text="Woody" styleClass="fam-label" prefWidth="70" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="woodyBar" width="0" height="4.0" fill="rgba(120,160,160,0.7)" styleClass="fam-fill" />
                 </StackPane>
-                <Label fx:id="woodyPct" text="0%" styleClass="fam-pct" prefWidth="32" />
+                <Label fx:id="woodyPct" text="0%" styleClass="fam-pct" prefWidth="50" />
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Circle radius="3.0" style="-fx-fill: rgba(90,158,143,0.8);" />
-                <Label text="Earthy" styleClass="fam-label" prefWidth="50" />
+                <Label text="Earthy" styleClass="fam-label" prefWidth="70" />
                 <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
                   <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
                   <Rectangle fx:id="earthyBar" width="0" height="4.0" fill="rgba(90,158,143,0.7)" styleClass="fam-fill" />
                 </StackPane>
-                <Label fx:id="earthyPct" text="0%" styleClass="fam-pct" prefWidth="32" />
+                <Label fx:id="earthyPct" text="0%" styleClass="fam-pct" prefWidth="50" />
               </HBox>
             </VBox>
           </VBox>
@@ -269,7 +275,7 @@
                 </VBox>
               </HBox>
               <Rectangle width="Infinity" height="1.0" style="-fx-fill: rgba(221,217,209,0.3);" />
-              <Label text="PHASE LONGEVITY" style="-fx-font-size: 9; -fx-text-fill: #A8A29E; -fx-letter-spacing: 1; -fx-font-weight: 600;" />
+              <Label text="PHASE LONGEVITY" style=" -fx-font-size: 15; -fx-text-fill: #A8A29E; -fx-letter-spacing: 1; -fx-font-weight: 600;" />
               <HBox spacing="6.0">
                 <VBox HBox.hgrow="ALWAYS" styleClass="mcard-sm" alignment="CENTER">
                   <Label fx:id="topDuration" text="—" styleClass="mcard-value-sm" />

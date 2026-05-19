@@ -24,7 +24,7 @@ public class UserDto {
         .id(user.getId())
         .nickname(user.getNickname())
         .email(user.getEmail())
-        .role(user.getRole().name())
+        .role(user.getRole() != null ? user.getRole().name() : "USER")
         .createdAt(user.getCreatedAt())
         .build();
   }

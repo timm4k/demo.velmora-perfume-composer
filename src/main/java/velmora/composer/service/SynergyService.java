@@ -1,5 +1,6 @@
 package velmora.composer.service;
 
+import jakarta.annotation.PostConstruct;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,25 @@ public class SynergyService {
 
   private final FamilySynergyRepository synergyRepository;
 
+  private final Map<String, Map<String, Integer>> synergyMap = new HashMap<>();
+
+  @PostConstruct
+  void preload() {
+    var rows = synergyRepository.findAll();
+    for (var row : rows) {
+      String a = row.getFamilyA().toLowerCase();
+      String b = row.getFamilyB().toLowerCase();
+      int score = row.getScore() != null ? row.getScore() : 0;
+      synergyMap.computeIfAbsent(a, k -> new HashMap<>()).put(b, score);
+      synergyMap.computeIfAbsent(b, k -> new HashMap<>()).put(a, score);
+    }
+  }
+
+  public void reload() {
+    synergyMap.clear();
+    preload();
+  }
+
   public SynergyResult calculate(List<Note> notes) {
     if (notes == null || notes.size() < 2) {
       return new SynergyResult(0, List.of(), List.of(), List.of());
@@ -23,7 +43,6 @@ public class SynergyService {
     double rawSum = 0;
     int pairCount = 0;
 
-    Map<String, Map<String, Integer>> synergyCache = new HashMap<>();
     Map<String, Integer> familyCount = countFamilies(notes);
 
     for (int i = 0; i < notes.size(); i++) {
@@ -36,10 +55,15 @@ public class SynergyService {
         String fb = b.getCategory();
         if (fa.equalsIgnoreCase(fb)) continue;
 
-        int score = getSynergy(fa, fb, synergyCache);
+        int score = getSynergy(fa, fb);
         pairCount++;
 
-        rawSum += (score + 1.0) / 3.0;
+        rawSum += switch (score) {
+          case 2 -> 1.0;
+          case 1 -> 0.75;
+          case 0 -> 0.40;
+          default -> 0.0;
+        };
 
         NoteInsight ins = new NoteInsight(
             a.getName(), fa, b.getName(), fb, score, explain(a, b, score)
@@ -56,18 +80,28 @@ public class SynergyService {
 
     int baseScore = (int) Math.round(rawSum / pairCount * 100);
     int diversityBonus = calcDiversityBonus(familyCount, notes.size());
-    int finalScore = Math.min(100, baseScore + diversityBonus);
+    int filledBonus = Math.min(25, pairCount);
+    int finalScore = Math.min(100, baseScore + diversityBonus + filledBonus);
 
     checkFamilyBalance(familyCount, notes.size(), warnings);
 
     return new SynergyResult(finalScore, good, conflicts, warnings);
   }
 
+  private int getSynergy(String fa, String fb) {
+    Map<String, Integer> inner = synergyMap.get(fa.toLowerCase());
+    if (inner != null) {
+      Integer score = inner.get(fb.toLowerCase());
+      if (score != null) return score;
+    }
+    return 0;
+  }
+
   private int calcDiversityBonus(Map<String, Integer> familyCount, int total) {
     int families = familyCount.size();
     if (total < 3) return 0;
-    if (families >= 5) return 10;
-    if (families >= 3) return 5;
+    if (families >= 5) return 15;
+    if (families >= 3) return 10;
     return 0;
   }
 
@@ -116,26 +150,8 @@ public class SynergyService {
     familyCount.entrySet().stream()
         .filter(e -> e.getValue() > total / 2)
         .findFirst().ifPresent(dom ->
-            warnings.add("⚠ " + dom.getKey() + " dominates (" + dom.getValue() + "/" + total + " notes) — consider diversifying")
+            warnings.add("\u26A0 " + dom.getKey() + " dominates (" + dom.getValue() + "/" + total + " notes) — consider diversifying")
         );
-  }
-
-  private int getSynergy(String fa, String fb, Map<String, Map<String, Integer>> cache) {
-    String ka = fa.toLowerCase(), kb = fb.toLowerCase();
-    if (cache.containsKey(ka) && cache.get(ka).containsKey(kb)) return cache.get(ka).get(kb);
-    if (cache.containsKey(kb) && cache.get(kb).containsKey(ka)) return cache.get(kb).get(ka);
-
-    int score = 0;
-    for (var row : synergyRepository.findByFamilyAOrFamilyB(fa, fb)) {
-      if ((row.getFamilyA().equalsIgnoreCase(fa) && row.getFamilyB().equalsIgnoreCase(fb))
-          || (row.getFamilyA().equalsIgnoreCase(fb) && row.getFamilyB().equalsIgnoreCase(fa))) {
-        score = row.getScore() != null ? row.getScore() : 0;
-        break;
-      }
-    }
-    cache.computeIfAbsent(ka, k -> new HashMap<>()).put(kb, score);
-    cache.computeIfAbsent(kb, k -> new HashMap<>()).put(ka, score);
-    return score;
   }
 
   public record NoteInsight(

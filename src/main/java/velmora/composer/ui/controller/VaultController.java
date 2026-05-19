@@ -141,13 +141,17 @@ public class VaultController {
   }
 
   private void applyFilters() {
-    String query = searchField.getText().toLowerCase().trim();
+    String raw = searchField.getText();
+    String query = raw != null ? raw.toLowerCase().trim() : "";
     int minIntensity = (int) intensitySlider.getValue();
     String category = categoryFilter.getValue();
 
     filteredNotes.setPredicate(note -> {
-      if (!query.isEmpty() && !note.getName().toLowerCase().contains(query)) {
-        return false;
+      if (!query.isEmpty()) {
+        String name = note.getName();
+        if (name == null || !name.toLowerCase().contains(query)) {
+          return false;
+        }
       }
       if (activeFilter != null && note.getType() != activeFilter) {
         return false;
@@ -194,7 +198,7 @@ public class VaultController {
     imageArea.getStyleClass().add(typeClass);
 
     Label emoji = new Label(getNoteEmoji(note));
-    emoji.setStyle("-fx-font-size: 40; -fx-text-fill: " + getNoteColor(note) + ";");
+    emoji.setStyle("-fx-font-size: 46; -fx-text-fill: " + getNoteColor(note) + ";");
 
     if (note.getImagePath() != null && !note.getImagePath().isBlank()) {
       try {
@@ -242,7 +246,7 @@ public class VaultController {
     body.getStyleClass().add("card-body");
     VBox.setVgrow(body, Priority.ALWAYS);
 
-    Label name = new Label(note.getName());
+    Label name = new Label(note.getName() != null ? note.getName() : "");
     name.getStyleClass().add("card-name");
 
     Region bodySpacer1 = new Region();

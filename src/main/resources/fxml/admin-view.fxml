@@ -28,7 +28,7 @@
           <Label text="ALL NOTES" styleClass="text-base font-bold text-secondary tracking-2" />
           <Label fx:id="notesCount" text="0"
             style="-fx-background-color: rgba(164,160,197,0.2); -fx-background-radius: 4;
-                   -fx-padding: 2 10; -fx-text-fill: #A4A0C5; -fx-font-size: 12; -fx-font-weight: bold;" />
+                   -fx-padding: 2 10; -fx-text-fill: #A4A0C5; -fx-font-size: 18; -fx-font-weight: bold;" />
           <Region HBox.hgrow="ALWAYS" />
           <Button text="+ ADD NOTE" onAction="#handleAdd" styleClass="btn btn-teal" />
           <Button text="EDIT" onAction="#handleEdit" styleClass="btn btn-primary" />

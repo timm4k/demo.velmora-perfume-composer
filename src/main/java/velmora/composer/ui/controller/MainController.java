@@ -75,10 +75,13 @@ public class MainController {
 
   private void setupSearch() {
     searchNotes.textProperty().addListener((obs, old, val) -> {
-      String query = val.toLowerCase().trim();
-      filteredNotes.setPredicate(n ->
-          query.isEmpty() || n.getName().toLowerCase().contains(query)
-      );
+      String raw = val != null ? val : "";
+      String query = raw.toLowerCase().trim();
+      filteredNotes.setPredicate(n -> {
+        if (query.isEmpty()) return true;
+        String name = n.getName();
+        return name != null && name.toLowerCase().contains(query);
+      });
     });
   }
 
@@ -94,7 +97,9 @@ public class MainController {
   }
 
   private void toggleNoteInPyramid(Note note) {
-    switch (note.getType()) {
+    NoteType type = note.getType();
+    if (type == null) return;
+    switch (type) {
       case TOP -> toggleInList(note, topNotes);
       case HEART -> toggleInList(note, heartNotes);
       case BASE -> toggleInList(note, baseNotes);
@@ -112,7 +117,9 @@ public class MainController {
   }
 
   private void removeFromPyramid(Note note) {
-    switch (note.getType()) {
+    NoteType type = note.getType();
+    if (type == null) return;
+    switch (type) {
       case TOP -> topNotes.remove(note);
       case HEART -> heartNotes.remove(note);
       case BASE -> baseNotes.remove(note);
@@ -160,22 +167,23 @@ public class MainController {
     chip.setAlignment(Pos.CENTER_LEFT);
     chip.getStyleClass().add("note-chip");
 
-    String typeClass = switch (note.getType()) {
+    NoteType nt = note.getType();
+    String typeClass = nt != null ? switch (nt) {
       case TOP -> "top-note";
       case HEART -> "heart-note";
       case BASE -> "base-note";
-    };
+    } : "top-note";
     chip.getStyleClass().add(typeClass);
 
     Rectangle dot = new Rectangle(6, 6, parseColor(note.getColorCode()));
     dot.setArcWidth(2);
     dot.setArcHeight(2);
 
-    Label name = new Label(note.getName());
-    name.setStyle("-fx-font-size: 12; -fx-font-weight: 600;");
+    Label name = new Label(note.getName() != null ? note.getName() : "");
+    name.setStyle("-fx-font-size: 18; -fx-font-weight: 600;");
 
     Label pct = new Label();
-    pct.setStyle("-fx-font-size: 10; -fx-text-fill: #888;");
+    pct.setStyle("-fx-font-size: 14; -fx-text-fill: #888;");
 
     chip.getChildren().addAll(dot, name);
     chip.setPickOnBounds(true);
@@ -226,20 +234,20 @@ public class MainController {
     compatibilityScore.setText(String.valueOf(score));
 
     if (topNotes.isEmpty()) {
-      sb.append("\n\u26A0 Missing top notes.\nScent may feel too heavy.");
-      setStatus("warning", "Missing Top Notes");
+      sb.append("\n\u26A0 Missing top notes\nScent may feel too heavy");
+      setStatus("warning", "Missing Top notes");
     } else if (baseNotes.isEmpty()) {
-      sb.append("\n\u26A0 No base notes.\nFragrance will lack longevity.");
-      setStatus("warning", "Missing Base Notes");
+      sb.append("\n\u26A0 No base notes.\nFragrance will lack longevity");
+      setStatus("warning", "Missing Base notes");
     } else if (heartNotes.isEmpty()) {
-      sb.append("\n\u26A0 No heart notes.\nThe fragrance has no core.");
-      setStatus("warning", "Missing Heart Notes");
+      sb.append("\n\u26A0 No heart notes.\nThe fragrance has no core");
+      setStatus("warning", "Missing heart notes");
     } else if (score >= 70) {
-      sb.append("\n\u2714 Good balance across all layers.");
-      setStatus("good", "Balanced Composition");
+      sb.append("\n\u2714 Good balance across all layers");
+      setStatus("good", "Balanced composition");
     } else {
-      sb.append("\n\u2022 Composition registered.\nConsider more variety.");
-      setStatus("good", "Composition Ready");
+      sb.append("\n\u2022 Composition registered\nConsider more variety");
+      setStatus("good", "Composition ready");
     }
 
     analysisLabel.setText(sb.toString());
@@ -277,7 +285,7 @@ public class MainController {
   public void handleSave() {
     String name = compositionName.getText().trim();
     if (name.isEmpty()) {
-      analysisLabel.setText("Please name your composition first");
+      analysisLabel.setText("Name your composition first");
       return;
     }
 
@@ -348,11 +356,11 @@ public class MainController {
         dot.setArcHeight(2);
         dot.setFill(parseColor(note.getColorCode()));
 
-        Label nameLabel = new Label(note.getName());
-        nameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 500;");
+        Label nameLabel = new Label(note.getName() != null ? note.getName() : "");
+        nameLabel.setStyle("-fx-font-size: 19; -fx-font-weight: 500;");
 
-        Label typeLabel = new Label(note.getType().name());
-        typeLabel.setStyle("-fx-font-size: 9; -fx-text-fill: #B0ADA8; -fx-font-weight: bold;");
+        Label typeLabel = new Label(note.getType() != null ? note.getType().name() : "");
+        typeLabel.setStyle("-fx-font-size: 15; -fx-text-fill: #B0ADA8; -fx-font-weight: bold;");
 
         box.getChildren().addAll(dot, nameLabel, typeLabel);
         setGraphic(box);

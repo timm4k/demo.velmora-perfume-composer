@@ -1,7 +1,5 @@
 package velmora.composer.ui.controller;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,13 +30,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import velmora.composer.model.Composition;
-import velmora.composer.model.CompositionItem;
-import velmora.composer.model.Note;
 import velmora.composer.model.Perfume;
-import velmora.composer.repository.CompositionRepository;
-import velmora.composer.repository.NoteRepository;
 import velmora.composer.repository.PerfumeRepository;
+import velmora.composer.service.analysis.SimilarityService;
 import velmora.composer.state.CompositionState;
 import velmora.composer.ui.ViewManager;
 
@@ -47,10 +41,9 @@ import velmora.composer.ui.ViewManager;
 public class CatalogController {
 
   private final PerfumeRepository perfumeRepository;
-  private final CompositionRepository compositionRepository;
-  private final NoteRepository noteRepository;
   private final CompositionState compositionState;
   private final ViewManager viewManager;
+  private final SimilarityService similarityService;
 
   @FXML private FlowPane catalogGrid;
   @FXML private Label catalogCount;
@@ -119,13 +112,16 @@ public class CatalogController {
     String q = searchField.getText();
     if (q == null || q.isBlank()) return true;
     String lq = q.toLowerCase();
-    return p.getName().toLowerCase().contains(lq)
-        || p.getBrand().toLowerCase().contains(lq)
-        || (p.getOlfactoryFamily() != null && p.getOlfactoryFamily().toLowerCase().contains(lq))
-        || (p.getSeason() != null && p.getSeason().toLowerCase().contains(lq))
-        || (p.getTopNotes() != null && p.getTopNotes().toLowerCase().contains(lq))
-        || (p.getHeartNotes() != null && p.getHeartNotes().toLowerCase().contains(lq))
-        || (p.getBaseNotes() != null && p.getBaseNotes().toLowerCase().contains(lq));
+    String name = p.getName();
+    if (name != null && name.toLowerCase().contains(lq)) return true;
+    String brand = p.getBrand();
+    if (brand != null && brand.toLowerCase().contains(lq)) return true;
+    if (p.getOlfactoryFamily() != null && p.getOlfactoryFamily().toLowerCase().contains(lq)) return true;
+    if (p.getSeason() != null && p.getSeason().toLowerCase().contains(lq)) return true;
+    if (p.getTopNotes() != null && p.getTopNotes().toLowerCase().contains(lq)) return true;
+    if (p.getHeartNotes() != null && p.getHeartNotes().toLowerCase().contains(lq)) return true;
+    if (p.getBaseNotes() != null && p.getBaseNotes().toLowerCase().contains(lq)) return true;
+    return false;
   }
 
   private boolean matchesBrand(Perfume p) {
@@ -169,12 +165,13 @@ public class CatalogController {
     }
 
     if (imageArea.getChildren().isEmpty()) {
-      Label placeholder = new Label(p.getName().substring(0, 1).toUpperCase());
+      String initial = p.getName() != null ? p.getName().substring(0, 1).toUpperCase() : "?";
+      Label placeholder = new Label(initial);
       placeholder.getStyleClass().add("perfume-card-placeholder");
       imageArea.getChildren().add(placeholder);
     }
 
-    Label brandBadge = new Label(p.getBrand());
+    Label brandBadge = new Label(p.getBrand() != null ? p.getBrand() : "");
     brandBadge.getStyleClass().add("perfume-card-brand-badge");
     StackPane.setAlignment(brandBadge, Pos.TOP_LEFT);
     StackPane.setMargin(brandBadge, new Insets(6));
@@ -208,8 +205,6 @@ public class CatalogController {
     return card;
   }
 
-  // ── Modal ──
-
   private void showModal(Perfume p) {
     modalContent.getChildren().clear();
     modalContent.getStyleClass().add("modal-glass");
@@ -242,12 +237,12 @@ public class CatalogController {
       } catch (Exception ignored) {}
     }
     if (imgArea.getChildren().isEmpty()) {
-      Label ph = new Label(p.getName().substring(0, 1).toUpperCase());
+      String init = p.getName() != null ? p.getName().substring(0, 1).toUpperCase() : "?";
+      Label ph = new Label(init);
       ph.getStyleClass().add("modal-image-placeholder");
       imgArea.getChildren().add(ph);
     }
 
-    // ── Olfactory Pyramid from DB columns V11 ──
     VBox pyramidBox = new VBox(8);
     pyramidBox.getStyleClass().add("modal-pyramid");
     Label pyrTitle = new Label("OLFACTORY PYRAMID");
@@ -266,19 +261,17 @@ public class CatalogController {
       if (p.getBaseNotes() != null && !p.getBaseNotes().isBlank())
         pyramidBox.getChildren().add(createNoteRow("BASE", p.getBaseNotes(), "#78A0A0"));
     } else {
-      // Fallback: load from V5 composition data
-      String[] compNotes = loadCompositionNotes(p.getId());
+      String[] compNotes = similarityService.loadCompositionNotes(p.getId());
       if (compNotes[0] != null) pyramidBox.getChildren().add(createNoteRow("TOP", compNotes[0], "#E2A998"));
       if (compNotes[1] != null) pyramidBox.getChildren().add(createNoteRow("HEART", compNotes[1], "#A4A0C5"));
       if (compNotes[2] != null) pyramidBox.getChildren().add(createNoteRow("BASE", compNotes[2], "#78A0A0"));
       if (compNotes[0] == null && compNotes[1] == null && compNotes[2] == null) {
         Label noData = new Label("No pyramid data available");
-        noData.setStyle("-fx-font-size: 11; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
+        noData.setStyle("-fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
         pyramidBox.getChildren().add(noData);
       }
     }
 
-    // ── Metadata chips ──
     HBox metaRow = new HBox(16);
     metaRow.setAlignment(Pos.CENTER_LEFT);
     metaRow.getStyleClass().add("modal-meta");
@@ -288,7 +281,6 @@ public class CatalogController {
     if (p.getGenderProfile() != null)  metaRow.getChildren().add(createMetaChip("Gender", capitalize(p.getGenderProfile())));
     if (p.getPrice() != null)         metaRow.getChildren().add(createMetaChip("Price", "$" + String.format("%.0f", p.getPrice())));
 
-    // ── Rich description ──
     StringBuilder descText = new StringBuilder();
     if (p.getDescription() != null && !p.getDescription().isBlank()) {
       descText.append(p.getDescription());
@@ -358,86 +350,26 @@ public class CatalogController {
     return chip;
   }
 
-  // ── Load composition notes from V5 data ──
-
-  private String[] loadCompositionNotes(Long perfumeId) {
-    String[] result = new String[]{null, null, null};
-    try {
-      java.util.Optional<Composition> compOpt = compositionRepository.findByPerfumeId(perfumeId);
-      if (compOpt.isPresent()) {
-        Composition comp = compOpt.get();
-        List<CompositionItem> items = comp.getItems();
-        if (items != null) {
-          StringBuilder top = new StringBuilder();
-          StringBuilder heart = new StringBuilder();
-          StringBuilder base = new StringBuilder();
-          for (CompositionItem item : items) {
-            noteRepository.findById(item.getNoteId()).ifPresent(note -> {
-              String name = note.getName();
-              switch (note.getType()) {
-                case TOP -> appendWithComma(top, name);
-                case HEART -> appendWithComma(heart, name);
-                case BASE -> appendWithComma(base, name);
-              }
-            });
-          }
-          if (top.length() > 0) result[0] = top.toString();
-          if (heart.length() > 0) result[1] = heart.toString();
-          if (base.length() > 0) result[2] = base.toString();
-        }
-      }
-    } catch (Exception e) {
-      System.err.println("[CATALOG] Failed to load composition for perfume " + perfumeId + ": " + e.getMessage());
-    }
-    return result;
-  }
-
-  private void appendWithComma(StringBuilder sb, String text) {
-    if (sb.length() > 0) sb.append(", ");
-    sb.append(text);
-  }
-
-  // ── Similarity Matching ──
-
   private void findSimilar(Perfume p) {
     Set<String> composerNotes = new HashSet<>(compositionState.getCurrentNoteNames());
     if (composerNotes.isEmpty()) {
       Label empty = new Label("Add notes to your composition first to compare.");
       empty.getStyleClass().add("modal-similar-result");
-      empty.setStyle("-fx-padding: 8 0 0 0; -fx-font-size: 11; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
+      empty.setStyle("-fx-padding: 8 0 0 0; -fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
       modalContent.getChildren().add(empty);
       return;
     }
 
-    Set<String> perfumeNotes = new HashSet<>();
-    String[] compNotes = loadCompositionNotes(p.getId());
-    boolean hasCompNotes = compNotes[0] != null || compNotes[1] != null || compNotes[2] != null;
-
-    if (hasCompNotes) {
-      for (String notes : compNotes) {
-        if (notes != null) perfumeNotes.addAll(splitNotes(notes));
-      }
-    } else {
-      if (p.getTopNotes() != null) perfumeNotes.addAll(splitNotes(p.getTopNotes()));
-      if (p.getHeartNotes() != null) perfumeNotes.addAll(splitNotes(p.getHeartNotes()));
-      if (p.getBaseNotes() != null) perfumeNotes.addAll(splitNotes(p.getBaseNotes()));
-    }
-
+    Set<String> perfumeNotes = similarityService.collectPerfumeNotes(p);
     if (perfumeNotes.isEmpty()) {
       Label empty = new Label("No note data available for this perfume.");
       empty.getStyleClass().add("modal-similar-result");
-      empty.setStyle("-fx-padding: 8 0 0 0; -fx-font-size: 11; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
+      empty.setStyle("-fx-padding: 8 0 0 0; -fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
       modalContent.getChildren().add(empty);
       return;
     }
 
-    Set<String> intersection = new HashSet<>(composerNotes);
-    intersection.retainAll(perfumeNotes);
-
-    Set<String> union = new HashSet<>(composerNotes);
-    union.addAll(perfumeNotes);
-
-    int matchPct = union.isEmpty() ? 0 : (int) ((double) intersection.size() / union.size() * 100);
+    int matchPct = similarityService.calculateMatchPercentage(composerNotes, perfumeNotes);
 
     HBox result = new HBox(12);
     result.setAlignment(Pos.CENTER_LEFT);
@@ -445,23 +377,15 @@ public class CatalogController {
     result.setStyle("-fx-padding: 8 0 0 0;");
 
     Label pctLabel = new Label(matchPct + "%");
-    pctLabel.setStyle("-fx-font-size: 24; -fx-font-weight: 700; -fx-font-family: 'Cormorant Garamond',serif;"
+    pctLabel.setStyle("-fx-font-size: 30; -fx-font-weight: 700; -fx-font-family: 'Cormorant Garamond',serif;"
         + (matchPct >= 60 ? " -fx-text-fill: #5A9E8F;"
         : matchPct >= 30 ? " -fx-text-fill: #C8954A;" : " -fx-text-fill: #D9534F;"));
 
     Label matchLabel = new Label("match with your formula");
-    matchLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #6B6762; -fx-font-style: italic;");
+    matchLabel.setStyle("-fx-font-size: 17; -fx-text-fill: #6B6762; -fx-font-style: italic;");
 
     result.getChildren().addAll(pctLabel, matchLabel);
     modalContent.getChildren().add(result);
-  }
-
-  private List<String> splitNotes(String text) {
-    return Arrays.stream(text.split(","))
-        .map(String::trim)
-        .map(String::toLowerCase)
-        .filter(s -> !s.isEmpty())
-        .collect(Collectors.toList());
   }
 
   private String capitalize(String s) {

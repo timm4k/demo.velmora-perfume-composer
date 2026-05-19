@@ -80,7 +80,6 @@ public class ViewManager {
     sb.setPrefWidth(220.0);
     sb.getStyleClass().add("sidebar");
 
-    // Brand block: logo + VELMORA / Olfactory Lab
     HBox brandBlock = new HBox(14.0);
     brandBlock.setAlignment(Pos.CENTER_LEFT);
     brandBlock.getStyleClass().add("brand-block");
@@ -110,11 +109,9 @@ public class ViewManager {
 
     brandBlock.getChildren().addAll(logoView, brandText);
 
-    // Divider
     Rectangle div1 = new Rectangle(180.0, 1.0, javafx.scene.paint.Color.web("#DDD9D1"));
     div1.setStyle("-fx-translate-x: 20;");
 
-    // Molecule map
     VBox molMap = new VBox(4.0);
     molMap.setStyle("-fx-padding: 16 16 0 16;");
     Label molLabel = new Label("MOLECULE MAP");
@@ -144,15 +141,13 @@ public class ViewManager {
       dots3.getChildren().add(cr);
     }
     Label notesLabel = new Label("4 NOTES");
-    notesLabel.setStyle("-fx-font-size: 10; -fx-text-fill: #C4BFB9; -fx-letter-spacing: 1;");
+    notesLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #C4BFB9; -fx-letter-spacing: 1;");
     dots3.getChildren().add(notesLabel);
     molMap.getChildren().addAll(molLabel, dots1, dots2, dots3);
 
-    // Divider
     Rectangle div2 = new Rectangle(180.0, 1.0, javafx.scene.paint.Color.web("#DDD9D1"));
     div2.setStyle("-fx-translate-x: 20;");
 
-    // Nav items
     VBox nav = new VBox(2.0);
     nav.setStyle("-fx-padding: 12 12 0 12;");
     VBox.setVgrow(nav, Priority.ALWAYS);
@@ -172,7 +167,6 @@ public class ViewManager {
     adminItem.setManaged(userSession.getRole() == Role.ADMIN);
     nav.getChildren().add(adminItem);
 
-    // Directory + status
     VBox bottom = new VBox();
     bottom.setStyle("-fx-padding: 0 0 24 0;");
     Rectangle div3 = new Rectangle(180.0, 1.0, javafx.scene.paint.Color.web("#DDD9D1"));
@@ -202,7 +196,6 @@ public class ViewManager {
       dir.getChildren().add(row);
     }
 
-    // Status bar
     HBox status = new HBox(6.0);
     status.setAlignment(Pos.CENTER_LEFT);
     status.getStyleClass().add("status-bar");
@@ -274,8 +267,6 @@ public class ViewManager {
     showCatalog();
   }
 
-  // ── Public navigation ──
-
   public void showAuth() {
     root.setLeft(null);
     loadContent("/fxml/auth-view.fxml");
@@ -316,8 +307,6 @@ public class ViewManager {
     loadContent("/fxml/admin-view.fxml");
     setActiveNav("admin");
   }
-
-  // ── Internal ──
 
   private void loadContent(String fxmlPath) {
     if (!ready) {

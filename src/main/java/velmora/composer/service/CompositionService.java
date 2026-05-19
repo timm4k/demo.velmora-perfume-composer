@@ -71,6 +71,7 @@ public class CompositionService {
 
   public Map<NoteType, List<CompositionItem>> getFragrancePyramid(Composition composition) {
     return composition.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() != null)
         .collect(Collectors.groupingBy(item -> item.getNote().getType()));
   }
 
@@ -78,9 +79,9 @@ public class CompositionService {
     List<CompositionItem> items = composition.getItems();
 
     long topNotesCount = items.stream()
-        .filter(i -> i.getNote().getType() == NoteType.TOP).count();
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.TOP).count();
     long baseNotesCount = items.stream()
-        .filter(i -> i.getNote().getType() == NoteType.BASE).count();
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE).count();
 
     if (topNotesCount == 0) {
       return "Warning: Missing top notes. The scent may feel too heavy initially";

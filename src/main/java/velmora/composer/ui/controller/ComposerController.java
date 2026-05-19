@@ -1,8 +1,6 @@
 package velmora.composer.ui.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import javafx.animation.*;
@@ -12,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -26,11 +25,13 @@ import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionItem;
 import velmora.composer.model.Note;
 import velmora.composer.model.NoteType;
-import velmora.composer.model.Role;
 import velmora.composer.model.User;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.service.CompositionService;
 import velmora.composer.service.SynergyService;
+import velmora.composer.service.analysis.AnalysisResult;
+import velmora.composer.service.analysis.CompositionAnalysisService;
+import velmora.composer.service.export.PdfExportService;
 import velmora.composer.state.CompositionState;
 import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
@@ -42,11 +43,12 @@ public class ComposerController {
   private final NoteRepository noteRepository;
   private final CompositionService compositionService;
   private final SynergyService synergyService;
+  private final CompositionAnalysisService analysisService;
+  private final PdfExportService pdfExportService;
   private final UserSession userSession;
   private final ViewManager viewManager;
   private final CompositionState compositionState;
 
-  // Left panel
   @FXML private ListView<Note> materialsList;
   @FXML private Label materialCount;
   @FXML private Label selectedCount;
@@ -55,14 +57,12 @@ public class ComposerController {
   @FXML private Button filterHeart;
   @FXML private Button filterBase;
 
-  // Header
   @FXML private TextField formulaName;
   @FXML private Label formulaStatus;
 
-  // Pyramid zones
-  @FXML private FlowPane topChips;
-  @FXML private FlowPane heartChips;
-  @FXML private FlowPane baseChips;
+  @FXML private TilePane topChips;
+  @FXML private TilePane heartChips;
+  @FXML private TilePane baseChips;
   @FXML private Label topCount;
   @FXML private Label heartCount;
   @FXML private Label baseCount;
@@ -70,11 +70,9 @@ public class ComposerController {
   @FXML private VBox heartZone;
   @FXML private VBox baseZone;
 
-  // Center
   @FXML private Pane particleLayer;
   @FXML private VBox insightsContainer;
 
-  // Right panel — performance bars
   @FXML private Rectangle harmonyBar;
   @FXML private Rectangle longevityBar;
   @FXML private Rectangle complexityBar;
@@ -84,7 +82,6 @@ public class ComposerController {
   @FXML private Label complexityScore;
   @FXML private Label projectionScore;
 
-  // Right panel — family distribution
   @FXML private Rectangle citrusBar;
   @FXML private Rectangle floralBar;
   @FXML private Rectangle woodyBar;
@@ -94,7 +91,6 @@ public class ComposerController {
   @FXML private Label woodyPct;
   @FXML private Label earthyPct;
 
-  // Right panel — formula metrics
   @FXML private Label noteCount;
   @FXML private Label totalIntensity;
   @FXML private Label estLongevity;
@@ -111,9 +107,11 @@ public class ComposerController {
   private final ObservableList<Note> currentHeartNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentBaseNotes = FXCollections.observableArrayList();
   private FilteredList<Note> filteredNotes;
+  @FXML private Button closeDraftBtn;
   private Button activeFilter;
   private Long editingCompositionId;
   private static final double PERF_BAR_MAX = 160.0;
+  private final PauseTransition analysisDebounce = new PauseTransition(Duration.millis(250));
 
   @FXML
   public void initialize() {
@@ -122,6 +120,7 @@ public class ComposerController {
       compositionState.setCurrentNoteNames(allNotes().stream().map(Note::getName).collect(Collectors.toList()));
     });
     loadNotes();
+    clearPyramid();
     restoreFromState();
     setupFilterButtons();
     setupMaterialClick();
@@ -131,14 +130,18 @@ public class ComposerController {
     Platform.runLater(this::updateAnalysis);
   }
 
-  // ── Data ─────────────────────────────────────────
-
   private void loadNotes() {
     allNotes.setAll(noteRepository.findAll());
     filteredNotes = new FilteredList<>(allNotes, p -> true);
     materialsList.setItems(filteredNotes);
     materialsList.setCellFactory(lv -> new MaterialCardCell());
     updateMaterialCount();
+  }
+
+  private void clearPyramid() {
+    currentTopNotes.clear();
+    currentHeartNotes.clear();
+    currentBaseNotes.clear();
   }
 
   private void restoreFromState() {
@@ -152,10 +155,11 @@ public class ComposerController {
       formulaName.setText(compositionState.getFormulaName());
     }
     editingCompositionId = compositionState.getEditCompositionId();
+    boolean isEditing = editingCompositionId != null;
+    closeDraftBtn.setVisible(isEditing);
+    closeDraftBtn.setManaged(isEditing);
     compositionState.clear();
   }
-
-  // ── Filter pills ─────────────────────────────────
 
   private void setupFilterButtons() {
     activeFilter = filterAll;
@@ -182,8 +186,6 @@ public class ComposerController {
     activeFilter = target;
     updateMaterialCount();
   }
-
-  // ── Click + Drag ─────────────────────────────────
 
   private void setupMaterialClick() {
     materialsList.setOnMouseClicked(event -> {
@@ -250,10 +252,10 @@ public class ComposerController {
     ((VBox) event.getSource()).getStyleClass().remove("drag-over");
   }
 
-  // ── Pyramid ──────────────────────────────────────
-
   private void addNoteToPyramid(Note note) {
-    List<Note> targetList = switch (note.getType()) {
+    NoteType type = note.getType();
+    if (type == null) return;
+    List<Note> targetList = switch (type) {
       case TOP -> currentTopNotes;
       case HEART -> currentHeartNotes;
       case BASE -> currentBaseNotes;
@@ -265,7 +267,9 @@ public class ComposerController {
   }
 
   private void removeNoteFromPyramid(Note note) {
-    List<Note> targetList = switch (note.getType()) {
+    NoteType type = note.getType();
+    if (type == null) return;
+    List<Note> targetList = switch (type) {
       case TOP -> currentTopNotes;
       case HEART -> currentHeartNotes;
       case BASE -> currentBaseNotes;
@@ -274,12 +278,12 @@ public class ComposerController {
     updateAll();
   }
 
-  // ── Chips ────────────────────────────────────────
-
   private void updateAll() {
     renderChips();
+    adjustZoneWidths();
     updateCounts();
-    updateAnalysis();
+    analysisDebounce.setOnFinished(e -> updateAnalysis());
+    analysisDebounce.playFromStart();
   }
 
   private void renderChips() {
@@ -288,10 +292,49 @@ public class ComposerController {
     renderChipPane(baseChips, currentBaseNotes);
   }
 
-  private void renderChipPane(FlowPane pane, ObservableList<Note> notes) {
+  private void adjustZoneWidths() {
+    adjustZoneWidth(topZone, topChips);
+    adjustZoneWidth(heartZone, heartChips);
+    adjustZoneWidth(baseZone, baseChips);
+  }
+
+  private void adjustZoneWidth(VBox zone, TilePane chips) {
+    int count = chips.getChildren().size();
+    int cols = count == 0 ? 4 : Math.min(4 + (count - 1) / 4, 8);
+    chips.setPrefColumns(cols);
+
+    Region parent = (Region) zone.getParent();
+    double parentWidth = parent.getWidth() > 0 ? parent.getWidth() : 700;
+    double maxAllowed = parentWidth * 0.7;
+
+    double zoneWidth;
+    if (count == 0) {
+      zoneWidth = Math.min(260, maxAllowed);
+    } else {
+      double chipWidth = 110;
+      double hgap = 6;
+      double zoneHpad = 40;
+      zoneWidth = cols * chipWidth + (cols - 1) * hgap + zoneHpad;
+      zoneWidth = Math.min(zoneWidth, maxAllowed);
+      zoneWidth = Math.max(zoneWidth, 260);
+    }
+    zone.setPrefWidth(zoneWidth);
+    zone.setMaxWidth(zoneWidth);
+  }
+
+  private void renderChipPane(TilePane pane, ObservableList<Note> notes) {
     pane.getChildren().clear();
     for (Note note : notes) {
       pane.getChildren().add(createChip(note));
+    }
+    if (pane.getParent() instanceof VBox zone) {
+      for (Node child : zone.getChildren()) {
+        if (child instanceof Label label && label.getStyleClass().contains("zone-placeholder")) {
+          label.setVisible(notes.isEmpty());
+          label.setManaged(notes.isEmpty());
+          break;
+        }
+      }
     }
   }
 
@@ -304,15 +347,13 @@ public class ComposerController {
         : note.getType() == NoteType.HEART ? "chip-heart"
         : "chip-base");
     Label name = new Label(note.getName());
-    name.setStyle("-fx-font-size: 12; -fx-font-weight: 500; -fx-text-fill: #4B4B4B;");
+    name.setStyle("-fx-font-size: 18; -fx-font-weight: 500; -fx-text-fill: #4B4B4B;");
     Label close = new Label("✕");
     close.getStyleClass().add("chip-close");
     close.setOnMouseClicked(e -> removeNoteFromPyramid(note));
     chip.getChildren().addAll(name, close);
     return chip;
   }
-
-  // ── Counts ───────────────────────────────────────
 
   private void updateCounts() {
     int top = currentTopNotes.size();
@@ -325,16 +366,10 @@ public class ComposerController {
     selectedCount.setText(String.valueOf(total));
   }
 
-  // ── Analysis ─────────────────────────────────────
-
   private void updateAnalysis() {
-    List<Note> all = allNotes();
-    int total = all.size();
-    long top = countByType(NoteType.TOP);
-    long heart = countByType(NoteType.HEART);
-    long base = countByType(NoteType.BASE);
+    AnalysisResult result = analysisService.analyze(currentTopNotes, currentHeartNotes, currentBaseNotes);
 
-    if (total == 0) {
+    if (result.isEmpty()) {
       harmonyScore.setText("—");
       longevityScore.setText("—");
       complexityScore.setText("—");
@@ -357,174 +392,110 @@ public class ComposerController {
       return;
     }
 
-    double topRatio = (double) top / total;
-    double heartRatio = (double) heart / total;
-    double baseRatio = (double) base / total;
+    noteCount.setText(String.valueOf(result.total()));
+    moleculeCount.setText(String.valueOf(result.total()));
+    totalIntensity.setText(String.format("%.1f", result.avgIntensity()));
 
-    double avgIntensity = all.stream()
-        .filter(n -> n.getIntensity() != null)
-        .mapToInt(Note::getIntensity)
-        .average()
-        .orElse(5.0);
+    topDuration.setText(result.topHoursDisplay());
+    heartDuration.setText(result.heartHoursDisplay());
+    baseDuration.setText(result.baseHoursDisplay());
 
-    long families = all.stream()
-        .map(Note::getCategory)
-        .filter(Objects::nonNull)
-        .distinct()
-        .count();
+    estLongevity.setText(result.estLongevity());
+    sillage.setText(result.sillage());
 
-    // FORMULA METRICS
-    noteCount.setText(String.valueOf(total));
-    familyCount.setText(String.valueOf(families));
-    moleculeCount.setText(String.valueOf(total));
-    totalIntensity.setText(String.format("%.1f", avgIntensity));
+    harmonyScore.setText(String.valueOf(result.harmony()));
+    setPerfBar(harmonyBar, result.harmony());
 
-    // PHASE LONGEVITY
-    double topHours = currentTopNotes.stream()
-        .filter(n -> n.getIntensity() != null)
-        .mapToInt(Note::getIntensity)
-        .average()
-        .orElse(5) * 0.5;
+    longevityScore.setText(String.valueOf(result.longevityScore()));
+    setPerfBar(longevityBar, result.longevityScore());
 
-    double heartHours = currentHeartNotes.stream()
-        .filter(n -> n.getIntensity() != null)
-        .mapToInt(Note::getIntensity)
-        .average()
-        .orElse(5) * 1.2;
+    complexityScore.setText(String.valueOf(result.complexityScore()));
+    setPerfBar(complexityBar, result.complexityScore());
 
-    double baseHours = currentBaseNotes.stream()
-        .filter(n -> n.getIntensity() != null)
-        .mapToInt(Note::getIntensity)
-        .average()
-        .orElse(5) * 2.0;
+    projectionScore.setText(String.valueOf(result.projectionScore()));
+    setPerfBar(projectionBar, result.projectionScore());
 
-    topDuration.setText(topHours > 0 ? String.format("%.1fh", topHours) : "—");
-    heartDuration.setText(heartHours > 0 ? String.format("%.1fh", heartHours) : "—");
-    baseDuration.setText(baseHours > 0 ? String.format("%.1fh", baseHours) : "—");
-
-    double totalLongevity = topHours * 0.2 + heartHours * 0.35 + baseHours * 0.45;
-    estLongevity.setText(fmtLongevity(totalLongevity));
-
-    // SILLAGE
-    if (avgIntensity >= 8) {
-      sillage.setText("Heavy");
-    } else if (avgIntensity >= 6) {
-      sillage.setText("Strong");
-    } else if (avgIntensity >= 4) {
-      sillage.setText("Moderate");
-    } else {
-      sillage.setText("Soft");
-    }
-
-    // PERFORMANCE
-    int harmony = calcBalance(topRatio, heartRatio, baseRatio);
-    harmonyScore.setText(String.valueOf(harmony));
-    setPerfBar(harmonyBar, harmony);
-
-    int longevity = Math.min((int) (totalLongevity * 15), 100);
-    longevityScore.setText(String.valueOf(longevity));
-    setPerfBar(longevityBar, longevity);
-
-    int complexity = Math.min(30 + (int) families * 14 + total * 4, 100);
-    complexityScore.setText(String.valueOf(complexity));
-    setPerfBar(complexityBar, complexity);
-
-    int projection = Math.min((int) avgIntensity * 15, 100);
-    projectionScore.setText(String.valueOf(projection));
-    setPerfBar(projectionBar, projection);
-
-    // OVERALL COMPOSITE SCORE
-    int overall = (int) (harmony * 0.25 + longevity * 0.30 + complexity * 0.20 + projection * 0.25);
-    // ensure it shows value even if null label guard
     if (overallScore != null) {
-      overallScore.setText(String.valueOf(overall));
+      overallScore.setText(String.valueOf(result.overallScore()));
     }
 
-    updateFamilyDistribution();
-    renderInsights(all);
+    updateFamilyDistribution(result);
+    renderInsights(result);
   }
 
   private void setPerfBar(Rectangle bar, int value) {
     bar.setWidth(PERF_BAR_MAX * value / 100.0);
   }
 
-  // ── Composition Insights (bottom panel) ──────────
-
-  private void renderInsights(List<Note> notes) {
+  private void renderInsights(AnalysisResult result) {
     insightsContainer.getChildren().clear();
-    if (notes.size() < 2) {
+    if (result.total() < 2) {
       Label hint = new Label("Add at least 2 notes to see analysis");
-      hint.setStyle("-fx-font-size: 11; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
+      hint.setStyle("-fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
       insightsContainer.getChildren().add(hint);
       return;
     }
 
-    var synergy = synergyService.calculate(notes);
+    var synergy = synergyService.calculate(result.allNotes());
     int synScore = synergy.score();
 
-    // Synergy score card
     VBox synCard = new VBox(4);
     synCard.getStyleClass().add("insight-glass-card");
     Label synTag = new Label("SYNERGY");
     synTag.getStyleClass().add("insight-tag-label");
     Label synVal = new Label(synScore + "/100");
     synVal.getStyleClass().add("insight-synergy");
-    synVal.setStyle("-fx-font-size: 18; -fx-font-family: \"Cormorant Garamond\",serif;"
+    synVal.setStyle("-fx-font-family: \"Cormorant Garamond\",serif;"
         + (synScore >= 60 ? " -fx-text-fill: #5A9E8F;"
         : synScore >= 40 ? " -fx-text-fill: #C8954A;" : " -fx-text-fill: #D9534F;"));
     synCard.getChildren().addAll(synTag, synVal);
     insightsContainer.getChildren().add(synCard);
 
-    // Dominant profile
     VBox profileCard = new VBox(4);
     profileCard.getStyleClass().add("insight-glass-card");
     Label profTag = new Label("DOMINANT PROFILE");
     profTag.getStyleClass().add("insight-tag-label");
-    Label profName = new Label(detectDominantProfile(notes));
+    Label profName = new Label(result.dominantProfile());
     profName.getStyleClass().add("insight-title");
     profileCard.getChildren().addAll(profTag, profName);
     insightsContainer.getChildren().add(profileCard);
 
-    // Opening (top notes analysis)
     if (!currentTopNotes.isEmpty()) {
       VBox openCard = new VBox(4);
       openCard.getStyleClass().add("insight-glass-card");
       Label openTag = new Label("OPENING");
       openTag.getStyleClass().add("insight-tag-label");
-      Label openText = new Label(generateTopAnalysis(currentTopNotes));
+      Label openText = new Label(result.topInsight());
       openText.getStyleClass().add("insight-body");
       openText.setWrapText(true);
       openCard.getChildren().addAll(openTag, openText);
       insightsContainer.getChildren().add(openCard);
     }
 
-    // Heart transition
     if (!currentHeartNotes.isEmpty()) {
       VBox heartCard = new VBox(4);
       heartCard.getStyleClass().add("insight-glass-card");
       Label heartTag = new Label("HEART TRANSITION");
       heartTag.getStyleClass().add("insight-tag-label");
-      Label heartText = new Label(generateHeartAnalysis(currentHeartNotes));
+      Label heartText = new Label(result.heartInsight());
       heartText.getStyleClass().add("insight-body");
       heartText.setWrapText(true);
       heartCard.getChildren().addAll(heartTag, heartText);
       insightsContainer.getChildren().add(heartCard);
     }
 
-    // Base behavior
     if (!currentBaseNotes.isEmpty()) {
       VBox baseCard = new VBox(4);
       baseCard.getStyleClass().add("insight-glass-card");
       Label baseTag = new Label("BASE BEHAVIOR");
       baseTag.getStyleClass().add("insight-tag-label");
-      Label baseText = new Label(generateBaseAnalysis(currentBaseNotes));
+      Label baseText = new Label(result.baseInsight());
       baseText.getStyleClass().add("insight-body");
       baseText.setWrapText(true);
       baseCard.getChildren().addAll(baseTag, baseText);
       insightsContainer.getChildren().add(baseCard);
     }
 
-    // Conflicts (how/why scents DON'T combine)
     if (!synergy.conflicts().isEmpty()) {
       VBox conflictCard = new VBox(4);
       conflictCard.getStyleClass().add("insight-glass-card");
@@ -543,7 +514,6 @@ public class ComposerController {
       insightsContainer.getChildren().add(conflictCard);
     }
 
-    // Good combinations (how/why scents DO combine)
     if (!synergy.good().isEmpty()) {
       VBox goodCard = new VBox(4);
       goodCard.getStyleClass().add("insight-glass-card");
@@ -562,7 +532,6 @@ public class ComposerController {
       insightsContainer.getChildren().add(goodCard);
     }
 
-    // Warnings
     if (!synergy.warnings().isEmpty()) {
       VBox warnCard = new VBox(4);
       warnCard.getStyleClass().add("insight-glass-card");
@@ -582,101 +551,6 @@ public class ComposerController {
     }
   }
 
-  private String generateTopAnalysis(List<Note> tops) {
-    List<String> parts = new ArrayList<>();
-    for (Note n : tops) {
-      String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "citrus" -> parts.add(n.getName() + " brings bright citrus lift");
-        case "green" -> parts.add(n.getName() + " offers fresh green vibrancy");
-        case "aromatic" -> parts.add(n.getName() + " provides herbal aromatic clarity");
-        case "spicy" -> parts.add(n.getName() + " adds spicy top notes");
-        case "floral" -> parts.add(n.getName() + " opens with floral delicacy");
-        case "fruity" -> parts.add(n.getName() + " contributes fruity sweetness");
-        default -> parts.add(n.getName() + " opens the composition");
-      }
-    }
-    return String.join("; ", parts) + ".";
-  }
-
-  private String generateHeartAnalysis(List<Note> hearts) {
-    List<String> parts = new ArrayList<>();
-    for (Note n : hearts) {
-      String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "floral" -> parts.add(n.getName() + " forms a floral heart");
-        case "spicy" -> parts.add(n.getName() + " introduces warmth and spice");
-        case "woody" -> parts.add(n.getName() + " adds a woody transition");
-        case "gourmand" -> parts.add(n.getName() + " brings gourmand richness");
-        case "oriental" -> parts.add(n.getName() + " deepens with oriental warmth");
-        default -> parts.add(n.getName() + " anchors the heart");
-      }
-    }
-    return String.join("; ", parts) + ".";
-  }
-
-  private String generateBaseAnalysis(List<Note> bases) {
-    List<String> parts = new ArrayList<>();
-    for (Note n : bases) {
-      String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "woody" -> parts.add(n.getName() + " provides long woody fixation");
-        case "earthy" -> parts.add(n.getName() + " grounds with earthy depth");
-        case "musk" -> parts.add(n.getName() + " adds soft musky persistence");
-        case "amber" -> parts.add(n.getName() + " creates warm amber trail");
-        case "gourmand" -> parts.add(n.getName() + " leaves sweet gourmand imprint");
-        default -> parts.add(n.getName() + " extends the dry-down");
-      }
-    }
-    return String.join("; ", parts) + ".";
-  }
-
-  private String detectDominantProfile(List<Note> notes) {
-    Map<String, Long> famCount = notes.stream()
-        .map(n -> n.getCategory() != null ? n.getCategory() : "Other")
-        .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-    String topFam = famCount.entrySet().stream()
-        .max(Map.Entry.comparingByValue())
-        .map(Map.Entry::getKey)
-        .orElse("Balanced");
-
-    long spicy = notes.stream().filter(n -> {
-      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Spicy") || c.equalsIgnoreCase("Woody"));
-    }).count();
-    long fresh = notes.stream().filter(n -> {
-      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Citrus") || c.equalsIgnoreCase("Green") || c.equalsIgnoreCase("Aromatic"));
-    }).count();
-    long sweet = notes.stream().filter(n -> {
-      String c = n.getCategory(); return c != null && (c.equalsIgnoreCase("Floral") || c.equalsIgnoreCase("Gourmand"));
-    }).count();
-
-    StringBuilder sb = new StringBuilder();
-    if (spicy > fresh && spicy > sweet) sb.append("Smoky ");
-    if (sweet > spicy && sweet > fresh) sb.append("Sweet ");
-    if (fresh > spicy && fresh > sweet) sb.append("Fresh ");
-    sb.append(topFam).append(" Amber");
-    return sb.toString().trim();
-  }
-
-  // ── Balance ──────────────────────────────────────
-
-  private int calcBalance(double topR, double heartR, double baseR) {
-    if (topR == 0 || heartR == 0 || baseR == 0) return 25;
-    double score = 100;
-    score -= Math.abs(topR - 0.30) * 50;
-    score -= Math.abs(heartR - 0.50) * 40;
-    score -= Math.abs(baseR - 0.20) * 50;
-    return Math.max(0, Math.min(100, (int) score));
-  }
-
-  private long countByType(NoteType type) {
-    return switch (type) {
-      case TOP -> currentTopNotes.size();
-      case HEART -> currentHeartNotes.size();
-      case BASE -> currentBaseNotes.size();
-    };
-  }
-
   private List<Note> allNotes() {
     List<Note> all = new ArrayList<>();
     all.addAll(currentTopNotes);
@@ -685,33 +559,13 @@ public class ComposerController {
     return all;
   }
 
-  // ── Family distribution ──────────────────────────
-
-  private void updateFamilyDistribution() {
-    List<Note> allSelected = new ArrayList<>();
-    allSelected.addAll(currentTopNotes);
-    allSelected.addAll(currentHeartNotes);
-    allSelected.addAll(currentBaseNotes);
-    long citrus = countByCategory(allSelected, "Citrus");
-    long floral = countByCategory(allSelected, "Floral");
-    long woody = countByCategory(allSelected, "Woody");
-    long earthy = countByCategory(allSelected, "Earthy");
-    long total = allSelected.size();
-    Set<String> presentFamilies = allSelected.stream()
-        .map(n -> n.getCategory() != null ? n.getCategory() : "Other")
-        .collect(Collectors.toSet());
-    familyCount.setText(String.valueOf(presentFamilies.size()));
-    if (total == 0) { resetBars(); return; }
-    setBar(citrusBar, citrusPct, citrus, total);
-    setBar(floralBar, floralPct, floral, total);
-    setBar(woodyBar, woodyPct, woody, total);
-    setBar(earthyBar, earthyPct, earthy, total);
-  }
-
-  private long countByCategory(List<Note> notes, String category) {
-    return notes.stream()
-        .filter(n -> category.equalsIgnoreCase(n.getCategory()))
-        .count();
+  private void updateFamilyDistribution(AnalysisResult result) {
+    familyCount.setText(String.valueOf(result.families()));
+    if (result.total() == 0) { resetBars(); return; }
+    setBar(citrusBar, citrusPct, result.citrusCount(), result.total());
+    setBar(floralBar, floralPct, result.floralCount(), result.total());
+    setBar(woodyBar, woodyPct, result.woodyCount(), result.total());
+    setBar(earthyBar, earthyPct, result.earthyCount(), result.total());
   }
 
   private void setBar(Rectangle bar, Label label, long count, long total) {
@@ -730,17 +584,6 @@ public class ComposerController {
   private void updateMaterialCount() {
     materialCount.setText(filteredNotes.size() + " materials");
   }
-
-  private String fmtLongevity(double value) {
-    if (value <= 2) return "1-2h";
-    if (value <= 4) return "2-4h";
-    if (value <= 6) return "4-6h";
-    if (value <= 8) return "6-8h";
-    if (value <= 12) return "8-12h";
-    return "12h+";
-  }
-
-  // ── Particles ────────────────────────────────────
 
   private void initParticles() {
     Random rand = new Random();
@@ -779,7 +622,16 @@ public class ComposerController {
     tl.play();
   }
 
-  // ── Actions ──────────────────────────────────────
+  @FXML
+  public void handleCloseDraft() {
+    editingCompositionId = null;
+    formulaName.setText("");
+    formulaStatus.setText("");
+    clearPyramid();
+    updateAll();
+    closeDraftBtn.setVisible(false);
+    closeDraftBtn.setManaged(false);
+  }
 
   @FXML
   public void handleSave() {
@@ -864,70 +716,10 @@ public class ComposerController {
     formulaStatus.getStyleClass().remove("status-badge-warn");
 
     String name = baseName;
+    AnalysisResult exportResult = analysisService.analyze(currentTopNotes, currentHeartNotes, currentBaseNotes);
     javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
       @Override protected Void call() throws Exception {
-        com.lowagie.text.Document doc = new com.lowagie.text.Document();
-        com.lowagie.text.pdf.PdfWriter.getInstance(doc, new FileOutputStream(file));
-        doc.open();
-
-        com.lowagie.text.Font titleF = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 18, com.lowagie.text.Font.BOLD);
-        com.lowagie.text.Font hF = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 14, com.lowagie.text.Font.BOLD);
-        com.lowagie.text.Font bF = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 12, com.lowagie.text.Font.BOLD);
-        com.lowagie.text.Font nF = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 11);
-
-        doc.add(new com.lowagie.text.Paragraph("VELMORA OLFACTORY LAB", titleF));
-        doc.add(new com.lowagie.text.Paragraph("FORMULA REPORT", hF));
-        doc.add(new com.lowagie.text.Paragraph(" "));
-
-        doc.add(new com.lowagie.text.Paragraph("Formula: " + name, bF));
-        doc.add(new com.lowagie.text.Paragraph("Date: " + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date()), nF));
-        doc.add(new com.lowagie.text.Paragraph(" "));
-
-        // Notes table
-        com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(5);
-        table.setWidthPercentage(100);
-        float[] cols = {35, 14, 18, 13, 10};
-        table.setWidths(cols);
-        String[] headers = {"Note", "Type", "Category", "Int.", "%"};
-        for (String h : headers) {
-          com.lowagie.text.pdf.PdfPCell cell = new com.lowagie.text.pdf.PdfPCell(
-              new com.lowagie.text.Phrase(h, new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 9, com.lowagie.text.Font.BOLD)));
-          cell.setHorizontalAlignment(com.lowagie.text.Element.ALIGN_CENTER);
-          table.addCell(cell);
-        }
-        for (Note n : all) {
-          table.addCell(n.getName() != null ? n.getName() : "—");
-          table.addCell(n.getType() != null ? n.getType().name() : "—");
-          table.addCell(n.getCategory() != null ? n.getCategory() : "—");
-          table.addCell(n.getIntensity() != null ? String.valueOf(n.getIntensity()) : "—");
-          table.addCell("—");
-        }
-        doc.add(table);
-        doc.add(new com.lowagie.text.Paragraph(" "));
-
-        doc.add(new com.lowagie.text.Paragraph("PERFORMANCE", bF));
-        doc.add(new com.lowagie.text.Paragraph("Harmony: " + harmonyScore.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Longevity: " + longevityScore.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Complexity: " + complexityScore.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Projection: " + projectionScore.getText(), nF));
-        if (overallScore != null) {
-          doc.add(new com.lowagie.text.Paragraph("Overall Score: " + overallScore.getText(), bF));
-        }
-        doc.add(new com.lowagie.text.Paragraph(" "));
-
-        doc.add(new com.lowagie.text.Paragraph("PHASE LONGEVITY", bF));
-        doc.add(new com.lowagie.text.Paragraph("Top Notes: " + topDuration.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Heart Notes: " + heartDuration.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Base Notes: " + baseDuration.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Est. Total: " + estLongevity.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph("Sillage: " + sillage.getText(), nF));
-        doc.add(new com.lowagie.text.Paragraph(" "));
-
-        doc.add(new com.lowagie.text.Paragraph("NOTES: " + noteCount.getText() +
-            "  |  FAMILIES: " + familyCount.getText() +
-            "  |  INTENSITY: " + totalIntensity.getText(), nF));
-
-        doc.close();
+        pdfExportService.export(file, name, all, exportResult);
         return null;
       }
     };
@@ -958,8 +750,6 @@ public class ComposerController {
     try { return Color.web(code); } catch (Exception e) { return Color.GRAY; }
   }
 
-  // ── MaterialCardCell ─────────────────────────────
-
   private static class MaterialCardCell extends ListCell<Note> {
     @Override
     protected void updateItem(Note note, boolean empty) {
@@ -979,11 +769,9 @@ public class ComposerController {
         VBox info = new VBox(3);
         VBox.setVgrow(info, Priority.ALWAYS);
 
-        // Row 1: Name
-        Label name = new Label(note.getName());
+        Label name = new Label(note.getName() != null ? note.getName() : "");
         name.getStyleClass().add("mcard-name");
 
-        // Row 2: tags row
         HBox tags = new HBox(8);
         tags.setAlignment(Pos.CENTER_LEFT);
         Label cat = new Label(note.getCategory() != null ? note.getCategory().toUpperCase() : "");
@@ -995,13 +783,11 @@ public class ComposerController {
             : "mcard-tag-base");
         tags.getChildren().addAll(cat, phase);
 
-        // Row 3: description
         String descText = note.getDescription();
         if (descText != null && descText.length() > 55) descText = descText.substring(0, 52) + "...";
         Label desc = new Label(descText != null ? descText : "");
         desc.getStyleClass().add("mcard-desc");
 
-        // Row 4: origin + intensity dots
         HBox meta = new HBox(8);
         meta.setAlignment(Pos.CENTER_LEFT);
         Label origin = new Label(note.getOrigin() != null ? note.getOrigin() : "");
@@ -1020,7 +806,7 @@ public class ComposerController {
         info.getChildren().addAll(name, tags, desc, meta);
         root.getChildren().addAll(dot, info);
         setGraphic(root);
-        setStyle("-fx-background-color: transparent; -fx-padding: 3 4;");
+        setStyle("-fx-background-color: transparent; -fx-padding: 3 20 3 4;");
       }
     }
   }

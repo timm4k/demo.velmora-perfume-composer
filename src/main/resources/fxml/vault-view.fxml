@@ -29,7 +29,7 @@
       <Region HBox.hgrow="ALWAYS" />
 
       <Label text="PHASE"
-        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+        style=" -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
 
       <Button fx:id="filterAll"
         text="ALL"
@@ -50,7 +50,7 @@
       <Region prefWidth="18" />
 
       <Label text="INTENSITY"
-        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+        style=" -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
 
       <Slider fx:id="intensitySlider"
         min="1"
@@ -63,23 +63,21 @@
 
       <Label fx:id="intensityLabel"
         text="1+"
-        style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #A4A0C5; -fx-min-width: 30;" />
+        style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #A4A0C5; -fx-min-width: 30;" />
 
       <Label text="CATEGORY"
-        style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
+        style=" -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
 
       <ComboBox fx:id="categoryFilter"
         prefWidth="120"
         promptText="All"
-        style="-fx-background-color: rgba(255,255,255,0.65); -fx-background-radius: 18; -fx-font-size: 12;" />
+        style="-fx-background-color: rgba(255,255,255,0.65); -fx-background-radius: 18; -fx-font-size: 18;" />
     </HBox>
 
-    <!-- MAIN CONTENT AREA -->
     <HBox VBox.vgrow="ALWAYS"
       spacing="0"
       style="-fx-padding: 0 34 24 34;">
 
-      <!-- CATALOG SCROLL -->
       <ScrollPane fx:id="scrollPane"
         fitToWidth="true"
         pannable="true"
@@ -91,7 +89,7 @@
           prefColumns="4"
           prefTileWidth="250"
           prefTileHeight="290"
-          hgap="26"
+          hgap="14"
           vgap="26"
           alignment="TOP_LEFT"
           styleClass="card-grid"
@@ -99,16 +97,15 @@
       </ScrollPane>
 
       <Region fx:id="panelGap"
-        prefWidth="10"
         minWidth="10"
         maxWidth="10"
         visible="false"
         managed="false" />
 
       <VBox fx:id="detailPanel"
-        prefWidth="380"
-        minWidth="380"
-        maxWidth="380"
+        prefWidth="400"
+        minWidth="400"
+        maxWidth="400"
         spacing="0"
         visible="false"
         managed="false"
@@ -120,7 +117,7 @@
 
         <Label text="← Back to grid"
           onMouseClicked="#closeDetail"
-          style="-fx-font-size: 10;
+          style=" -fx-font-size: 16;
                  -fx-font-weight: bold;
                  -fx-letter-spacing: 2;
                  -fx-text-fill: #A4A0C5;
@@ -139,7 +136,7 @@
           <Label fx:id="detailImagePlaceholder"
             text="✦"
             alignment="CENTER"
-            style="-fx-font-size: 44;
+            style=" -fx-font-size: 50;
                    -fx-text-fill: #D4C8B8;" />
         </StackPane>
 
@@ -147,33 +144,33 @@
           style="-fx-padding: 18 2 0 2;">
 
           <Label fx:id="detailCategory"
-            style="-fx-font-size: 12;
+            style="-fx-font-size: 18;
                    -fx-font-weight: bold;
                    -fx-text-fill: #78A0A0;
                    -fx-letter-spacing: 1.5;" />
 
           <Label fx:id="detailName"
             wrapText="true"
-            style="-fx-font-size: 18;
+            style=" -fx-font-size: 24;
                    -fx-font-family: 'Cormorant Garamond';
                    -fx-text-fill: #1F1A17;
                    -fx-padding: 10 0 18 0;" />
 
           <Label text="DESCRIPTION"
-            style="-fx-font-size: 11;
+            style=" -fx-font-size: 17;
                    -fx-font-weight: bold;
                    -fx-text-fill: #B89B8B;
                    -fx-letter-spacing: 1.5;" />
 
           <Label fx:id="detailDescription"
             wrapText="true"
-            style="-fx-font-size: 13;
+            style=" -fx-font-size: 19;
                    -fx-line-spacing: 3;
                    -fx-text-fill: #5B534D;
                    -fx-padding: 10 0 18 0;" />
 
           <Label text="OLFACTORY PROFILE"
-            style="-fx-font-size: 11;
+            style=" -fx-font-size: 17;
                    -fx-font-weight: bold;
                    -fx-text-fill: #B89B8B;
                    -fx-letter-spacing: 1.5;" />
@@ -183,38 +180,38 @@
 
             <HBox alignment="CENTER_LEFT">
               <Label text="Phase"
-                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+                style="-fx-font-size: 18; -fx-text-fill: #A89F97;" />
               <Region HBox.hgrow="ALWAYS" />
               <Label fx:id="detailPhase"
-                style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
+                style=" -fx-font-size: 19; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
             </HBox>
 
             <HBox alignment="CENTER_LEFT">
               <Label text="Intensity"
-                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+                style="-fx-font-size: 18; -fx-text-fill: #A89F97;" />
               <Region HBox.hgrow="ALWAYS" />
               <HBox fx:id="detailIntensityDots" spacing="4" />
             </HBox>
 
             <HBox alignment="CENTER_LEFT">
               <Label text="Origin"
-                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+                style="-fx-font-size: 18; -fx-text-fill: #A89F97;" />
               <Region HBox.hgrow="ALWAYS" />
               <Label fx:id="detailOrigin"
-                style="-fx-font-size: 13; -fx-text-fill: #1F1A17;" />
+                style=" -fx-font-size: 19; -fx-text-fill: #1F1A17;" />
             </HBox>
 
             <HBox alignment="CENTER_LEFT">
               <Label text="Longevity"
-                style="-fx-font-size: 12; -fx-text-fill: #A89F97;" />
+                style="-fx-font-size: 18; -fx-text-fill: #A89F97;" />
               <Region HBox.hgrow="ALWAYS" />
               <Label fx:id="detailLongevity"
-                style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
+                style=" -fx-font-size: 19; -fx-font-weight: bold; -fx-text-fill: #1F1A17;" />
             </HBox>
           </VBox>
 
           <Label text="SCENT TIMELINE"
-            style="-fx-font-size: 11;
+            style=" -fx-font-size: 17;
                    -fx-font-weight: bold;
                    -fx-text-fill: #B89B8B;
                    -fx-letter-spacing: 1.5;" />
@@ -225,7 +222,7 @@
             <HBox alignment="CENTER_LEFT" spacing="10">
               <Label text="TOP  0-15m"
                 minWidth="92"
-                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+                style=" -fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
               <Region HBox.hgrow="ALWAYS" />
               <Rectangle fx:id="tlTop"
                 width="68" height="6"
@@ -236,7 +233,7 @@
             <HBox alignment="CENTER_LEFT" spacing="10">
               <Label text="HEART 15m-3h"
                 minWidth="92"
-                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+                style=" -fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
               <Region HBox.hgrow="ALWAYS" />
               <Rectangle fx:id="tlHeart"
                 width="96" height="6"
@@ -247,7 +244,7 @@
             <HBox alignment="CENTER_LEFT" spacing="10">
               <Label text="BASE  3h+"
                 minWidth="92"
-                style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
+                style=" -fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #B7ACA3;" />
               <Region HBox.hgrow="ALWAYS" />
               <Rectangle fx:id="tlBase"
                 width="120" height="6"
@@ -263,7 +260,7 @@
             style="-fx-background-color: #161210;
                    -fx-background-radius: 14;
                    -fx-text-fill: white;
-                   -fx-font-size: 14;
+                   -fx-font-size: 24;
                    -fx-font-weight: bold;
                    -fx-cursor: hand;" />
         </VBox>
