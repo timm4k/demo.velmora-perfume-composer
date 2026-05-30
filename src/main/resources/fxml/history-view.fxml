@@ -13,15 +13,32 @@
         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
         spacing="0.0">
 
-    <VBox style="-fx-padding: 32 48 20 48;" spacing="4.0">
+    <VBox style="-fx-padding: 28 48 12 48;" spacing="4.0">
       <HBox spacing="12.0" alignment="CENTER_LEFT">
-        <Rectangle width="3.0" height="20.0" fill="#b18db8" arcWidth="2" arcHeight="2" />
-        <Label text="Composition History" styleClass="history-heading" />
+        <Rectangle width="3.0" height="22.0" fill="#b18db8" arcWidth="2" arcHeight="2" />
+        <Label text="Formula Archive" styleClass="history-heading" />
+        <Label text="— Creative Workspace" styleClass="history-heading-sub" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="historyCount" text="0 sessions" styleClass="history-subtitle" />
+        <Label fx:id="historyCount" text="0 formulas" styleClass="history-subtitle" />
       </HBox>
-      <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+
+      <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 6 0 0 0;">
         <Button text="←  Back to Composer" onAction="#handleBack" styleClass="btn-ghost-lux" />
+        <Rectangle width="1.0" height="20.0" fill="rgba(177,141,184,0.15)" arcWidth="1" arcHeight="1" />
+
+        <TextField fx:id="searchField" promptText="Search formulas..."
+                   styleClass="history-search" prefWidth="200.0" />
+
+        <Label text="STATUS" style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
+        <ComboBox fx:id="statusFilter" prefWidth="120"
+                  style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #E2DDD4; -fx-border-radius: 6; -fx-font-size: 13;" />
+
+        <Label text="SORT" style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
+        <ComboBox fx:id="sortFilter" prefWidth="140"
+                  style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #E2DDD4; -fx-border-radius: 6; -fx-font-size: 13;" />
+
+        <Button fx:id="favoritesBtn" text="♡ Favorites" onAction="#toggleFavoritesFilter"
+                styleClass="filter-btn" style="-fx-font-size: 12; -fx-padding: 4 10;" />
       </HBox>
     </VBox>
 
@@ -32,10 +49,25 @@
                 style="-fx-background-color: transparent; -fx-padding: 0;"
                 styleClass="thin-scroll">
       <VBox spacing="0.0" style="-fx-padding: 24 48 48 48;">
-        <VBox fx:id="historyContainer" spacing="0.0" />
-        <Label text="End of history" styleClass="history-end" />
+        <VBox fx:id="historyContainer" spacing="12.0" />
+        <Label fx:id="historyEnd" text="End of archive" styleClass="history-end" />
       </VBox>
     </ScrollPane>
-
   </VBox>
+
+  <StackPane fx:id="detailOverlay" visible="false" managed="false"
+             styleClass="history-overlay" StackPane.alignment="CENTER">
+    <VBox fx:id="detailPanel" maxWidth="680.0" maxHeight="820.0"
+          styleClass="history-detail-panel" spacing="0.0"
+          style="-fx-padding: 0;">
+    </VBox>
+  </StackPane>
+
+  <StackPane fx:id="compareOverlay" visible="false" managed="false"
+             styleClass="history-overlay" StackPane.alignment="CENTER">
+    <VBox fx:id="comparePanel" maxWidth="760.0" maxHeight="820.0"
+          styleClass="history-detail-panel" spacing="0.0"
+          style="-fx-padding: 0;">
+    </VBox>
+  </StackPane>
 </AnchorPane>

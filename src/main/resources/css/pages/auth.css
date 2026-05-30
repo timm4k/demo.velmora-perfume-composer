@@ -14,15 +14,16 @@
 }
 
 .auth-brand {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 52;
   -fx-font-weight: bold;
   -fx-text-fill: #1C1917;
   -fx-letter-spacing: 8;
+  -fx-font-style: italic;
 }
 
 .auth-subtitle {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-letter-spacing: 6;
   -fx-text-fill: #B18DB8;
@@ -35,10 +36,12 @@
 }
 
 .auth-form-title {
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 28;
   -fx-font-weight: bold;
   -fx-text-fill: #1C1917;
   -fx-letter-spacing: 3;
+  -fx-font-style: italic;
 }
 
 .field-label {

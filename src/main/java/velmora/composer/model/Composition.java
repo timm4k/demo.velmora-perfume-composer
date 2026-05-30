@@ -24,6 +24,16 @@ public class Composition {
   @Column(name = "is_public")
   private boolean isPublic = false;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status")
+  private CompositionStatus status = CompositionStatus.DRAFT;
+
+  @Column(name = "is_favorite")
+  private boolean favorite = false;
+
+  @Column(name = "version_number")
+  private int versionNumber = 1;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;

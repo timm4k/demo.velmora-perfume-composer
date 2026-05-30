@@ -50,4 +50,17 @@ public class Perfume {
 
   @Column(name = "gender_profile")
   private String genderProfile;
+
+  @Column(name = "release_year")
+  private Integer releaseYear;
+
+  private String style;
+
+  private String complexity;
+
+  @Column(columnDefinition = "TEXT")
+  private String accords;
+
+  @Column(columnDefinition = "TEXT")
+  private String occasions;
 }

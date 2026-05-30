@@ -20,7 +20,7 @@
 .font-bold    { -fx-font-weight: bold; }
 .font-semibold { -fx-font-weight: 600; }
 .font-mono    { -fx-font-family: 'Courier New', monospace; }
-.font-serif   { -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif; }
+.font-serif   { -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif; }
 .font-italic  { -fx-font-style: italic; }
 
 .tracking-1 { -fx-letter-spacing: 1; }
@@ -52,28 +52,28 @@
 }
 
 .auth-form-title {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 38;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 2;
 }
 
 .auth-brand {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 82;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 18;
 }
 
 .auth-subtitle {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 19;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 7;
 }
 
 .auth-tagline {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 21;
   -fx-text-fill: -velmora-text-muted;
   -fx-letter-spacing: 2;
@@ -105,7 +105,7 @@
 }
 
 .heading-hero {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 48;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 1;
@@ -113,14 +113,14 @@
 }
 
 .heading-section {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 30;
   -fx-text-fill: -velmora-text;
   -fx-font-weight: 600;
 }
 
 .heading-sub {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 5;
@@ -131,7 +131,7 @@
 
 .label-muted {
   -fx-text-fill: -velmora-text-muted;
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
 }
 
@@ -146,7 +146,7 @@
 }
 
 .pyramid-zone-title {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
@@ -154,20 +154,20 @@
 }
 
 .pyramid-zone-empty {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: -velmora-text-muted;
   -fx-font-style: italic;
 }
 
 .score-text {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 34;
   -fx-text-fill: -velmora-text;
 }
 
 .metric-value {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 38;
   -fx-text-fill: -velmora-text;
 }
@@ -180,7 +180,7 @@
 }
 
 .material-name {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-font-weight: 600;
   -fx-text-fill: -velmora-text;
@@ -194,14 +194,14 @@
 }
 
 .material-score {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 18;
   -fx-text-fill: -velmora-accent-purple;
   -fx-font-style: italic;
 }
 
 .settings-section-header {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
   -fx-font-size: 26;
   -fx-text-fill: -velmora-text;
   -fx-padding: 0 0 6 0;
@@ -210,7 +210,7 @@
 }
 
 .settings-toggle-title {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: -velmora-text;
 }
@@ -222,20 +222,20 @@
 }
 
 .version-label {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-text-fill: -velmora-text-secondary;
 }
 
 .version-value {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-text-fill: -velmora-text;
   -fx-font-weight: 600;
 }
 
 .version-pro {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-text-fill: -velmora-accent-peach;
   -fx-font-weight: bold;

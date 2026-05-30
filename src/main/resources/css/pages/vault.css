@@ -137,14 +137,15 @@
 }
 
 .card-name {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 23;
   -fx-font-weight: 600;
   -fx-text-fill: #1C1917;
+  -fx-font-style: italic;
 }
 
 .card-description {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 18;
   -fx-text-fill: #8A847E;
   -fx-line-spacing: 2;
@@ -191,17 +192,20 @@
 }
 
 .detail-name {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 30;
   -fx-font-weight: 600;
   -fx-text-fill: #1C1917;
+  -fx-font-style: italic;
 }
 
 .detail-category {
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 17;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
   -fx-text-fill: #6DA89E;
+  -fx-font-style: italic;
 }
 
 .detail-section-title {
@@ -213,10 +217,11 @@
 }
 
 .detail-description {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: #6B6560;
   -fx-line-spacing: 4;
+  -fx-font-style: italic;
 }
 
 .detail-info-row {
@@ -232,9 +237,10 @@
 }
 
 .detail-info-value {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-text-fill: #1C1917;
+  -fx-font-style: italic;
 }
 
 .timeline-container {
@@ -272,7 +278,7 @@
   -fx-background-color: rgba(109,168,158,0.12);
   -fx-background-radius: 4;
   -fx-padding: 4 10;
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 18;
   -fx-text-fill: #6DA89E;
   -fx-font-weight: 600;
@@ -290,13 +296,13 @@
 }
 
 .empty-state-title {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 26;
   -fx-text-fill: #B0ADA8;
 }
 
 .empty-state-subtitle {
-  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;

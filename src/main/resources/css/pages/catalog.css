@@ -3,7 +3,7 @@
 }
 
 .catalog-heading {
-  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-family: "Libre Baskerville", serif;
   -fx-font-size: 34;
   -fx-text-fill: #2D2A24;
   -fx-font-weight: 700;
@@ -32,7 +32,7 @@
 .perfume-card {
   -fx-background-color: -velmora-surface;
   -fx-background-radius: 12;
-  -fx-padding: 0 0 12 0;
+  -fx-padding: 0 0 0 0;
   -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 6, 0, 0, 2);
 }
 
@@ -41,14 +41,38 @@
   -fx-translate-y: -2;
 }
 
+.card-glow-lavender {
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.08), 8, 0, 0, 2);
+}
+
+.card-glow-lavender:hover {
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.25), 24, 0, 0, 8);
+}
+
+.card-glow-peach {
+  -fx-effect: dropshadow(gaussian, rgba(214,148,120,0.08), 8, 0, 0, 2);
+}
+
+.card-glow-peach:hover {
+  -fx-effect: dropshadow(gaussian, rgba(214,148,120,0.25), 24, 0, 0, 8);
+}
+
+.card-glow-teal {
+  -fx-effect: dropshadow(gaussian, rgba(109,168,158,0.08), 8, 0, 0, 2);
+}
+
+.card-glow-teal:hover {
+  -fx-effect: dropshadow(gaussian, rgba(109,168,158,0.25), 24, 0, 0, 8);
+}
+
 .perfume-card-image {
   -fx-background-color: #F0EDE6;
   -fx-background-radius: 12 12 0 0;
-  -fx-min-height: 180;
+  -fx-min-height: 170;
 }
 
 .perfume-card-placeholder {
-  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-family: "Libre Baskerville", serif;
   -fx-font-size: 48;
   -fx-text-fill: #C4BFB9;
   -fx-font-weight: 700;
@@ -58,7 +82,7 @@
   -fx-background-color: rgba(45,42,36,0.7);
   -fx-background-radius: 4;
   -fx-text-fill: white;
-  -fx-font-size: 15;
+  -fx-font-size: 13;
   -fx-font-weight: 700;
   -fx-padding: 2 8 2 8;
   -fx-letter-spacing: 1;
@@ -74,19 +98,24 @@
 }
 
 .perfume-card-name {
-  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-family: "Libre Baskerville", serif;
   -fx-font-size: 21;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
-  -fx-padding: 0 12 0 12;
 }
 
 .perfume-card-family {
-  -fx-font-size: 16;
+  -fx-font-size: 15;
   -fx-text-fill: #A8A29E;
   -fx-font-weight: 600;
   -fx-letter-spacing: 1;
-  -fx-padding: 0 12 0 12;
+}
+
+.perfume-card-price {
+  -fx-font-size: 15;
+  -fx-font-weight: 700;
+  -fx-text-fill: #6B6560;
+  -fx-font-family: 'Libre Baskerville', serif;
 }
 
 .modal-overlay {
@@ -111,10 +140,11 @@
 }
 
 .modal-title {
-  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-family: "Libre Baskerville", serif;
   -fx-font-size: 30;
   -fx-font-weight: 700;
   -fx-text-fill: #2D2A24;
+  -fx-line-spacing: 1;
 }
 
 .modal-brand {
@@ -124,20 +154,6 @@
   -fx-letter-spacing: 1;
 }
 
-.modal-image {
-  -fx-background-color: #F0EDE6;
-  -fx-background-radius: 8;
-  -fx-min-height: 200;
-  -fx-max-height: 200;
-}
-
-.modal-image-placeholder {
-  -fx-font-family: "Cormorant Garamond", serif;
-  -fx-font-size: 54;
-  -fx-text-fill: #C4BFB9;
-  -fx-font-weight: 700;
-}
-
 .modal-section-title {
   -fx-font-size: 16;
   -fx-text-fill: #A8A29E;
@@ -145,54 +161,11 @@
   -fx-letter-spacing: 1;
 }
 
-.modal-pyramid {
-  -fx-background-color: -velmora-bg;
-  -fx-background-radius: 8;
-  -fx-padding: 12 16 12 16;
-}
-
-.modal-phase-label {
-  -fx-font-size: 16;
-  -fx-font-weight: 700;
-  -fx-text-fill: #8A8680;
-  -fx-letter-spacing: 1;
-}
-
-.modal-phase-notes {
-  -fx-font-size: 18;
-  -fx-text-fill: #4B4B4B;
-  -fx-font-style: italic;
-}
-
-.modal-meta {
-  -fx-padding: 4 0 0 0;
-  -fx-flex-wrap: wrap;
-}
-
-.modal-meta-chip {
-  -fx-background-color: #F0EDE6;
-  -fx-background-radius: 6;
-  -fx-padding: 6 12 6 12;
-  -fx-min-width: 60;
-}
-
-.modal-meta-title {
-  -fx-font-size: 14;
-  -fx-text-fill: #A8A29E;
-  -fx-font-weight: 700;
-  -fx-letter-spacing: 1;
-}
-
-.modal-meta-value {
-  -fx-font-size: 18;
-  -fx-text-fill: #2D2A24;
-  -fx-font-weight: 600;
-}
-
 .modal-desc {
   -fx-font-size: 17;
   -fx-text-fill: #6B6762;
   -fx-line-spacing: 2;
+  -fx-font-style: italic;
 }
 
 .btn-similar {
@@ -210,18 +183,102 @@
   -fx-background-color: #9C78A3;
 }
 
-.modal-similar-result {
-  -fx-padding: 8 0 0 0;
+.btn-similar-full {
+  -fx-background-radius: 10;
+  -fx-padding: 12 20;
+  -fx-font-size: 18;
+  -fx-letter-spacing: 1;
 }
 
-.modal-similar-pct {
-  -fx-font-family: "Cormorant Garamond", serif;
-  -fx-font-size: 30;
-  -fx-font-weight: 700;
+.filter-btn {
+  -fx-background-color: transparent;
+  -fx-background-radius: 16;
+  -fx-padding: 6 16;
+  -fx-font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
+  -fx-font-size: 18;
+  -fx-font-weight: bold;
+  -fx-text-fill: #6B6560;
+  -fx-cursor: hand;
 }
 
-.modal-similar-text {
-  -fx-font-size: 17;
-  -fx-text-fill: #6B6762;
-  -fx-font-style: italic;
+.filter-btn:hover {
+  -fx-text-fill: #B18DB8;
+  -fx-background-color: rgba(177,141,184,0.08);
+}
+
+.btn-ghost-lux {
+  -fx-background-color: transparent;
+  -fx-text-fill: #8A8580;
+  -fx-background-radius: 20px;
+  -fx-padding: 8 18;
+  -fx-font-size: 16px;
+  -fx-font-weight: 600;
+  -fx-letter-spacing: 1;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 4, 0, 0, 1);
+}
+
+.btn-ghost-lux:hover {
+  -fx-background-color: rgba(177, 141, 184, 0.08);
+}
+
+.vault-slider {
+  -fx-pref-height: 24;
+}
+
+.vault-slider .track {
+  -fx-background-color: rgba(234,230,223,0.6);
+  -fx-background-radius: 4;
+  -fx-pref-height: 4;
+}
+
+.vault-slider .thumb {
+  -fx-background-color: #B18DB8;
+  -fx-background-radius: 50%;
+  -fx-pref-width: 14;
+  -fx-pref-height: 14;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.3), 6, 0, 0, 0);
+}
+
+.vault-slider .thumb:hover {
+  -fx-background-color: #9C78A3;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.5), 10, 0, 0, 0);
+}
+
+.vault-slider .colored-track {
+  -fx-background-color: rgba(177,141,184,0.5);
+  -fx-background-radius: 4;
+}
+
+.thin-scroll {
+  -fx-background-color: transparent;
+}
+
+.thin-scroll .viewport {
+  -fx-background-color: transparent;
+}
+
+.thin-scroll .scroll-bar:vertical {
+  -fx-pref-width: 4;
+  -fx-background-color: transparent;
+}
+
+.thin-scroll .scroll-bar:vertical .thumb {
+  -fx-background-color: rgba(177,141,184,0.25);
+  -fx-background-radius: 4;
+}
+
+.thin-scroll .scroll-bar:vertical .track {
+  -fx-background-color: transparent;
+}
+
+.thin-scroll .scroll-bar:horizontal {
+  -fx-pref-height: 0;
+}
+
+.thin-scroll .scroll-bar .increment-button,
+.thin-scroll .scroll-bar .decrement-button {
+  -fx-pref-height: 0;
+  -fx-pref-width: 0;
+  -fx-opacity: 0;
 }

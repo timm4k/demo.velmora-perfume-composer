@@ -2,3 +2,35 @@
   -fx-padding: 10 0;
   -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 4, 0, 0, -2);
 }
+
+.settings-section {
+  -fx-padding: 24;
+  -fx-spacing: 16;
+}
+
+.settings-label {
+  -fx-font-size: 14;
+  -fx-font-weight: 600;
+  -fx-text-fill: -velmora-text;
+}
+
+.settings-description {
+  -fx-font-size: 12;
+  -fx-text-fill: -velmora-text-muted;
+  -fx-wrap-text: true;
+}
+
+.settings-input {
+  -fx-background-color: rgba(255, 253, 251, 0.6);
+  -fx-background-radius: 2;
+  -fx-border-color: rgba(177, 141, 184, 0.15);
+  -fx-border-radius: 2;
+  -fx-padding: 8 12;
+  -fx-font-size: 14;
+  -fx-font-family: 'Libre Baskerville', serif;
+}
+
+.settings-input:focused {
+  -fx-border-color: rgba(177, 141, 184, 0.4);
+  -fx-background-color: rgba(255, 253, 251, 0.85);
+}

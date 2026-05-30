@@ -3,14 +3,13 @@ package velmora.composer.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionItem;
-import velmora.composer.model.NoteType;
+import velmora.composer.model.CompositionStatus;
 import velmora.composer.model.User;
 import velmora.composer.repository.CompositionRepository;
 import velmora.composer.repository.UserRepository;
@@ -21,9 +20,15 @@ public class CompositionService {
 
   private final CompositionRepository compositionRepository;
   private final UserRepository userRepository;
+  private final VersionService versionService;
 
   @Transactional
   public Composition saveComposition(Composition composition) {
+    return saveComposition(composition, null);
+  }
+
+  @Transactional
+  public Composition saveComposition(Composition composition, String changeDescription) {
     List<CompositionItem> items = composition.getItems();
 
     if (composition.getName() == null || composition.getName().trim().isEmpty()) {
@@ -54,6 +59,10 @@ public class CompositionService {
       composition.setUser(managed);
     }
 
+    if (composition.getStatus() == null) {
+      composition.setStatus(CompositionStatus.DRAFT);
+    }
+
     composition.setUpdatedAt(LocalDateTime.now());
 
     List<CompositionItem> detached = new ArrayList<>(items);
@@ -66,30 +75,15 @@ public class CompositionService {
       saved.getItems().add(item);
     }
 
-    return compositionRepository.save(saved);
-  }
+    Composition result = compositionRepository.save(saved);
 
-  public Map<NoteType, List<CompositionItem>> getFragrancePyramid(Composition composition) {
-    return composition.getItems().stream()
-        .filter(i -> i.getNote() != null && i.getNote().getType() != null)
-        .collect(Collectors.groupingBy(item -> item.getNote().getType()));
-  }
-
-  public String analyzeCompatibility(Composition composition) {
-    List<CompositionItem> items = composition.getItems();
-
-    long topNotesCount = items.stream()
-        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.TOP).count();
-    long baseNotesCount = items.stream()
-        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE).count();
-
-    if (topNotesCount == 0) {
-      return "Warning: Missing top notes. The scent may feel too heavy initially";
-    }
-    if (baseNotesCount == 0) {
-      return "Warning: No base notes detected. The fragrance will lack longevity";
+    try {
+      versionService.createVersion(result, changeDescription != null ? changeDescription : "Saved");
+    } catch (Exception e) {
+      System.err.println("[COMPOSITION] Version creation failed: " + e.getMessage());
     }
 
-    return "Composition is balanced. Pyramid structure is correct";
+    return result;
   }
+
 }

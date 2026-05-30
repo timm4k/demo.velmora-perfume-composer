@@ -2,27 +2,27 @@ package velmora.composer.ui.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import velmora.composer.model.Note;
-import velmora.composer.model.NoteType;
 import velmora.composer.model.Role;
-import velmora.composer.repository.NoteRepository;
+import velmora.composer.service.AdminService;
 import velmora.composer.ui.UserSession;
 import velmora.composer.ui.ViewManager;
+import velmora.composer.ui.util.UiUtils;
 
 @Component
 @RequiredArgsConstructor
 public class AdminController {
 
-  private final NoteRepository noteRepository;
+  private final AdminService adminService;
   private final UserSession userSession;
   private final ViewManager viewManager;
 
@@ -64,7 +64,7 @@ public class AdminController {
   }
 
   private void loadNotes() {
-    var items = noteRepository.findAll();
+    var items = adminService.getAllNotes();
     notesCount.setText(String.valueOf(items.size()));
     notesObservable.setAll(items);
     notesList.setItems(notesObservable);
@@ -78,15 +78,15 @@ public class AdminController {
           HBox box = new HBox(8);
           box.setAlignment(Pos.CENTER_LEFT);
           Circle dot = new Circle(5);
-          dot.setFill(parseColor(n.getColorCode()));
+          dot.setFill(UiUtils.parseColor(n.getColorCode()));
           Label name = new Label(n.getName());
-          name.setStyle("-fx-font-size: 19; -fx-font-weight: 500;");
+          name.getStyleClass().add("admin-note-name");
           Label type = new Label(n.getType() != null ? n.getType().name() : "");
-          type.setStyle("-fx-font-size: 15; -fx-text-fill: #b18db8; -fx-font-weight: bold;");
+          type.getStyleClass().add("admin-note-type");
           Label cat = new Label(n.getCategory() != null ? n.getCategory() : "");
-          cat.setStyle("-fx-font-size: 15; -fx-text-fill: #B0ADA8; -fx-font-style: italic;");
+          cat.getStyleClass().add("admin-note-category");
           Label intensity = new Label("★".repeat(n.getIntensity() != null ? n.getIntensity() / 2 : 0));
-          intensity.setStyle("-fx-font-size: 15; -fx-text-fill: #E2A998;");
+          intensity.getStyleClass().add("admin-note-intensity");
           box.getChildren().addAll(dot, name, type, cat, intensity);
           setGraphic(box);
         }
@@ -106,6 +106,7 @@ public class AdminController {
     editIntensity.getValueFactory().setValue(5);
     editColor.clear();
     editDescription.clear();
+    adminMessage.setText("");
     editorPanel.setVisible(true);
     editorPanel.setManaged(true);
   }
@@ -124,6 +125,7 @@ public class AdminController {
     editIntensity.getValueFactory().setValue(selected.getIntensity() != null ? selected.getIntensity() : 5);
     editColor.setText(selected.getColorCode());
     editDescription.setText(selected.getDescription());
+    adminMessage.setText("");
     editorPanel.setVisible(true);
     editorPanel.setManaged(true);
   }
@@ -134,10 +136,10 @@ public class AdminController {
     Note selected = notesList.getSelectionModel().getSelectedItem();
     if (selected == null) return;
 
-    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+    Task<Void> task = new Task<>() {
       @Override
       protected Void call() {
-        noteRepository.delete(selected);
+        adminService.deleteNote(selected);
         return null;
       }
     };
@@ -154,27 +156,33 @@ public class AdminController {
   @FXML
   public void handleSaveNote() {
     if (userSession.getRole() != Role.ADMIN) return;
-    String name = editName.getText().trim();
-    if (name.isEmpty()) { adminMessage.setText("Name required"); return; }
+    String name = editName.getText();
+    if (name == null || name.trim().isEmpty()) {
+      adminMessage.setText("Name required");
+      return;
+    }
 
-    Note note = isNew ? new Note() : editingNote;
-    note.setName(name);
-    note.setCategory(editCategory.getValue());
-    note.setType(editType.getValue() != null ? NoteType.valueOf(editType.getValue()) : null);
-    note.setIntensity(editIntensity.getValue());
-    note.setColorCode(editColor.getText().trim());
-    note.setDescription(editDescription.getText().trim());
+    Note note = adminService.buildNote(
+        isNew ? null : editingNote.getId(),
+        name,
+        editCategory.getValue(),
+        editType.getValue(),
+        editIntensity.getValue(),
+        editColor.getText(),
+        editDescription.getText()
+    );
 
-    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
+    Task<Void> task = new Task<>() {
       @Override
       protected Void call() {
-        noteRepository.save(note);
+        adminService.saveNote(note);
         return null;
       }
     };
     task.setOnSucceeded(e -> {
       editorPanel.setVisible(false);
       editorPanel.setManaged(false);
+      adminMessage.setText("");
       loadNotes();
     });
     task.setOnFailed(e -> adminMessage.setText(
@@ -186,16 +194,11 @@ public class AdminController {
   public void handleCancel() {
     editorPanel.setVisible(false);
     editorPanel.setManaged(false);
+    adminMessage.setText("");
   }
 
   @FXML
   public void handleBack() {
     viewManager.showMain();
-  }
-
-  private static Color parseColor(String colorCode) {
-    if (colorCode == null || colorCode.isBlank()) return Color.GRAY;
-    try { return Color.web(colorCode); }
-    catch (Exception e) { return Color.GRAY; }
   }
 }

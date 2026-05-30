@@ -3,10 +3,17 @@
 }
 
 .history-heading {
-  -fx-font-family: "Cormorant Garamond", serif;
+  -fx-font-family: "Libre Baskerville", serif;
   -fx-font-size: 34;
   -fx-text-fill: #2D2A24;
   -fx-font-weight: 700;
+}
+
+.history-heading-sub {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 20;
+  -fx-text-fill: #C4BFB9;
+  -fx-font-style: italic;
 }
 
 .history-subtitle {
@@ -19,45 +26,72 @@
   -fx-font-size: 16;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
-  -fx-padding: 16 0 0 32;
+  -fx-padding: 16 0 0 0;
+}
+
+.history-search {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 6;
+  -fx-border-color: #E2DDD4;
+  -fx-border-radius: 6;
+  -fx-font-size: 14;
+  -fx-padding: 4 8;
 }
 
 .history-card {
-  -fx-padding: 8 0 8 0;
+  -fx-background-color: #FFFDFB;
+  -fx-background-radius: 10;
+  -fx-border-color: #EDE8E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 6, 0, 0, 2);
+  -fx-padding: 16 20;
   -fx-cursor: hand;
 }
 
 .history-card:hover {
-  -fx-background-color: rgba(177,141,184,0.06);
-  -fx-border-radius: 8;
-  -fx-background-radius: 8;
-  -fx-padding: 8 8 8 8;
+  -fx-background-color: #FFFFFF;
+  -fx-border-color: #D8D0C6;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.1), 10, 0, 0, 3);
 }
 
-.history-dot {
-  -fx-fill: #B18DB8;
-  -fx-stroke: #C8C4D8;
-  -fx-stroke-width: 1.5;
+.history-card-inner {
+  -fx-spacing: 8;
 }
 
-.history-dot:hover {
-  -fx-fill: #7B78A6;
+.history-card-header {
+  -fx-spacing: 12;
+  -fx-alignment: CENTER_LEFT;
 }
 
-.history-line {
-  -fx-background-color: #DDD9D1;
-  -fx-background-radius: 1;
-}
-
-.history-name {
-  -fx-font-family: "Cormorant Garamond", serif;
-  -fx-font-size: 23;
+.history-card-name {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 22;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
 }
 
-.history-status {
+.history-card-fav {
+  -fx-font-size: 18;
+  -fx-cursor: hand;
+}
+
+.history-card-fav:hover {
+  -fx-font-size: 20;
+}
+
+.history-card-vis {
   -fx-font-size: 16;
+  -fx-cursor: hand;
+  -fx-text-fill: #B0ADA8;
+}
+
+.history-card-vis:hover {
+  -fx-text-fill: #6DA89E;
+}
+
+.history-status-badge {
+  -fx-font-size: 13;
   -fx-font-weight: 700;
   -fx-letter-spacing: 1;
   -fx-padding: 2 10 2 10;
@@ -65,33 +99,333 @@
   -fx-text-fill: white;
 }
 
-.status-draft {
+.history-status-DRAFT {
   -fx-background-color: #C8954A;
 }
 
-.status-refined {
-  -fx-background-color: #7B78A6;
+.history-status-EXPERIMENTAL {
+  -fx-background-color: #D69478;
 }
 
-.status-final {
+.history-status-PUBLISHED {
   -fx-background-color: #5A9E8F;
 }
 
-.status-experimental {
+.history-status-ARCHIVED {
+  -fx-background-color: #A8A29E;
+}
+
+.history-card-meta {
+  -fx-spacing: 16;
+  -fx-alignment: CENTER_LEFT;
+}
+
+.history-card-date {
+  -fx-font-size: 15;
+  -fx-text-fill: #B0ADA8;
+}
+
+.history-card-notes {
+  -fx-font-size: 15;
+  -fx-text-fill: #B0ADA8;
+  -fx-font-weight: 600;
+}
+
+.history-card-versions {
+  -fx-font-size: 14;
+  -fx-text-fill: #B18DB8;
+  -fx-font-weight: 600;
+}
+
+.history-card-stats {
+  -fx-spacing: 8;
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 4 0 0 0;
+}
+
+.history-stat-chip {
+  -fx-font-size: 12;
+  -fx-text-fill: #8A8580;
+  -fx-background-color: rgba(177,141,184,0.08);
+  -fx-background-radius: 4;
+  -fx-padding: 2 8;
+}
+
+.history-card-actions {
+  -fx-spacing: 6;
+  -fx-alignment: CENTER_RIGHT;
+}
+
+.history-overlay {
+  -fx-background-color: rgba(28,25,23,0.5);
+}
+
+.history-detail-panel {
+  -fx-background-color: #FFFDFB;
+  -fx-background-radius: 12;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 8);
+}
+
+/* Timeline */
+.timeline-container {
+  -fx-padding: 16 20;
+  -fx-spacing: 0;
+}
+
+.timeline-title {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 22;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2D2A24;
+  -fx-padding: 0 0 12 0;
+}
+
+.timeline-item {
+  -fx-padding: 4 0;
+  -fx-cursor: hand;
+}
+
+.timeline-item:hover {
+  -fx-background-color: rgba(177,141,184,0.06);
+  -fx-background-radius: 6;
+}
+
+.timeline-dot {
+  -fx-fill: #B18DB8;
+  -fx-stroke: #D8D0D8;
+  -fx-stroke-width: 1.5;
+}
+
+.timeline-dot-active {
+  -fx-fill: #7B78A6;
+  -fx-stroke: #B18DB8;
+  -fx-stroke-width: 2;
+}
+
+.timeline-line {
+  -fx-background-color: #E2DDD4;
+  -fx-background-radius: 1;
+}
+
+.timeline-version-num {
+  -fx-font-size: 14;
+  -fx-font-weight: 700;
+  -fx-text-fill: #B18DB8;
+  -fx-min-width: 32;
+}
+
+.timeline-version-desc {
+  -fx-font-size: 15;
+  -fx-text-fill: #5F5B57;
+}
+
+.timeline-version-date {
+  -fx-font-size: 13;
+  -fx-text-fill: #B0ADA8;
+}
+
+.timeline-restore-btn {
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-text-fill: #6DA89E;
+  -fx-background-color: transparent;
+  -fx-border-color: #6DA89E;
+  -fx-border-radius: 4;
+  -fx-padding: 2 8;
+  -fx-cursor: hand;
+}
+
+.timeline-restore-btn:hover {
+  -fx-background-color: rgba(109,168,158,0.1);
+}
+
+/* Version Comparison */
+.compare-title {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 22;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2D2A24;
+  -fx-padding: 16 20 8 20;
+}
+
+.compare-header {
+  -fx-padding: 0 20;
+  -fx-spacing: 12;
+  -fx-alignment: CENTER_LEFT;
+}
+
+.compare-vs {
+  -fx-font-size: 18;
+  -fx-font-weight: 700;
+  -fx-text-fill: #B18DB8;
+  -fx-padding: 0 8;
+}
+
+.compare-section {
+  -fx-padding: 8 20;
+}
+
+.compare-section-title {
+  -fx-font-size: 14;
+  -fx-font-weight: 700;
+  -fx-text-fill: #A8A29E;
+  -fx-letter-spacing: 1.5;
+  -fx-padding: 8 0 4 0;
+}
+
+.compare-added {
+  -fx-font-size: 14;
+  -fx-text-fill: #5A9E8F;
+  -fx-font-weight: 600;
+  -fx-padding: 2 0 2 16;
+}
+
+.compare-removed {
+  -fx-font-size: 14;
+  -fx-text-fill: #D9534F;
+  -fx-font-weight: 600;
+  -fx-padding: 2 0 2 16;
+}
+
+.compare-changed {
+  -fx-font-size: 14;
+  -fx-text-fill: #C8954A;
+  -fx-font-weight: 600;
+  -fx-padding: 2 0 2 16;
+}
+
+.compare-desc-change {
+  -fx-font-size: 14;
+  -fx-text-fill: #6B6560;
+  -fx-font-style: italic;
+  -fx-padding: 2 0 2 16;
+}
+
+/* Stats */
+.stats-grid {
+  -fx-padding: 12 20;
+  -fx-hgap: 12;
+  -fx-vgap: 8;
+}
+
+.stat-box {
+  -fx-background-color: rgba(177,141,184,0.06);
+  -fx-background-radius: 8;
+  -fx-padding: 10 14;
+  -fx-alignment: CENTER;
+  -fx-min-width: 100;
+}
+
+.stat-value {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 24;
+  -fx-font-weight: 700;
+  -fx-text-fill: #2D2A24;
+}
+
+.stat-label {
+  -fx-font-size: 12;
+  -fx-font-weight: 700;
+  -fx-text-fill: #A8A29E;
+  -fx-letter-spacing: 1;
+}
+
+/* Detail modal */
+.detail-header {
+  -fx-padding: 20 24 12 24;
+  -fx-spacing: 8;
+}
+
+.detail-title {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 26;
+  -fx-font-weight: 700;
+  -fx-text-fill: #2D2A24;
+}
+
+.detail-close {
+  -fx-font-size: 20;
+  -fx-text-fill: #B0ADA8;
+  -fx-cursor: hand;
+  -fx-padding: 0 4;
+}
+
+.detail-close:hover {
+  -fx-text-fill: #6B6560;
+}
+
+.detail-actions {
+  -fx-padding: 12 24 20 24;
+  -fx-spacing: 8;
+  -fx-alignment: CENTER_LEFT;
+}
+
+.detail-action-btn {
+  -fx-font-size: 13;
+  -fx-font-weight: 600;
+  -fx-text-fill: #6B6560;
+  -fx-background-color: rgba(177,141,184,0.08);
+  -fx-background-radius: 6;
+  -fx-padding: 6 14;
+  -fx-border-color: transparent;
+  -fx-cursor: hand;
+}
+
+.detail-action-btn:hover {
+  -fx-background-color: rgba(177,141,184,0.15);
+}
+
+.detail-action-btn-primary {
+  -fx-text-fill: white;
+  -fx-background-color: #B18DB8;
+}
+
+.detail-action-btn-primary:hover {
+  -fx-background-color: #9A7A9F;
+}
+
+.detail-action-btn-danger {
+  -fx-text-fill: white;
   -fx-background-color: #D9534F;
 }
 
-.history-meta {
-  -fx-padding: 0;
+.detail-action-btn-danger:hover {
+  -fx-background-color: #C0392B;
 }
 
-.history-date {
-  -fx-font-size: 17;
-  -fx-text-fill: #B0ADA8;
+.detail-status-combo {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 6;
+  -fx-border-color: #E2DDD4;
+  -fx-border-radius: 6;
+  -fx-font-size: 13;
+  -fx-padding: 2 6;
 }
 
-.history-notes {
-  -fx-font-size: 17;
+/* Empty state */
+.history-empty {
+  -fx-alignment: CENTER;
+  -fx-padding: 60 40;
+}
+
+.history-empty-title {
+  -fx-font-family: "Libre Baskerville", serif;
+  -fx-font-size: 28;
   -fx-text-fill: #B0ADA8;
   -fx-font-weight: 600;
+}
+
+.history-empty-sub {
+  -fx-font-size: 18;
+  -fx-text-fill: #C4BFB9;
+  -fx-font-style: italic;
+  -fx-padding: 8 0 0 0;
+}
+
+.status-combo-box {
+  -fx-background-color: rgba(177,141,184,0.08);
+  -fx-background-radius: 4;
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-padding: 2 4;
 }

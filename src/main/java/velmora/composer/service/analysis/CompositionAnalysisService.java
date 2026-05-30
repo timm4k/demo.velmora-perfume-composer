@@ -94,6 +94,15 @@ public class CompositionAnalysisService {
         citrus, floral, woody, earthy, all);
   }
 
+  public int calcBalanceScore(List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+    int total = topNotes.size() + heartNotes.size() + baseNotes.size();
+    if (total == 0) return 0;
+    double topR = (double) topNotes.size() / total;
+    double heartR = (double) heartNotes.size() / total;
+    double baseR = (double) baseNotes.size() / total;
+    return calcBalance(topR, heartR, baseR);
+  }
+
   private int calcBalance(double topR, double heartR, double baseR) {
     if (topR == 0 || heartR == 0 || baseR == 0) return 25;
     double score = 100;

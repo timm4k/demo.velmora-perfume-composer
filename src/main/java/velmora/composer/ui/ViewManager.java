@@ -34,6 +34,7 @@ public class ViewManager {
   private boolean ready;
   private final Map<String, HBox> navItems = new HashMap<>();
   private Runnable beforeCatalogNavigate = () -> {};
+  private Runnable beforeVaultNavigate = () -> {};
 
   public ViewManager(ApplicationContext context, UserSession userSession, CompositionState compositionState) {
     this.context = context;
@@ -43,6 +44,10 @@ public class ViewManager {
 
   public void setBeforeCatalogNavigate(Runnable r) {
     this.beforeCatalogNavigate = r;
+  }
+
+  public void setBeforeVaultNavigate(Runnable r) {
+    this.beforeVaultNavigate = r;
   }
 
   public void setPrimaryStage(Stage primaryStage) {
@@ -166,49 +171,7 @@ public class ViewManager {
     adminItem.setManaged(userSession.getRole() == Role.ADMIN);
     nav.getChildren().add(adminItem);
 
-    VBox bottom = new VBox();
-    bottom.setStyle("-fx-padding: 0 0 24 0;");
-    Rectangle div3 = new Rectangle(180.0, 1.0, javafx.scene.paint.Color.web("#DDD9D1"));
-    div3.setStyle("-fx-translate-x: 20;");
-    VBox dir = new VBox(3.0);
-    dir.setStyle("-fx-padding: 14 12 0 12;");
-    Label dirHeading = new Label("DIRECTORY");
-    dirHeading.getStyleClass().add("dir-heading");
-    dir.getChildren().add(dirHeading);
-    String[][] dirEntries = {
-        {"rgba(214,148,120,0.7)", "Bergamot"},
-        {"rgba(177,141,184,0.7)", "Pink Pepper"},
-        {"rgba(109,168,158,0.6)", "Neroli"},
-        {"rgba(177,141,184,0.5)", "Iris Absolute"},
-        {"rgba(214,148,120,0.5)", "Rose Damascena"},
-        {"rgba(109,168,158,0.5)", "Jasmine"}
-    };
-    for (String[] e : dirEntries) {
-      HBox row = new HBox(8.0);
-      row.setAlignment(Pos.CENTER_LEFT);
-      row.setStyle("-fx-padding: 3 8;");
-      Circle cr = new Circle(4.0);
-      cr.setStyle("-fx-fill: " + e[0] + ";");
-      Label l = new Label(e[1]);
-      l.getStyleClass().add("dir-item");
-      row.getChildren().addAll(cr, l);
-      dir.getChildren().add(row);
-    }
-
-    HBox status = new HBox(6.0);
-    status.setAlignment(Pos.CENTER_LEFT);
-    status.getStyleClass().add("status-bar");
-    Label online = new Label("● ONLINE");
-    online.getStyleClass().add("status-online");
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-    Label help = new Label("?");
-    help.getStyleClass().add("status-help");
-    status.getChildren().addAll(online, spacer, help);
-
-    bottom.getChildren().addAll(div3, dir, status);
-
-    sb.getChildren().addAll(brandBlock, div1, molMap, div2, nav, bottom);
+    sb.getChildren().addAll(brandBlock, div1, molMap, div2, nav);
     return sb;
   }
 
@@ -286,6 +249,7 @@ public class ViewManager {
   }
 
   public void showVault() {
+    beforeVaultNavigate.run();
     root.setLeft(sidebar);
     loadContent("/fxml/vault-view.fxml");
     setActiveNav("vault");

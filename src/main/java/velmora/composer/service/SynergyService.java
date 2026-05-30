@@ -59,15 +59,14 @@ public class SynergyService {
         pairCount++;
 
         rawSum += switch (score) {
-          case 2 -> 1.0;
-          case 1 -> 0.75;
-          case 0 -> 0.40;
+          case 2  -> 1.0;
+          case 1  -> 0.75;
+          case 0  -> 0.40;
           default -> 0.0;
         };
 
         NoteInsight ins = new NoteInsight(
-            a.getName(), fa, b.getName(), fb, score, explain(a, b, score)
-        );
+            a.getName(), fa, b.getName(), fb, score, explain(a, b, score));
         if (score >= 1) {
           if (good.size() < 20) good.add(ins);
         } else if (score == -1) {
@@ -78,10 +77,10 @@ public class SynergyService {
 
     if (pairCount == 0) return new SynergyResult(50, List.of(), List.of(), List.of());
 
-    int baseScore = (int) Math.round(rawSum / pairCount * 100);
+    int baseScore     = (int) Math.round(rawSum / pairCount * 100);
     int diversityBonus = calcDiversityBonus(familyCount, notes.size());
-    int filledBonus = Math.min(25, pairCount);
-    int finalScore = Math.min(100, baseScore + diversityBonus + filledBonus);
+    int filledBonus   = Math.min(25, pairCount);
+    int finalScore    = Math.min(100, baseScore + diversityBonus + filledBonus);
 
     checkFamilyBalance(familyCount, notes.size(), warnings);
 
@@ -108,33 +107,30 @@ public class SynergyService {
   private String explain(Note a, Note b, int score) {
     String na = a.getName();
     String nb = b.getName();
+    int idx = Math.abs((na + nb).hashCode()) % 3;
 
     if (score >= 2) {
-      return pick(
-        na + " + " + nb + " — excellent synergy: they amplify each other, creating a rich, coherent accord",
-        na + " + " + nb + " — perfect pair: together they build a harmonious blend where both shine",
-        na + " + " + nb + " — great combination: the two notes fuse naturally into a unified scent"
-      );
+      return switch (idx) {
+        case 0 -> na + " + " + nb + " — excellent synergy: they amplify each other into a rich, coherent accord";
+        case 1 -> na + " + " + nb + " — perfect pair: together they build a harmonious blend where both shine";
+        default -> na + " + " + nb + " — great combination: the two notes fuse naturally into a unified scent";
+      };
     }
     if (score == 1) {
-      return pick(
-        na + " + " + nb + " — good match: one softens the other for a balanced transition",
-        na + " + " + nb + " — works well: their contrast adds depth without clashing",
-        na + " + " + nb + " — compatible: they create a pleasant bridge between two families"
-      );
+      return switch (idx) {
+        case 0 -> na + " + " + nb + " — good match: one softens the other for a balanced transition";
+        case 1 -> na + " + " + nb + " — works well: their contrast adds depth without clashing";
+        default -> na + " + " + nb + " — compatible: they create a pleasant bridge between two families";
+      };
     }
     if (score == -1) {
-      return pick(
-        na + " + " + nb + " — may clash: bright volatiles compete with heavy base, creating a disjointed profile",
-        na + " + " + nb + " — poor synergy: their characters fight rather than blend, the scent may feel fragmented",
-        na + " + " + nb + " — conflict: one overpowers the other, losing the nuance of both"
-      );
+      return switch (idx) {
+        case 0 -> na + " + " + nb + " — may clash: bright volatiles compete with heavy base, creating a disjointed profile";
+        case 1 -> na + " + " + nb + " — poor synergy: their characters fight rather than blend";
+        default -> na + " + " + nb + " — conflict: one overpowers the other, losing the nuance of both";
+      };
     }
-    return na + " + " + nb + " — neutral: neither helps nor hurts, they coexist without interaction";
-  }
-
-  private String pick(String... options) {
-    return options[(int) (Math.random() * options.length)];
+    return na + " + " + nb + " — neutral: they coexist without notable interaction";
   }
 
   private Map<String, Integer> countFamilies(List<Note> notes) {
@@ -150,8 +146,8 @@ public class SynergyService {
     familyCount.entrySet().stream()
         .filter(e -> e.getValue() > total / 2)
         .findFirst().ifPresent(dom ->
-            warnings.add("\u26A0 " + dom.getKey() + " dominates (" + dom.getValue() + "/" + total + " notes) — consider diversifying")
-        );
+            warnings.add("⚠ " + dom.getKey() + " dominates ("
+                + dom.getValue() + "/" + total + " notes) — consider diversifying"));
   }
 
   public record NoteInsight(
@@ -159,5 +155,10 @@ public class SynergyService {
       int score, String explanation
   ) {}
 
-  public record SynergyResult(int score, List<NoteInsight> good, List<NoteInsight> conflicts, List<String> warnings) {}
+  public record SynergyResult(
+      int score,
+      List<NoteInsight> good,
+      List<NoteInsight> conflicts,
+      List<String> warnings
+  ) {}
 }
