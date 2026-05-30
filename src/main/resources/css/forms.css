@@ -1,22 +1,24 @@
 .text-field, .password-field {
-  -fx-background-color: -velmora-white;
+  -fx-background-color: -velmora-surface;
   -fx-border-color: -velmora-border;
   -fx-border-width: 1;
   -fx-font-size: 20;
   -fx-padding: 10 12;
   -fx-text-fill: -velmora-text;
   -fx-prompt-text-fill: #B0ADA8;
-  -fx-background-radius: 4;
-  -fx-border-radius: 4;
+  -fx-background-radius: 12;
+  -fx-border-radius: 12;
 }
 
 .text-field:focused, .password-field:focused {
   -fx-border-color: -velmora-accent-purple;
   -fx-border-width: 1.5;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.1), 6, 0, 0, 1);
 }
 
 .text-field:hover, .password-field:hover {
   -fx-border-color: -velmora-accent-teal;
+  -fx-effect: dropshadow(gaussian, rgba(109,168,158,0.08), 6, 0, 0, 1);
 }
 
 .toggle-button, .check-box {

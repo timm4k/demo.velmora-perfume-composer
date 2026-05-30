@@ -65,7 +65,7 @@ public class EmailService {
                   <div style="background:#F6F3EE;border:1px solid #E2A998;border-radius:12px;padding:20px 32px;margin:0 0 24px;display:inline-block;">
                     <span style="font-family:'Courier New',monospace;font-size:32px;font-weight:bold;color:#1A1A1A;letter-spacing:8px;">%s</span>
                   </div>
-                  <p style="color:#A4A0C5;font-size:11px;line-height:1.5;margin:0 0 4px;">
+                  <p style="color:#b18db8;font-size:11px;line-height:1.5;margin:0 0 4px;">
                     This code expires in 15 minutes.
                   </p>
                   <p style="color:#B0ADA8;font-size:10px;line-height:1.5;margin:0;">

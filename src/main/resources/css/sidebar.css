@@ -1,8 +1,7 @@
 .sidebar {
   -fx-background-color: linear-gradient(from 0% 0% to 0% 100%,
     #FFFFFF 0%, #FAFAF8 100%);
-  -fx-border-color: -velmora-border;
-  -fx-border-width: 0 1 0 0;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 4, 0, 2, 0);
 }
 
 .brand-block {
@@ -29,21 +28,29 @@
   -fx-text-fill: #9E9890;
 }
 
-.sidebar-icon {
+.nav-item {
   -fx-cursor: hand;
   -fx-padding: 10 14;
-  -fx-background-radius: 4;
+  -fx-background-radius: 6;
 }
 
-.sidebar-icon:hover {
-  -fx-background-color: rgba(164, 160, 197, 0.08);
+.nav-item:hover {
+  -fx-background-color: rgba(177, 141, 184, 0.08);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 8, 0, 0, 2);
 }
 
-.sidebar-icon-active {
-  -fx-background-color: rgba(164, 160, 197, 0.14);
-  -fx-border-color: rgba(164, 160, 197, 0.4);
-  -fx-border-width: 1;
-  -fx-border-radius: 4;
+.nav-item-active {
+  -fx-background-color: rgba(177, 141, 184, 0.12);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.12), 12, 0, 0, 4);
+}
+
+.nav-active-bar {
+  -fx-fill: -velmora-accent-purple;
+  -fx-width: 3;
+  -fx-height: 28;
+  -fx-arc-width: 2;
+  -fx-arc-height: 2;
+  -fx-translate-x: -10;
 }
 
 .sidebar-section-heading {
@@ -69,7 +76,6 @@
   -fx-cursor: hand;
 }
 
-
 .nav-icon {
   -fx-font-size: 19;
   -fx-text-fill: #A8A29E;
@@ -87,7 +93,7 @@
 }
 
 .nav-icon-active {
-  -fx-text-fill: #A4A0C5;
+  -fx-text-fill: #B18DB8;
 }
 
 .nav-label-active {
@@ -96,7 +102,7 @@
 }
 
 .nav-subtitle-active {
-  -fx-text-fill: #A4A0C5;
+  -fx-text-fill: #B18DB8;
 }
 
 .nav-icon-admin {
@@ -110,7 +116,6 @@
 .nav-subtitle-admin {
   -fx-text-fill: #D9534F;
 }
-
 
 .dir-heading {
   -fx-font-size: 16;

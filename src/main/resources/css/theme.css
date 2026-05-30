@@ -1,14 +1,16 @@
 .root {
-  -velmora-bg:             #F4F1EC;
-  -velmora-bg-warm:        #EDE9E1;
-  -velmora-bg-deep:        #E5E0D6;
-  -velmora-surface:        #FAFAF8;
+  -velmora-bg:             #F7F1EB;
+  -velmora-bg-warm:        #F2EBE2;
+  -velmora-bg-deep:        #ECE3D8;
+  -velmora-surface:        #FFFDFB;
+  -velmora-surface-composer: #FCF8FF;
+  -velmora-surface-analysis: #FFFAF7;
   -velmora-text:           #1C1917;
   -velmora-text-secondary: #6B6560;
   -velmora-text-muted:     #A8A29E;
-  -velmora-accent-purple:  #A4A0C5;
-  -velmora-accent-teal:    #78A0A0;
-  -velmora-accent-peach:   #E2A998;
+  -velmora-accent-purple:  #B18DB8;
+  -velmora-accent-teal:    #6DA89E;
+  -velmora-accent-peach:   #D69478;
   -velmora-border:         #DDD9D1;
   -velmora-border-light:   #EAE6DF;
   -velmora-white:          #FFFFFF;
@@ -16,9 +18,9 @@
   -fx-font-size: 21;
   -velmora-success:        #5A9E8F;
   -velmora-warning:        #C8954A;
-  -velmora-glow-purple:    rgba(164, 160, 197, 0.22);
-  -velmora-glow-teal:      rgba(120, 160, 160, 0.22);
-  -velmora-glow-peach:     rgba(226, 169, 152, 0.22);
+  -velmora-glow-purple:    rgba(177, 141, 184, 0.18);
+  -velmora-glow-teal:      rgba(109, 168, 158, 0.18);
+  -velmora-glow-peach:     rgba(214, 148, 120, 0.18);
   -fx-background-color:    -velmora-bg;
-  -fx-font-family:         'Garamond', 'Georgia', 'Times New Roman', serif;
+  -fx-font-family:         'Inter', 'Manrope', 'Segoe UI', sans-serif;
 }

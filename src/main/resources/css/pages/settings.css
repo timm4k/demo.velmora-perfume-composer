@@ -1,5 +1,4 @@
 .settings-toggle-row {
   -fx-padding: 10 0;
-  -fx-border-color: transparent transparent -velmora-border-light transparent;
-  -fx-border-width: 0 0 1 0;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 4, 0, 0, -2);
 }

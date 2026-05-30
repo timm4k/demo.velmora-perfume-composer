@@ -26,14 +26,14 @@
 
             <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4); -fx-border-color: #DDD9D1; -fx-border-width: 1; -fx-border-radius: 8;" spacing="20.0">
               <HBox alignment="CENTER_LEFT" spacing="12.0">
-                <Rectangle width="4.0" height="22.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
-                <Label text="PROFILE" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #A4A0C5;" />
+                <Rectangle width="4.0" height="22.0" fill="#b18db8" arcWidth="2" arcHeight="2" />
+                <Label text="PROFILE" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #b18db8;" />
               </HBox>
 
               <HBox alignment="CENTER_LEFT" spacing="16.0">
                 <StackPane prefWidth="52.0" prefHeight="52.0"
-                  style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(164,160,197,0.3) 0%, rgba(120,160,160,0.2) 100%); -fx-background-radius: 14; -fx-border-color: rgba(164,160,197,0.45); -fx-border-width: 1; -fx-border-radius: 14;">
-                  <Label fx:id="profileInitials" text="?" style="-fx-text-fill: #A4A0C5; -fx-font-size: 26; -fx-font-weight: bold;" />
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(177,141,184,0.3) 0%, rgba(120,160,160,0.2) 100%); -fx-background-radius: 14; -fx-border-color: rgba(177,141,184,0.45); -fx-border-width: 1; -fx-border-radius: 14;">
+                  <Label fx:id="profileInitials" text="?" style="-fx-text-fill: #b18db8; -fx-font-size: 26; -fx-font-weight: bold;" />
                 </StackPane>
                 <VBox spacing="3.0">
                   <Label fx:id="profileName" text="Perfumer" style=" -fx-font-size: 24; -fx-font-weight: 600; -fx-text-fill: #1C1917;" />
@@ -80,31 +80,9 @@
                 <Rectangle width="4.0" height="22.0" fill="#E2A998" arcWidth="2" arcHeight="2" />
                 <Label text="SAVED COMPOSITIONS" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #E2A998;" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Label fx:id="compCount" text="0" style="-fx-background-color: rgba(164,160,197,0.2); -fx-background-radius: 4; -fx-padding: 2 10; -fx-text-fill: #A4A0C5; -fx-font-size: 18; -fx-font-weight: bold;" />
+                <Label fx:id="compCount" text="0" style="-fx-background-color: rgba(177,141,184,0.2); -fx-background-radius: 4; -fx-padding: 2 10; -fx-text-fill: #b18db8; -fx-font-size: 18; -fx-font-weight: bold;" />
               </HBox>
               <ListView fx:id="compositionsList" prefHeight="200.0" />
-            </VBox>
-
-            <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4); -fx-border-color: #DDD9D1; -fx-border-width: 1; -fx-border-radius: 8;" spacing="16.0">
-              <HBox alignment="CENTER_LEFT" spacing="12.0">
-                <Rectangle width="4.0" height="22.0" fill="#78A0A0" arcWidth="2" arcHeight="2" />
-                <Label text="DATABASE POOL" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-letter-spacing: 2; -fx-text-fill: #78A0A0;" />
-              </HBox>
-              <HBox spacing="24.0" alignment="CENTER_LEFT">
-                <VBox spacing="2.0">
-                  <Label text="AVAILABLE" style=" -fx-font-size: 16; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
-                  <Label fx:id="poolAvailable" text="0" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #5A9E8F;" />
-                </VBox>
-                <VBox spacing="2.0">
-                  <Label text="IN USE" style=" -fx-font-size: 16; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
-                  <Label fx:id="poolUsed" text="0" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #E2A998;" />
-                </VBox>
-                <VBox spacing="2.0">
-                  <Label text="MAX SIZE" style=" -fx-font-size: 16; -fx-letter-spacing: 1.5; -fx-text-fill: #A8A29E;" />
-                  <Label fx:id="poolMax" text="10" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #A4A0C5;" />
-                </VBox>
-              </HBox>
-              <Label text="Pool-based JDBC access path: Controller → Service → NoteDao → SimpleConnectionPool → Supabase" style=" -fx-font-size: 17; -fx-text-fill: #B0ADA8; -fx-font-style: italic;" />
             </VBox>
 
           </VBox>

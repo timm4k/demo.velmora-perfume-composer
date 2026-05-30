@@ -14,8 +14,15 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -66,14 +73,20 @@ public class ComposerController {
   @FXML private Label topCount;
   @FXML private Label heartCount;
   @FXML private Label baseCount;
+  @FXML private Label topPct;
+  @FXML private Label heartPct;
+  @FXML private Label basePct;
   @FXML private VBox topZone;
   @FXML private VBox heartZone;
   @FXML private VBox baseZone;
 
   @FXML private Pane particleLayer;
+  @FXML private Pane floatingGradients;
+  @FXML private Circle cursorGlow;
   @FXML private VBox insightsContainer;
+  @FXML private VBox profileContainer;
 
-  @FXML private Rectangle harmonyBar;
+  @FXML private Canvas harmonyCircle;
   @FXML private Rectangle longevityBar;
   @FXML private Rectangle complexityBar;
   @FXML private Rectangle projectionBar;
@@ -81,6 +94,10 @@ public class ComposerController {
   @FXML private Label longevityScore;
   @FXML private Label complexityScore;
   @FXML private Label projectionScore;
+  @FXML private Label harmonyStatus;
+  @FXML private Label longevityStatus;
+  @FXML private Label projectionStatus;
+  @FXML private Label complexityStatus;
 
   @FXML private Rectangle citrusBar;
   @FXML private Rectangle floralBar;
@@ -102,16 +119,21 @@ public class ComposerController {
   @FXML private Label baseDuration;
   @FXML private Label overallScore;
 
+  @FXML private Label totalConcentration;
+  @FXML private Label concentrationValidation;
+  @FXML private VBox noteConcentrationContainer;
+
   private final ObservableList<Note> allNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentTopNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentHeartNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentBaseNotes = FXCollections.observableArrayList();
+  private final Map<Long, Integer> notePercentages = new HashMap<>();
+  private final Set<Long> previousNoteIds = new HashSet<>();
   private FilteredList<Note> filteredNotes;
   @FXML private Button closeDraftBtn;
   private Button activeFilter;
   private Long editingCompositionId;
   private static final double PERF_BAR_MAX = 160.0;
-  private final PauseTransition analysisDebounce = new PauseTransition(Duration.millis(250));
 
   @FXML
   public void initialize() {
@@ -126,6 +148,8 @@ public class ComposerController {
     setupMaterialClick();
     setupDragDrop();
     initParticles();
+    initFloatingGradients();
+    initGlowCursor();
     updateAll();
     Platform.runLater(this::updateAnalysis);
   }
@@ -142,14 +166,26 @@ public class ComposerController {
     currentTopNotes.clear();
     currentHeartNotes.clear();
     currentBaseNotes.clear();
+    notePercentages.clear();
+    previousNoteIds.clear();
   }
 
   private void restoreFromState() {
     List<Long> ids = compositionState.getCurrentNoteIds();
     if (ids != null && !ids.isEmpty()) {
       for (Long id : ids) {
-        noteRepository.findById(id).ifPresent(this::addNoteToPyramid);
+        noteRepository.findById(id).ifPresent(note -> {
+          NoteType type = note.getType();
+          if (type == null) return;
+          List<Note> targetList = switch (type) {
+            case TOP -> currentTopNotes;
+            case HEART -> currentHeartNotes;
+            case BASE -> currentBaseNotes;
+          };
+          if (!targetList.contains(note)) targetList.add(note);
+        });
       }
+      redistributePercentages();
     }
     if (compositionState.getFormulaName() != null) {
       formulaName.setText(compositionState.getFormulaName());
@@ -262,6 +298,7 @@ public class ComposerController {
     };
     if (!targetList.contains(note)) {
       targetList.add(note);
+      redistributePercentages();
     }
     updateAll();
   }
@@ -275,15 +312,48 @@ public class ComposerController {
       case BASE -> currentBaseNotes;
     };
     targetList.remove(note);
+    notePercentages.remove(note.getId());
+    redistributePercentages();
     updateAll();
+  }
+
+  private void redistributePercentages() {
+    List<Note> all = allNotes();
+    notePercentages.clear();
+    if (all.isEmpty()) return;
+    int total = all.size();
+    int base = 100 / total;
+    int remainder = 100 - base * total;
+    for (int i = 0; i < all.size(); i++) {
+      notePercentages.put(all.get(i).getId(), base + (i < remainder ? 1 : 0));
+    }
+  }
+
+  @FXML
+  private void handleAutoBalance() {
+    redistributePercentages();
+    updateAll();
+  }
+
+  private void adjustPercentage(Note note, int delta) {
+    int current = notePercentages.getOrDefault(note.getId(), 0);
+    int newVal = Math.max(0, Math.min(100, current + delta));
+    notePercentages.put(note.getId(), newVal);
+    updateAll();
+  }
+
+  private int getTotalPercentage() {
+    return notePercentages.values().stream().mapToInt(Integer::intValue).sum();
   }
 
   private void updateAll() {
     renderChips();
     adjustZoneWidths();
     updateCounts();
-    analysisDebounce.setOnFinished(e -> updateAnalysis());
-    analysisDebounce.playFromStart();
+    updateConcentrationDisplay();
+    updatePhasePercentages();
+    renderNoteConcentration();
+    updateAnalysis();
   }
 
   private void renderChips() {
@@ -309,9 +379,9 @@ public class ComposerController {
 
     double zoneWidth;
     if (count == 0) {
-      zoneWidth = Math.min(260, maxAllowed);
+      zoneWidth = Math.min(310, maxAllowed);
     } else {
-      double chipWidth = 110;
+      double chipWidth = 150;
       double hgap = 6;
       double zoneHpad = 40;
       zoneWidth = cols * chipWidth + (cols - 1) * hgap + zoneHpad;
@@ -323,10 +393,14 @@ public class ComposerController {
   }
 
   private void renderChipPane(TilePane pane, ObservableList<Note> notes) {
+    Set<Long> currentIds = notes.stream().map(Note::getId).collect(Collectors.toSet());
     pane.getChildren().clear();
     for (Note note : notes) {
-      pane.getChildren().add(createChip(note));
+      boolean isNew = !previousNoteIds.contains(note.getId());
+      pane.getChildren().add(createChip(note, isNew));
     }
+    previousNoteIds.clear();
+    previousNoteIds.addAll(currentIds);
     if (pane.getParent() instanceof VBox zone) {
       for (Node child : zone.getChildren()) {
         if (child instanceof Label label && label.getStyleClass().contains("zone-placeholder")) {
@@ -338,7 +412,7 @@ public class ComposerController {
     }
   }
 
-  private HBox createChip(Note note) {
+  private HBox createChip(Note note, boolean animate) {
     HBox chip = new HBox(4);
     chip.setAlignment(Pos.CENTER_LEFT);
     chip.getStyleClass().add("note-chip-glass");
@@ -346,11 +420,28 @@ public class ComposerController {
         note.getType() == NoteType.TOP ? "chip-top"
         : note.getType() == NoteType.HEART ? "chip-heart"
         : "chip-base");
+
+    if (animate) {
+      chip.setScaleX(0.85);
+      chip.setScaleY(0.85);
+      chip.setOpacity(0);
+      FadeTransition ft = new FadeTransition(Duration.millis(250), chip);
+      ft.setToValue(1.0);
+      ScaleTransition st = new ScaleTransition(Duration.millis(300), chip);
+      st.setToX(1.0);
+      st.setToY(1.0);
+      st.setInterpolator(Interpolator.EASE_OUT);
+      ft.play();
+      st.play();
+    }
+
     Label name = new Label(note.getName());
-    name.setStyle("-fx-font-size: 18; -fx-font-weight: 500; -fx-text-fill: #4B4B4B;");
+    name.setStyle("-fx-font-size: 16; -fx-font-weight: 500; -fx-text-fill: #4B4B4B;");
+
     Label close = new Label("✕");
     close.getStyleClass().add("chip-close");
     close.setOnMouseClicked(e -> removeNoteFromPyramid(note));
+
     chip.getChildren().addAll(name, close);
     return chip;
   }
@@ -364,6 +455,44 @@ public class ComposerController {
     heartCount.setText(String.valueOf(heart));
     baseCount.setText(String.valueOf(base));
     selectedCount.setText(String.valueOf(total));
+
+    double topPctVal = total > 0 ? (double) top / total * 100 : 0;
+    double heartPctVal = total > 0 ? (double) heart / total * 100 : 0;
+    double basePctVal = total > 0 ? (double) base / total * 100 : 0;
+    topPct.setText(String.format("%.0f%%", topPctVal));
+    heartPct.setText(String.format("%.0f%%", heartPctVal));
+    basePct.setText(String.format("%.0f%%", basePctVal));
+  }
+
+  private void updatePhasePercentages() {
+    int totalInNotes = allNotes().size();
+    if (totalInNotes == 0) return;
+    double topSum = currentTopNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();
+    double heartSum = currentHeartNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();
+    double baseSum = currentBaseNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();
+    double grand = topSum + heartSum + baseSum;
+    if (grand == 0) return;
+
+    topPct.setText(String.format("%.0f%%", topSum));
+    heartPct.setText(String.format("%.0f%%", heartSum));
+    basePct.setText(String.format("%.0f%%", baseSum));
+  }
+
+  private void updateConcentrationDisplay() {
+    int total = getTotalPercentage();
+    totalConcentration.setText("Total: " + total + "%");
+    if (total == 100) {
+      concentrationValidation.setText("✓ Formula balanced");
+      concentrationValidation.setStyle("-fx-text-fill: #5A9E8F; -fx-font-size: 14; -fx-font-weight: 600;");
+    } else if (total < 100) {
+      int remaining = 100 - total;
+      concentrationValidation.setText("⚠ Incomplete. " + remaining + "% remaining.");
+      concentrationValidation.setStyle("-fx-text-fill: #C8954A; -fx-font-size: 14; -fx-font-weight: 600;");
+    } else {
+      int excess = total - 100;
+      concentrationValidation.setText("✗ Exceeds by " + excess + "%.");
+      concentrationValidation.setStyle("-fx-text-fill: #D9534F; -fx-font-size: 14; -fx-font-weight: 600;");
+    }
   }
 
   private void updateAnalysis() {
@@ -374,6 +503,10 @@ public class ComposerController {
       longevityScore.setText("—");
       complexityScore.setText("—");
       projectionScore.setText("—");
+      if (harmonyStatus != null) harmonyStatus.setText("");
+      if (longevityStatus != null) longevityStatus.setText("");
+      if (complexityStatus != null) complexityStatus.setText("");
+      if (projectionStatus != null) projectionStatus.setText("");
       noteCount.setText("0");
       familyCount.setText("0");
       moleculeCount.setText("0");
@@ -384,11 +517,12 @@ public class ComposerController {
       topDuration.setText("—");
       heartDuration.setText("—");
       baseDuration.setText("—");
-      setPerfBar(harmonyBar, 0);
+      drawHarmonyCircle(0);
       setPerfBar(longevityBar, 0);
       setPerfBar(complexityBar, 0);
       setPerfBar(projectionBar, 0);
       insightsContainer.getChildren().clear();
+      profileContainer.getChildren().clear();
       return;
     }
 
@@ -404,16 +538,29 @@ public class ComposerController {
     sillage.setText(result.sillage());
 
     harmonyScore.setText(String.valueOf(result.harmony()));
-    setPerfBar(harmonyBar, result.harmony());
+    drawHarmonyCircle(result.harmony());
+    if (harmonyStatus != null) {
+      harmonyStatus.setText(result.harmony() >= 80 ? "Excellent" : result.harmony() >= 60 ? "Good" : result.harmony() >= 40 ? "Average" : "Poor");
+    }
 
     longevityScore.setText(String.valueOf(result.longevityScore()));
     setPerfBar(longevityBar, result.longevityScore());
+    if (longevityStatus != null) {
+      double tl = result.totalLongevity();
+      longevityStatus.setText(tl >= 8 ? "Long-lasting" : tl >= 4 ? "Moderate" : "Short");
+    }
 
     complexityScore.setText(String.valueOf(result.complexityScore()));
     setPerfBar(complexityBar, result.complexityScore());
+    if (complexityStatus != null) {
+      complexityStatus.setText(result.complexityScore() >= 80 ? "Highly Complex" : result.complexityScore() >= 60 ? "Complex" : result.complexityScore() >= 40 ? "Balanced" : "Simple");
+    }
 
     projectionScore.setText(String.valueOf(result.projectionScore()));
     setPerfBar(projectionBar, result.projectionScore());
+    if (projectionStatus != null) {
+      projectionStatus.setText(result.sillage());
+    }
 
     if (overallScore != null) {
       overallScore.setText(String.valueOf(result.overallScore()));
@@ -421,10 +568,125 @@ public class ComposerController {
 
     updateFamilyDistribution(result);
     renderInsights(result);
+    renderLiveProfile(result);
+  }
+
+  private void renderNoteConcentration() {
+    noteConcentrationContainer.getChildren().clear();
+    List<Note> all = allNotes();
+    if (all.isEmpty()) return;
+
+    VBox card = new VBox(6);
+    card.getStyleClass().add("analysis-glass");
+
+    HBox header = new HBox(6);
+    header.setAlignment(Pos.CENTER_LEFT);
+    Circle dot = new Circle(3);
+    dot.setStyle("-fx-fill: rgba(177,141,184,0.7);");
+    Label title = new Label("NOTE CONCENTRATION");
+    title.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;");
+    header.getChildren().addAll(dot, title);
+    card.getChildren().add(header);
+
+    for (Note note : all) {
+      HBox row = new HBox(6);
+      row.setAlignment(Pos.CENTER_LEFT);
+
+      Circle typeDot = new Circle(4);
+      String phaseColor = note.getType() == NoteType.TOP ? "#D69478"
+          : note.getType() == NoteType.HEART ? "#B18DB8" : "#6DA89E";
+      typeDot.setStyle("-fx-fill: " + phaseColor + ";");
+
+      Label name = new Label(note.getName());
+      name.setStyle("-fx-font-size: 15; -fx-font-weight: 500; -fx-text-fill: #4B4B4B; -fx-min-width: 70; -fx-max-width: 120; -fx-wrap-text: true;");
+
+      Region spacer = new Region();
+      HBox.setHgrow(spacer, Priority.ALWAYS);
+
+      Button minusBtn = new Button("−");
+      minusBtn.getStyleClass().add("chip-pct-btn");
+      minusBtn.setOnAction(e -> adjustPercentage(note, -1));
+
+      int pct = notePercentages.getOrDefault(note.getId(), 0);
+      Label pctLbl = new Label(pct + "%");
+      pctLbl.getStyleClass().add("chip-pct");
+
+      Button plusBtn = new Button("+");
+      plusBtn.getStyleClass().add("chip-pct-btn");
+      plusBtn.setOnAction(e -> adjustPercentage(note, 1));
+
+      row.getChildren().addAll(typeDot, name, spacer, minusBtn, pctLbl, plusBtn);
+      card.getChildren().add(row);
+    }
+
+    noteConcentrationContainer.getChildren().add(card);
+  }
+
+  private void renderLiveProfile(AnalysisResult result) {
+    profileContainer.getChildren().clear();
+    if (result.total() < 2) return;
+
+    String description = analysisService.generateDescription(currentTopNotes, currentHeartNotes, currentBaseNotes);
+
+    VBox card = new VBox(6);
+    card.getStyleClass().add("analysis-glass");
+    HBox header = new HBox(8);
+    header.setAlignment(Pos.CENTER_LEFT);
+    Circle dot = new Circle(3);
+    dot.setStyle("-fx-fill: rgba(177,141,184,0.7);");
+    Label title = new Label("LIVE PERFUME PROFILE");
+    title.setStyle("-fx-font-size: 14; -fx-font-weight: 600; -fx-letter-spacing: 2; -fx-text-fill: #A8A29E;");
+
+    Label desc = new Label(description);
+    desc.setWrapText(true);
+    desc.setStyle("-fx-font-family: 'Cormorant Garamond','Garamond','Georgia',serif; -fx-font-size: 16; -fx-text-fill: #5F5B57; -fx-line-spacing: 2; -fx-font-style: italic;");
+
+    header.getChildren().addAll(dot, title);
+    card.getChildren().addAll(header, desc);
+    profileContainer.getChildren().add(card);
+  }
+
+  private void drawHarmonyCircle(int value) {
+    if (harmonyCircle == null) return;
+    renderHarmonyArc(value);
+  }
+
+  private void renderHarmonyArc(int value) {
+    double w = harmonyCircle.getWidth();
+    double h = harmonyCircle.getHeight();
+    double cx = w / 2;
+    double cy = h / 2;
+    double r = Math.min(cx, cy) - 4;
+    double angle = 360.0 * Math.min(100, Math.max(0, value)) / 100.0;
+
+    GraphicsContext gc = harmonyCircle.getGraphicsContext2D();
+    gc.clearRect(0, 0, w, h);
+
+    gc.setLineWidth(3);
+    gc.setStroke(Color.rgb(234, 230, 223));
+    gc.strokeArc(cx - r, cy - r, r * 2, r * 2, 0, 360, ArcType.OPEN);
+
+    Color fillColor = value >= 70 ? Color.rgb(90, 158, 143)
+        : value >= 40 ? Color.rgb(200, 149, 74)
+        : Color.rgb(217, 83, 79);
+    gc.setStroke(fillColor);
+    gc.setLineCap(StrokeLineCap.ROUND);
+    gc.strokeArc(cx - r, cy - r, r * 2, r * 2, 90, -angle, ArcType.OPEN);
+
+    gc.setFill(fillColor);
+    gc.setFont(Font.font("Cormorant Garamond", FontWeight.BOLD, 14));
+    gc.setTextAlign(TextAlignment.CENTER);
+    gc.fillText(value + "%", cx, cy + 5);
   }
 
   private void setPerfBar(Rectangle bar, int value) {
-    bar.setWidth(PERF_BAR_MAX * value / 100.0);
+    double target = PERF_BAR_MAX * value / 100.0;
+    if (bar.getWidth() == target) return;
+    Timeline anim = new Timeline(
+        new KeyFrame(Duration.millis(400),
+            new KeyValue(bar.widthProperty(), target, Interpolator.EASE_OUT))
+    );
+    anim.play();
   }
 
   private void renderInsights(AnalysisResult result) {
@@ -571,12 +833,18 @@ public class ComposerController {
   private void setBar(Rectangle bar, Label label, long count, long total) {
     double pct = (double) count / total * 100;
     label.setText(String.format("%.0f%%", pct));
-    bar.setWidth(PERF_BAR_MAX * pct / 100.0);
+    double target = PERF_BAR_MAX * pct / 100.0;
+    if (bar.getWidth() == target) return;
+    Timeline anim = new Timeline(
+        new KeyFrame(Duration.millis(400),
+            new KeyValue(bar.widthProperty(), target, Interpolator.EASE_OUT))
+    );
+    anim.play();
   }
 
   private void resetBars() {
-    citrusBar.setWidth(0); floralBar.setWidth(0);
-    woodyBar.setWidth(0); earthyBar.setWidth(0);
+    setPerfBar(citrusBar, 0); setPerfBar(floralBar, 0);
+    setPerfBar(woodyBar, 0); setPerfBar(earthyBar, 0);
     citrusPct.setText("0%"); floralPct.setText("0%");
     woodyPct.setText("0%"); earthyPct.setText("0%");
   }
@@ -588,14 +856,15 @@ public class ComposerController {
   private void initParticles() {
     Random rand = new Random();
     List<Circle> particles = new ArrayList<>();
-    for (int i = 0; i < 20; i++) {
-      Circle c = new Circle(1.5 + rand.nextDouble() * 4);
+    String[] symbols = {"\u2726", "\u2022", "\u25E6", "\u2219"};
+    for (int i = 0; i < 35; i++) {
+      Circle c = new Circle(1 + rand.nextDouble() * 3);
       double t = rand.nextDouble();
-      if (t < 0.33)      c.setFill(Color.rgb(226, 169, 152, 0.08 + rand.nextDouble() * 0.12));
-      else if (t < 0.66) c.setFill(Color.rgb(164, 160, 197, 0.08 + rand.nextDouble() * 0.12));
-      else                c.setFill(Color.rgb(120, 160, 160, 0.08 + rand.nextDouble() * 0.12));
-      c.setCenterX(rand.nextDouble() * 560 + 20);
-      c.setCenterY(rand.nextDouble() * 320 + 60);
+      if (t < 0.33)      c.setFill(Color.rgb(214, 148, 120, 0.06 + rand.nextDouble() * 0.10));
+      else if (t < 0.66) c.setFill(Color.rgb(177, 141, 184, 0.06 + rand.nextDouble() * 0.10));
+      else                c.setFill(Color.rgb(109, 168, 158, 0.06 + rand.nextDouble() * 0.10));
+      c.setCenterX(rand.nextDouble() * 600 + 20);
+      c.setCenterY(rand.nextDouble() * 400 + 40);
       c.setOpacity(0);
       particleLayer.getChildren().add(c);
       particles.add(c);
@@ -604,22 +873,118 @@ public class ComposerController {
     Timeline tl = new Timeline();
     for (int i = 0; i < particles.size(); i++) {
       Circle p = particles.get(i);
-      double delay = rand.nextDouble() * 10;
-      double dur = 8 + rand.nextDouble() * 12;
-      double dx = (rand.nextDouble() - 0.5) * 50;
-      double dy = (rand.nextDouble() - 0.5) * 30;
+      double delay = rand.nextDouble() * 15;
+      double dur = 12 + rand.nextDouble() * 16;
+      double dx = (rand.nextDouble() - 0.5) * 80;
+      double dy = (rand.nextDouble() - 0.5) * 50;
       tl.getKeyFrames().addAll(
           new KeyFrame(Duration.seconds(delay), new KeyValue(p.opacityProperty(), 0)),
-          new KeyFrame(Duration.seconds(delay + 2), new KeyValue(p.opacityProperty(), 0.2 + rand.nextDouble() * 0.15)),
-          new KeyFrame(Duration.seconds(delay + 2 + dur),
+          new KeyFrame(Duration.seconds(delay + 3), new KeyValue(p.opacityProperty(), 0.15 + rand.nextDouble() * 0.12)),
+          new KeyFrame(Duration.seconds(delay + 3 + dur),
               new KeyValue(p.translateXProperty(), dx, Interpolator.EASE_BOTH),
               new KeyValue(p.translateYProperty(), dy, Interpolator.EASE_BOTH),
-              new KeyValue(p.opacityProperty(), 0.2 + rand.nextDouble() * 0.15)),
-          new KeyFrame(Duration.seconds(delay + 2 + dur + 2),
+              new KeyValue(p.opacityProperty(), 0.15 + rand.nextDouble() * 0.12)),
+          new KeyFrame(Duration.seconds(delay + 3 + dur + 3),
               new KeyValue(p.opacityProperty(), 0, Interpolator.EASE_BOTH)));
     }
     tl.setCycleCount(Timeline.INDEFINITE);
     tl.play();
+  }
+
+  private void initFloatingGradients() {
+    Random rand = new Random();
+
+    double[][] blobSpecs = {
+        {260, 0.14, 214, 148, 120},
+        {300, 0.14, 177, 141, 184},
+        {240, 0.14, 109, 168, 158}
+    };
+    String[] classes = {"floating-blob-peach", "floating-blob-lavender", "floating-blob-teal"};
+
+    Circle[] blobs = new Circle[3];
+
+    for (int i = 0; i < 3; i++) {
+      Circle blob = new Circle(blobSpecs[i][0]);
+      blob.getStyleClass().addAll("floating-blob", classes[i]);
+      blob.setCenterX(200 + rand.nextDouble() * 300);
+      blob.setCenterY(150 + rand.nextDouble() * 200);
+      blob.setOpacity(0);
+      floatingGradients.getChildren().add(blob);
+      blobs[i] = blob;
+    }
+
+    Timeline tl = new Timeline();
+    for (int i = 0; i < 3; i++) {
+      Circle blob = blobs[i];
+      double delay = rand.nextDouble() * 5;
+      double startX = blob.getCenterX();
+      double startY = blob.getCenterY();
+      double dx1 = (rand.nextDouble() - 0.5) * 120;
+      double dy1 = (rand.nextDouble() - 0.5) * 80;
+      double dx2 = (rand.nextDouble() - 0.5) * 120;
+      double dy2 = (rand.nextDouble() - 0.5) * 80;
+      double dx3 = (rand.nextDouble() - 0.5) * 120;
+      double dy3 = (rand.nextDouble() - 0.5) * 80;
+
+      tl.getKeyFrames().addAll(
+          new KeyFrame(Duration.seconds(delay), new KeyValue(blob.opacityProperty(), 0)),
+          new KeyFrame(Duration.seconds(delay + 3), new KeyValue(blob.opacityProperty(), 0.8 + rand.nextDouble() * 0.2)),
+          new KeyFrame(Duration.seconds(delay + 10),
+              new KeyValue(blob.centerXProperty(), startX + dx1, Interpolator.EASE_BOTH),
+              new KeyValue(blob.centerYProperty(), startY + dy1, Interpolator.EASE_BOTH)),
+          new KeyFrame(Duration.seconds(delay + 20),
+              new KeyValue(blob.centerXProperty(), startX + dx1 + dx2, Interpolator.EASE_BOTH),
+              new KeyValue(blob.centerYProperty(), startY + dy1 + dy2, Interpolator.EASE_BOTH)),
+          new KeyFrame(Duration.seconds(delay + 30),
+              new KeyValue(blob.centerXProperty(), startX + dx1 + dx2 + dx3, Interpolator.EASE_BOTH),
+              new KeyValue(blob.centerYProperty(), startY + dy1 + dy2 + dy3, Interpolator.EASE_BOTH)),
+          new KeyFrame(Duration.seconds(delay + 35),
+              new KeyValue(blob.opacityProperty(), 0.6, Interpolator.EASE_BOTH)),
+          new KeyFrame(Duration.seconds(delay + 40),
+              new KeyValue(blob.centerXProperty(), startX, Interpolator.EASE_BOTH),
+              new KeyValue(blob.centerYProperty(), startY, Interpolator.EASE_BOTH)),
+          new KeyFrame(Duration.seconds(delay + 43),
+              new KeyValue(blob.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+    }
+    tl.setCycleCount(Timeline.INDEFINITE);
+    tl.play();
+  }
+
+  private double mouseX = 0;
+  private double mouseY = 0;
+
+  private void initGlowCursor() {
+    Timeline glowTimeline = new Timeline(
+        new KeyFrame(Duration.millis(16), e -> {
+          if (cursorGlow != null && cursorGlow.isVisible()) {
+            double dx = mouseX - cursorGlow.getCenterX();
+            double dy = mouseY - cursorGlow.getCenterY();
+            cursorGlow.setCenterX(cursorGlow.getCenterX() + dx * 0.08);
+            cursorGlow.setCenterY(cursorGlow.getCenterY() + dy * 0.08);
+          }
+        })
+    );
+    glowTimeline.setCycleCount(Timeline.INDEFINITE);
+    glowTimeline.play();
+
+    if (cursorGlow != null) {
+      cursorGlow.sceneProperty().addListener((obs, old, scene) -> {
+        if (scene != null) {
+          scene.setOnMouseMoved(e -> {
+            mouseX = e.getSceneX();
+            mouseY = e.getSceneY();
+          });
+          scene.setOnMouseEntered(e -> {
+            mouseX = e.getSceneX();
+            mouseY = e.getSceneY();
+            cursorGlow.setVisible(true);
+          });
+          scene.setOnMouseExited(e -> cursorGlow.setVisible(false));
+          cursorGlow.setCenterX(scene.getWidth() / 2);
+          cursorGlow.setCenterY(scene.getHeight() / 2);
+        }
+      });
+    }
   }
 
   @FXML
@@ -665,13 +1030,10 @@ public class ComposerController {
     composition.setDescription("Created in Velmora Olfactory Lab");
     composition.setPublic(false);
     composition.setUser(userRef);
-    int total = all.size();
-    int basePct = 100 / total;
-    int remainder = 100 - basePct * total;
-    for (int i = 0; i < all.size(); i++) {
+    for (Note note : all) {
       CompositionItem item = new CompositionItem();
-      item.setNoteId(all.get(i).getId());
-      item.setPercentage(basePct + (i < remainder ? 1 : 0));
+      item.setNoteId(note.getId());
+      item.setPercentage(notePercentages.getOrDefault(note.getId(), 100 / all.size()));
       composition.getItems().add(item);
     }
     javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {

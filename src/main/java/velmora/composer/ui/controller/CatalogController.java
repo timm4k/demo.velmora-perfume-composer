@@ -257,13 +257,13 @@ public class CatalogController {
       if (p.getTopNotes() != null && !p.getTopNotes().isBlank())
         pyramidBox.getChildren().add(createNoteRow("TOP", p.getTopNotes(), "#E2A998"));
       if (p.getHeartNotes() != null && !p.getHeartNotes().isBlank())
-        pyramidBox.getChildren().add(createNoteRow("HEART", p.getHeartNotes(), "#A4A0C5"));
+        pyramidBox.getChildren().add(createNoteRow("HEART", p.getHeartNotes(), "#b18db8"));
       if (p.getBaseNotes() != null && !p.getBaseNotes().isBlank())
         pyramidBox.getChildren().add(createNoteRow("BASE", p.getBaseNotes(), "#78A0A0"));
     } else {
       String[] compNotes = similarityService.loadCompositionNotes(p.getId());
       if (compNotes[0] != null) pyramidBox.getChildren().add(createNoteRow("TOP", compNotes[0], "#E2A998"));
-      if (compNotes[1] != null) pyramidBox.getChildren().add(createNoteRow("HEART", compNotes[1], "#A4A0C5"));
+      if (compNotes[1] != null) pyramidBox.getChildren().add(createNoteRow("HEART", compNotes[1], "#b18db8"));
       if (compNotes[2] != null) pyramidBox.getChildren().add(createNoteRow("BASE", compNotes[2], "#78A0A0"));
       if (compNotes[0] == null && compNotes[1] == null && compNotes[2] == null) {
         Label noData = new Label("No pyramid data available");

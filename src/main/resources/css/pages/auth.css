@@ -1,6 +1,6 @@
 .auth-root {
   -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
-    #F4F1EC 0%, #EDE9E1 50%, #E8E3DA 100%);
+    #F7F1EB 0%, #F2EBE2 50%, #ECE3D8 100%);
 }
 
 .auth-brand-bg {
@@ -8,15 +8,13 @@
 }
 
 .auth-card {
-  -fx-background-color: rgba(255, 255, 255, 0.88);
+  -fx-background-color: rgba(255, 253, 251, 0.9);
   -fx-background-radius: 2;
-  -fx-border-color: -velmora-border;
-  -fx-border-width: 1;
-  -fx-border-radius: 2;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.08), 16, 0, 0, 6);
 }
 
 .auth-brand {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 52;
   -fx-font-weight: bold;
   -fx-text-fill: #1C1917;
@@ -24,10 +22,10 @@
 }
 
 .auth-subtitle {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-letter-spacing: 6;
-  -fx-text-fill: #A4A0C5;
+  -fx-text-fill: #B18DB8;
 }
 
 .auth-tagline {
@@ -65,5 +63,5 @@
 .auth-switch-link {
   -fx-font-size: 20;
   -fx-font-weight: bold;
-  -fx-text-fill: #A4A0C5;
+  -fx-text-fill: #B18DB8;
 }

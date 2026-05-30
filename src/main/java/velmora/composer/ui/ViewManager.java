@@ -13,7 +13,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -119,7 +118,7 @@ public class ViewManager {
     HBox dots1 = new HBox(6.0);
     dots1.setAlignment(Pos.CENTER_LEFT);
     dots1.setStyle("-fx-padding: 4 4 0 4;");
-    for (String c : new String[]{"rgba(226,169,152,0.7)", "rgba(164,160,197,0.6)", "rgba(120,160,160,0.6)", "rgba(226,169,152,0.5)"}) {
+    for (String c : new String[]{"rgba(214,148,120,0.7)", "rgba(177,141,184,0.6)", "rgba(109,168,158,0.6)", "rgba(214,148,120,0.5)"}) {
       Circle cr = new Circle(c.contains("7") ? 6 : c.contains("6") ? 5 : 4);
       cr.setStyle("-fx-fill: " + c + ";");
       dots1.getChildren().add(cr);
@@ -127,7 +126,7 @@ public class ViewManager {
     HBox dots2 = new HBox(6.0);
     dots2.setAlignment(Pos.CENTER_LEFT);
     dots2.setStyle("-fx-padding: 0 4;");
-    for (String c : new String[]{"rgba(164,160,197,0.4)", "rgba(90,158,143,0.6)", "rgba(226,169,152,0.5)"}) {
+    for (String c : new String[]{"rgba(177,141,184,0.4)", "rgba(90,158,143,0.6)", "rgba(214,148,120,0.5)"}) {
       Circle cr = new Circle(c.contains("6") ? 6 : 4);
       cr.setStyle("-fx-fill: " + c + ";");
       dots2.getChildren().add(cr);
@@ -135,7 +134,7 @@ public class ViewManager {
     HBox dots3 = new HBox(6.0);
     dots3.setAlignment(Pos.CENTER_LEFT);
     dots3.setStyle("-fx-padding: 0 4 8 4;");
-    for (String c : new String[]{"rgba(164,160,197,0.5)", "rgba(120,160,160,0.5)", "rgba(226,169,152,0.4)"}) {
+    for (String c : new String[]{"rgba(177,141,184,0.5)", "rgba(109,168,158,0.5)", "rgba(214,148,120,0.4)"}) {
       Circle cr = new Circle(c.contains("5") ? 5 : 4);
       cr.setStyle("-fx-fill: " + c + ";");
       dots3.getChildren().add(cr);
@@ -177,12 +176,12 @@ public class ViewManager {
     dirHeading.getStyleClass().add("dir-heading");
     dir.getChildren().add(dirHeading);
     String[][] dirEntries = {
-        {"rgba(226,169,152,0.7)", "Bergamot"},
-        {"rgba(164,160,197,0.7)", "Pink Pepper"},
-        {"rgba(120,160,160,0.6)", "Neroli"},
-        {"rgba(164,160,197,0.5)", "Iris Absolute"},
-        {"rgba(226,169,152,0.5)", "Rose Damascena"},
-        {"rgba(120,160,160,0.5)", "Jasmine"}
+        {"rgba(214,148,120,0.7)", "Bergamot"},
+        {"rgba(177,141,184,0.7)", "Pink Pepper"},
+        {"rgba(109,168,158,0.6)", "Neroli"},
+        {"rgba(177,141,184,0.5)", "Iris Absolute"},
+        {"rgba(214,148,120,0.5)", "Rose Damascena"},
+        {"rgba(109,168,158,0.5)", "Jasmine"}
     };
     for (String[] e : dirEntries) {
       HBox row = new HBox(8.0);
@@ -216,7 +215,7 @@ public class ViewManager {
   private HBox createNavItem(String icon, String label, String subtitle, String pageId, Runnable action) {
     HBox item = new HBox(12.0);
     item.setAlignment(Pos.CENTER_LEFT);
-    item.getStyleClass().add("sidebar-icon");
+    item.getStyleClass().add("nav-item");
     item.setOnMouseClicked(e -> action.run());
 
     Label iconLbl = new Label(icon);
@@ -237,17 +236,25 @@ public class ViewManager {
     for (Map.Entry<String, HBox> e : navItems.entrySet()) {
       HBox item = e.getValue();
       if (e.getKey().equals(pageId)) {
-        item.getStyleClass().add("sidebar-icon-active");
-        Label icon = (Label) item.getChildren().get(0);
+        item.getStyleClass().add("nav-item-active");
+        if (item.getChildren().isEmpty() || !(item.getChildren().get(0) instanceof Rectangle)) {
+          Rectangle bar = new Rectangle(3, 28);
+          bar.getStyleClass().add("nav-active-bar");
+          item.getChildren().add(0, bar);
+        }
+        Label icon = (Label) item.getChildren().get(item.getChildren().size() == 3 ? 1 : 0);
         icon.getStyleClass().remove("nav-icon");
         icon.getStyleClass().add("nav-icon-active");
-        VBox vb = (VBox) item.getChildren().get(1);
+        VBox vb = (VBox) item.getChildren().get(item.getChildren().size() == 3 ? 2 : 1);
         ((Label) vb.getChildren().get(0)).getStyleClass().remove("nav-label");
         ((Label) vb.getChildren().get(0)).getStyleClass().add("nav-label-active");
         ((Label) vb.getChildren().get(1)).getStyleClass().remove("nav-subtitle");
         ((Label) vb.getChildren().get(1)).getStyleClass().add("nav-subtitle-active");
       } else {
-        item.getStyleClass().remove("sidebar-icon-active");
+        item.getStyleClass().remove("nav-item-active");
+        if (!item.getChildren().isEmpty() && item.getChildren().get(0) instanceof Rectangle) {
+          item.getChildren().remove(0);
+        }
         Label icon = (Label) item.getChildren().get(0);
         icon.getStyleClass().remove("nav-icon-active");
         if (!icon.getStyleClass().contains("nav-icon")) icon.getStyleClass().add("nav-icon");

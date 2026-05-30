@@ -193,4 +193,53 @@ public class CompositionAnalysisService {
     if (value <= 12) return "8-12h";
     return "12h+";
   }
+
+  public String generateDescription(List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+    List<Note> all = new ArrayList<>();
+    all.addAll(topNotes); all.addAll(heartNotes); all.addAll(baseNotes);
+    if (all.isEmpty()) return "Empty composition. Add notes to generate a profile.";
+
+    String opening = describePhase(topNotes, "opening", "top");
+    String heart = describePhase(heartNotes, "heart", "middle");
+    String base = describePhase(baseNotes, "drydown", "base");
+
+    double avgInt = all.stream().filter(n -> n.getIntensity() != null).mapToInt(Note::getIntensity).average().orElse(5);
+    String intensity = avgInt >= 7 ? "strong" : avgInt >= 4 ? "moderate" : "soft";
+
+    long families = all.stream().map(Note::getCategory).filter(Objects::nonNull).distinct().count();
+    String complexity = families >= 5 ? "complex" : families >= 3 ? "well-balanced" : "focused";
+
+    return opening + " with " + heart + " and " + base + ". A " + intensity + ", " + complexity + " composition.";
+  }
+
+  private String describePhase(List<Note> notes, String label, String type) {
+    if (notes.isEmpty()) return "no " + label + " notes";
+    List<String> categories = notes.stream()
+        .map(n -> n.getCategory() != null ? n.getCategory().toLowerCase() : "other")
+        .distinct().collect(Collectors.toList());
+
+    if (type.equals("top")) {
+      if (categories.contains("citrus")) return "fresh citrus " + label;
+      if (categories.contains("green")) return "bright green " + label;
+      if (categories.contains("aromatic")) return "herbal aromatic " + label;
+      if (categories.contains("spicy")) return "spicy " + label;
+      if (categories.contains("fruity")) return "fruity " + label;
+      if (categories.contains("floral")) return "floral " + label;
+      return "vibrant " + label;
+    }
+    if (type.equals("middle")) {
+      if (categories.contains("floral")) return "floral heart";
+      if (categories.contains("spicy")) return "warm spicy heart";
+      if (categories.contains("gourmand")) return "sweet gourmand heart";
+      if (categories.contains("oriental")) return "rich oriental heart";
+      if (categories.contains("woody")) return "woody heart";
+      return "balanced heart";
+    }
+    if (categories.contains("woody")) return "warm woody " + label;
+    if (categories.contains("earthy")) return "earthy " + label;
+    if (categories.contains("musk")) return "soft musky " + label;
+    if (categories.contains("amber")) return "warm amber " + label;
+    if (categories.contains("gourmand")) return "sweet gourmand " + label;
+    return "lingering " + label;
+  }
 }

@@ -2,8 +2,8 @@
   -fx-font-size: 18;
   -fx-font-weight: bold;
   -fx-cursor: hand;
-  -fx-background-radius: 4;
-  -fx-border-radius: 4;
+  -fx-background-radius: 12;
+  -fx-border-radius: 12;
   -fx-padding: 14 28;
   -fx-border-width: 1;
   -fx-border-color: transparent;
@@ -36,7 +36,8 @@
 }
 
 .btn-secondary:hover {
-  -fx-background-color: rgba(164, 160, 197, 0.12);
+  -fx-background-color: rgba(177, 141, 184, 0.12);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 4, 0, 0, 1);
 }
 
 .btn-ghost {
@@ -71,8 +72,8 @@
   -fx-text-fill: -velmora-error;
   -fx-letter-spacing: 2;
   -fx-border-color: rgba(192, 57, 43, 0.5);
-  -fx-background-radius: 1;
-  -fx-border-radius: 1;
+  -fx-background-radius: 12;
+  -fx-border-radius: 12;
 }
 
 .btn-danger:hover {
@@ -117,17 +118,19 @@
   -fx-cursor: hand;
   -fx-border-color: -velmora-border;
   -fx-border-width: 1;
-  -fx-border-radius: 1;
-  -fx-background-radius: 1;
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
 }
 
 .filter-tab:hover {
-  -fx-background-color: rgba(164, 160, 197, 0.1);
+  -fx-background-color: rgba(177, 141, 184, 0.1);
   -fx-text-fill: -velmora-text;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 4, 0, 0, 1);
 }
 
 .filter-tab.active {
   -fx-background-color: -velmora-text;
   -fx-text-fill: -velmora-surface;
   -fx-border-color: -velmora-text;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.1), 6, 0, 0, 1);
 }

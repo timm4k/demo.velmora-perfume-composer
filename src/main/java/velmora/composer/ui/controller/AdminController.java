@@ -82,7 +82,7 @@ public class AdminController {
           Label name = new Label(n.getName());
           name.setStyle("-fx-font-size: 19; -fx-font-weight: 500;");
           Label type = new Label(n.getType() != null ? n.getType().name() : "");
-          type.setStyle("-fx-font-size: 15; -fx-text-fill: #A4A0C5; -fx-font-weight: bold;");
+          type.setStyle("-fx-font-size: 15; -fx-text-fill: #b18db8; -fx-font-weight: bold;");
           Label cat = new Label(n.getCategory() != null ? n.getCategory() : "");
           cat.setStyle("-fx-font-size: 15; -fx-text-fill: #B0ADA8; -fx-font-style: italic;");
           Label intensity = new Label("★".repeat(n.getIntensity() != null ? n.getIntensity() / 2 : 0));

@@ -1,5 +1,5 @@
 .history-root {
-  -fx-background-color: #F8F6F2;
+  -fx-background-color: -velmora-bg;
 }
 
 .history-heading {
@@ -28,15 +28,14 @@
 }
 
 .history-card:hover {
-  -fx-background-color: rgba(164,160,197,0.06);
+  -fx-background-color: rgba(177,141,184,0.06);
   -fx-border-radius: 8;
   -fx-background-radius: 8;
   -fx-padding: 8 8 8 8;
-  -fx-margin: 0 -8;
 }
 
 .history-dot {
-  -fx-fill: #A4A0C5;
+  -fx-fill: #B18DB8;
   -fx-stroke: #C8C4D8;
   -fx-stroke-width: 1.5;
 }

@@ -16,14 +16,14 @@
     <Circle radius="200.0" layoutX="450.0" layoutY="560.0" styleClass="deco-glow-peach" />
     <Circle radius="160.0" layoutX="250.0" layoutY="700.0" styleClass="deco-glow-teal" />
 
-    <Rectangle width="1.0" height="120.0" translateX="-180.0" translateY="-160.0" fill="#A4A0C5" opacity="0.3" />
+    <Rectangle width="1.0" height="120.0" translateX="-180.0" translateY="-160.0" fill="#b18db8" opacity="0.3" />
     <Rectangle width="1.0" height="80.0" translateX="-180.0" translateY="200.0" fill="#E2A998" opacity="0.3" />
 
     <VBox alignment="CENTER" spacing="0">
       <HBox spacing="10.0" alignment="CENTER" style="-fx-padding: 0 0 28 0;">
-        <Rectangle width="28.0" height="1.0" fill="#A4A0C5" opacity="0.6" />
-        <Label text="EST. MMXXIV" style=" -fx-font-size: 16; -fx-letter-spacing: 4; -fx-text-fill: #A4A0C5;" />
-        <Rectangle width="28.0" height="1.0" fill="#A4A0C5" opacity="0.6" />
+        <Rectangle width="28.0" height="1.0" fill="#b18db8" opacity="0.6" />
+        <Label text="EST. MMXXIV" style=" -fx-font-size: 16; -fx-letter-spacing: 4; -fx-text-fill: #b18db8;" />
+        <Rectangle width="28.0" height="1.0" fill="#b18db8" opacity="0.6" />
       </HBox>
 
       <Label text="VELMORA" styleClass="auth-brand" />
@@ -31,7 +31,7 @@
       <HBox spacing="10.0" alignment="CENTER" style="-fx-padding: 16 0 16 0;">
         <Rectangle width="36.0" height="1.0" fill="#E2A998" opacity="0.7" />
         <Circle radius="2.0" fill="#E2A998" opacity="0.7" />
-        <Circle radius="3.5" fill="#A4A0C5" opacity="0.6" />
+        <Circle radius="3.5" fill="#b18db8" opacity="0.6" />
         <Circle radius="2.0" fill="#E2A998" opacity="0.7" />
         <Rectangle width="36.0" height="1.0" fill="#E2A998" opacity="0.7" />
       </HBox>
@@ -54,7 +54,7 @@
         <Circle radius="3.0" styleClass="deco-dot-peach" />
         <Circle radius="3.0" styleClass="deco-dot-teal" />
         <Circle radius="3.0" styleClass="deco-dot" />
-        <Rectangle width="40.0" height="1.0" fill="#A4A0C5" opacity="0.35" />
+        <Rectangle width="40.0" height="1.0" fill="#b18db8" opacity="0.35" />
       </HBox>
     </VBox>
   </StackPane>
@@ -93,7 +93,7 @@
 
       <VBox fx:id="registerForm" spacing="18.0" maxWidth="360.0" managed="false" visible="false">
         <Label text="CREATE ACCOUNT" styleClass="auth-form-title" />
-        <Rectangle width="40.0" height="2.0" fill="#A4A0C5" />
+        <Rectangle width="40.0" height="2.0" fill="#b18db8" />
 
         <VBox spacing="5.0">
           <Label text="NICKNAME" styleClass="field-label" />

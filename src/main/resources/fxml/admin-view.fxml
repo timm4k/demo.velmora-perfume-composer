@@ -6,14 +6,14 @@
 <AnchorPane prefHeight="800.0" prefWidth="1180.0" xmlns="http://javafx.com/javafx/21"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="velmora.composer.ui.controller.AdminController"
-  style="-fx-background-color: #F4F1EC;">
+  styleClass="vault-root">
 
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
     <children>
       <VBox AnchorPane.leftAnchor="44.0" AnchorPane.topAnchor="36.0" spacing="4.0">
         <Label text="Admin Panel" styleClass="font-serif text-4xl text-primary" />
-        <Rectangle width="50.0" height="2.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
+        <Rectangle width="50.0" height="2.0" fill="#b18db8" arcWidth="2" arcHeight="2" />
         <Label text="NOTE DATABASE MANAGEMENT" styleClass="text-xs tracking-3 text-purple" />
       </VBox>
 
@@ -27,8 +27,8 @@
         <HBox spacing="12.0" alignment="CENTER_LEFT">
           <Label text="ALL NOTES" styleClass="text-base font-bold text-secondary tracking-2" />
           <Label fx:id="notesCount" text="0"
-            style="-fx-background-color: rgba(164,160,197,0.2); -fx-background-radius: 4;
-                   -fx-padding: 2 10; -fx-text-fill: #A4A0C5; -fx-font-size: 18; -fx-font-weight: bold;" />
+            style="-fx-background-color: rgba(177,141,184,0.2); -fx-background-radius: 4;
+                   -fx-padding: 2 10; -fx-text-fill: #b18db8; -fx-font-size: 18; -fx-font-weight: bold;" />
           <Region HBox.hgrow="ALWAYS" />
           <Button text="+ ADD NOTE" onAction="#handleAdd" styleClass="btn btn-teal" />
           <Button text="EDIT" onAction="#handleEdit" styleClass="btn btn-primary" />

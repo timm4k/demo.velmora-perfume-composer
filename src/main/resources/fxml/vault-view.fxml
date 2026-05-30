@@ -63,7 +63,7 @@
 
       <Label fx:id="intensityLabel"
         text="1+"
-        style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #A4A0C5; -fx-min-width: 30;" />
+        style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #b18db8; -fx-min-width: 30;" />
 
       <Label text="CATEGORY"
         style=" -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 2;" />
@@ -120,7 +120,7 @@
           style=" -fx-font-size: 16;
                  -fx-font-weight: bold;
                  -fx-letter-spacing: 2;
-                 -fx-text-fill: #A4A0C5;
+                 -fx-text-fill: #b18db8;
                  -fx-cursor: hand;
                  -fx-padding: 0 0 14 2;" />
 
@@ -238,7 +238,7 @@
               <Rectangle fx:id="tlHeart"
                 width="96" height="6"
                 arcWidth="12" arcHeight="12"
-                fill="#A4A0C5" />
+                fill="#b18db8" />
             </HBox>
 
             <HBox alignment="CENTER_LEFT" spacing="10">

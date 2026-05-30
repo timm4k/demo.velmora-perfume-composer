@@ -1,5 +1,5 @@
 .vault-root {
-  -fx-background-color: #F4F1EC;
+  -fx-background-color: -velmora-bg;
 }
 
 .vault-content {
@@ -13,51 +13,48 @@
 }
 
 .filter-search {
-  -fx-background-color: rgba(255,255,255,0.6);
+  -fx-background-color: rgba(255,253,251,0.7);
   -fx-background-radius: 20;
   -fx-padding: 10 18;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
   -fx-font-size: 20;
   -fx-prompt-text-fill: #B0ADA8;
-  -fx-border-color: #DDD9D1;
-  -fx-border-radius: 20;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 4, 0, 0, 1);
   -fx-pref-width: 280;
 }
 
 .filter-search:focused {
-  -fx-border-color: #A4A0C5;
-  -fx-effect: dropshadow(gaussian, rgba(164,160,197,0.2), 8, 0, 0, 2);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.15), 8, 0, 0, 2);
 }
 
 .filter-btn {
   -fx-background-color: transparent;
   -fx-background-radius: 16;
   -fx-padding: 6 16;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
   -fx-font-size: 18;
   -fx-font-weight: bold;
   -fx-text-fill: #6B6560;
-  -fx-border-color: #DDD9D1;
-  -fx-border-radius: 16;
   -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.03), 4, 0, 0, 1);
 }
 
 .filter-btn:hover {
-  -fx-border-color: #A4A0C5;
-  -fx-text-fill: #A4A0C5;
-  -fx-background-color: rgba(164,160,197,0.08);
+  -fx-text-fill: #B18DB8;
+  -fx-background-color: rgba(177,141,184,0.08);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.08), 8, 0, 0, 2);
 }
 
 .filter-btn-active {
-  -fx-background-color: #A4A0C5;
-  -fx-text-fill: #FAFAF8;
-  -fx-border-color: #A4A0C5;
+  -fx-background-color: #B18DB8;
+  -fx-text-fill: #FFFDFB;
   -fx-background-radius: 16;
   -fx-padding: 6 16;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
   -fx-font-size: 18;
   -fx-font-weight: bold;
   -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.15), 8, 0, 0, 3);
 }
 
 .card-grid {
@@ -68,21 +65,16 @@
 }
 
 .note-card {
-  -fx-background-color: #FAFAF8;
+  -fx-background-color: -velmora-surface;
   -fx-background-radius: 18;
-  -fx-border-radius: 18;
-  -fx-border-color: #EAE6DF;
-  -fx-border-width: 1;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.05), 10, 0, 0, 3);
   -fx-cursor: hand;
 }
 
 .note-card:hover {
   -fx-scale-x: 1.02;
   -fx-scale-y: 1.02;
-  -fx-effect: dropshadow(gaussian, rgba(164,160,197,0.15), 20, 0, 0, 8);
-  -fx-border-color: #A4A0C5;
-  -fx-transition: all 0.2s ease;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.16), 24, 0, 0, 10);
 }
 
 .note-card:pressed {
@@ -116,7 +108,7 @@
   -fx-font-size: 16;
   -fx-font-weight: bold;
   -fx-letter-spacing: 1;
-  -fx-text-fill: #FAFAF8;
+  -fx-text-fill: #FFFDFB;
 }
 
 .badge-top {
@@ -132,7 +124,7 @@
 }
 
 .badge-category {
-  -fx-background-color: rgba(164,160,197,0.15);
+  -fx-background-color: rgba(177,141,184,0.15);
   -fx-text-fill: #6B6560;
   -fx-font-size: 16;
   -fx-font-weight: bold;
@@ -145,14 +137,14 @@
 }
 
 .card-name {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 23;
   -fx-font-weight: 600;
   -fx-text-fill: #1C1917;
 }
 
 .card-description {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 18;
   -fx-text-fill: #8A847E;
   -fx-line-spacing: 2;
@@ -170,10 +162,11 @@
   -fx-min-height: 8;
   -fx-max-width: 8;
   -fx-max-height: 8;
+  -fx-translate-y: -1;
 }
 
 .card-intensity-dot-active {
-  -fx-background-color: #E2A998;
+  -fx-background-color: #D69478;
 }
 
 .card-intensity-dot-inactive {
@@ -181,20 +174,16 @@
 }
 
 .detail-panel {
-  -fx-background-color: rgba(255,255,255,0.72);
+  -fx-background-color: rgba(255,253,251,0.75);
   -fx-background-radius: 28;
-  -fx-border-color: rgba(221,217,209,0.35);
-  -fx-border-width: 1;
-  -fx-border-radius: 28;
   -fx-padding: 18;
   -fx-spacing: 14;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 24, 0.18, 0, 8);
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 20, 0.15, 0, 8);
 }
 
 .detail-image {
   -fx-background-color: #ECE7E0;
   -fx-background-radius: 24;
-  -fx-border-radius: 24;
   -fx-padding: 0;
   -fx-alignment: center;
   -fx-min-height: 145;
@@ -202,7 +191,7 @@
 }
 
 .detail-name {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 30;
   -fx-font-weight: 600;
   -fx-text-fill: #1C1917;
@@ -212,7 +201,7 @@
   -fx-font-size: 17;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
-  -fx-text-fill: #78A0A0;
+  -fx-text-fill: #6DA89E;
 }
 
 .detail-section-title {
@@ -224,7 +213,7 @@
 }
 
 .detail-description {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: #6B6560;
   -fx-line-spacing: 4;
@@ -243,7 +232,7 @@
 }
 
 .detail-info-value {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 19;
   -fx-text-fill: #1C1917;
 }
@@ -280,18 +269,18 @@
 }
 
 .compat-tag {
-  -fx-background-color: rgba(120,160,160,0.12);
+  -fx-background-color: rgba(109,168,158,0.12);
   -fx-background-radius: 4;
   -fx-padding: 4 10;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 18;
-  -fx-text-fill: #78A0A0;
+  -fx-text-fill: #6DA89E;
   -fx-font-weight: 600;
   -fx-cursor: hand;
 }
 
 .compat-tag:hover {
-  -fx-background-color: rgba(120,160,160,0.22);
+  -fx-background-color: rgba(109,168,158,0.22);
 }
 
 .empty-state {
@@ -301,13 +290,13 @@
 }
 
 .empty-state-title {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 26;
   -fx-text-fill: #B0ADA8;
 }
 
 .empty-state-subtitle {
-  -fx-font-family: 'Garamond', 'Georgia', serif;
+  -fx-font-family: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
   -fx-font-size: 20;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
@@ -327,9 +316,8 @@
 }
 
 .vault-scroll .scroll-bar .thumb {
-  -fx-background-color: #A4A0C5;
+  -fx-background-color: rgba(177, 141, 184, 0.25);
   -fx-background-radius: 4;
-  -fx-opacity: 0.25;
 }
 
 .vault-scroll .scroll-bar .increment-button,
@@ -342,7 +330,7 @@
 .vault-root .btn-primary {
   -fx-background-color: #161312;
   -fx-background-radius: 16;
-  -fx-text-fill: #F7F4EF;
+  -fx-text-fill: #FFFDFB;
   -fx-font-size: 19;
   -fx-font-weight: 600;
   -fx-padding: 10 18;

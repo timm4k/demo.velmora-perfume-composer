@@ -16,7 +16,7 @@
 
       <VBox style="-fx-padding: 32 48 16 48;" spacing="4.0">
         <HBox spacing="12.0" alignment="CENTER_LEFT">
-          <Rectangle width="3.0" height="20.0" fill="#A4A0C5" arcWidth="2" arcHeight="2" />
+          <Rectangle width="3.0" height="20.0" fill="#b18db8" arcWidth="2" arcHeight="2" />
           <Label text="Perfume Catalog" styleClass="catalog-heading" />
           <Region HBox.hgrow="ALWAYS" />
           <Label fx:id="catalogCount" text="0 fragrances" styleClass="catalog-subtitle" />
