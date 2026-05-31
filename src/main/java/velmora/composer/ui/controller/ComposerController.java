@@ -356,9 +356,9 @@ public class ComposerController {
 
   private void syncAutoSaveItems() {
     List<Note> all = allNotes();
-    List<velmora.composer.model.CompositionItem> items = new ArrayList<>();
+    List<CompositionItem> items = new ArrayList<>();
     for (Note note : all) {
-      velmora.composer.model.CompositionItem item = new velmora.composer.model.CompositionItem();
+      CompositionItem item = new CompositionItem();
       item.setNoteId(note.getId());
       item.setPercentage(notePercentages.getOrDefault(note.getId(), 100 / Math.max(1, all.size())));
       items.add(item);
@@ -671,45 +671,57 @@ public class ComposerController {
       statusDot.getStyleClass().add("status-dot-warn");
       return;
     }
-    User userRef = new User();
-    userRef.setId(userSession.getUserId());
-    Composition composition;
+
+    Composition composition = new Composition();
     if (editingCompositionId != null) {
-      composition = new Composition();
       composition.setId(editingCompositionId);
-    } else {
-      composition = new Composition();
     }
     composition.setName(name);
     composition.setDescription("Created in Velmora Olfactory Lab");
     composition.setPublic(isPublicComposition);
+
+    User userRef = new User();
+    userRef.setId(userSession.getUserId());
     composition.setUser(userRef);
+
     for (Note note : all) {
       CompositionItem item = new CompositionItem();
       item.setNoteId(note.getId());
       item.setPercentage(notePercentages.getOrDefault(note.getId(), 100 / all.size()));
       composition.getItems().add(item);
     }
+
     syncAutoSaveItems();
-    javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
-      @Override protected Void call() {
-        compositionService.saveComposition(composition, "Manual save");
-        return null;
+
+    javafx.concurrent.Task<Composition> task = new javafx.concurrent.Task<>() {
+      @Override
+      protected Composition call() {
+        return compositionService.saveComposition(composition, "Manual save");
       }
     };
+
     formulaStatus.setText("SAVING...");
+    statusDot.getStyleClass().removeAll("status-dot-saved", "status-dot-saving", "status-dot-warn");
+    statusDot.getStyleClass().add("status-dot-saving");
+
     task.setOnSucceeded(e -> {
+      Composition saved = task.getValue();
+      editingCompositionId = saved.getId();
       formulaStatus.setText("SAVED \u2713");
       statusDot.getStyleClass().removeAll("status-dot-saved", "status-dot-saving", "status-dot-warn");
       statusDot.getStyleClass().add("status-dot-saved");
-      editingCompositionId = null;
       autoSaveService.clear();
+      closeDraftBtn.setVisible(true);
+      closeDraftBtn.setManaged(true);
     });
+
     task.setOnFailed(e -> {
-      formulaStatus.setText("ERROR: " + task.getException().getMessage());
+      String msg = task.getException().getMessage();
+      formulaStatus.setText("ERROR: " + (msg != null ? msg : "unknown"));
       statusDot.getStyleClass().removeAll("status-dot-saved", "status-dot-saving", "status-dot-warn");
       statusDot.getStyleClass().add("status-dot-warn");
     });
+
     new Thread(task).start();
   }
 
@@ -738,7 +750,8 @@ public class ComposerController {
     String name = baseName;
     AnalysisResult exportResult = analysisService.analyze(currentTopNotes, currentHeartNotes, currentBaseNotes);
     javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
-      @Override protected Void call() throws Exception {
+      @Override
+      protected Void call() throws Exception {
         pdfExportService.export(file, name, all, exportResult);
         return null;
       }
@@ -752,7 +765,6 @@ public class ComposerController {
       formulaStatus.setText("EXPORT FAILED");
       statusDot.getStyleClass().removeAll("status-dot-saved", "status-dot-saving", "status-dot-warn");
       statusDot.getStyleClass().add("status-dot-warn");
-      System.out.println("[EXPORT] Error: " + task.getException().getMessage());
     });
     new Thread(task).start();
   }

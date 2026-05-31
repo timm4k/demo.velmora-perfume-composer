@@ -3,6 +3,7 @@ package velmora.composer.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,19 +61,12 @@ public class CompositionService {
   public Composition saveComposition(Composition composition, String changeDescription) {
     validate(composition);
 
-    Composition saved;
     boolean isNew = composition.getId() == null;
-    log.info("[SAVE] Starting saveComposition for composition id={} (isNew={})",
-        composition.getId(), isNew);
+    log.info("[SAVE] Starting saveComposition for composition id={} (isNew={})", composition.getId(), isNew);
 
-    if (!isNew) {
-      saved = updateExisting(composition);
-    } else {
-      saved = createNew(composition);
-    }
+    Composition saved = isNew ? createNew(composition) : updateExisting(composition);
 
     log.info("[SAVE] Composition saved successfully id={}, now creating version...", saved.getId());
-
     String description = versionService.generateChangeDescription(saved.getId(), saved);
     versionService.createVersion(saved, description);
     log.info("[SAVE] Version CREATED for composition id={}", saved.getId());
@@ -95,8 +89,7 @@ public class CompositionService {
         .mapToInt(i -> i.getPercentage() != null ? i.getPercentage() : 0)
         .sum();
     if (totalPct > 100) {
-      throw new IllegalStateException(
-          "Total percentage exceeds 100% (current: " + totalPct + "%)");
+      throw new IllegalStateException("Total percentage exceeds 100% (current: " + totalPct + "%)");
     }
     for (CompositionItem item : items) {
       if (item.getPercentage() != null
@@ -106,10 +99,36 @@ public class CompositionService {
     }
   }
 
+  private Composition createNew(Composition composition) {
+    if (composition.getUser() != null && composition.getUser().getId() != null) {
+      composition.setUser(userRepository.getReferenceById(composition.getUser().getId()));
+    }
+    if (composition.getStatus() == null) {
+      composition.setStatus(CompositionStatus.DRAFT);
+    }
+    composition.setUpdatedAt(LocalDateTime.now());
+
+    List<CompositionItem> items = new ArrayList<>(composition.getItems());
+    composition.getItems().clear();
+
+    Composition saved = compositionRepository.save(composition);
+    entityManager.flush();
+
+    for (CompositionItem item : items) {
+      item.setCompositionId(saved.getId());
+      resolveNoteReference(item);
+      saved.getItems().add(item);
+    }
+
+    Composition result = compositionRepository.save(saved);
+    entityManager.flush();
+    log.info("[COMPOSITION] Created id={} name='{}'", result.getId(), result.getName());
+    return result;
+  }
+
   private Composition updateExisting(Composition incoming) {
     Composition managed = compositionRepository.findWithItemsById(incoming.getId())
-        .orElseThrow(() -> new IllegalStateException(
-            "Composition not found: " + incoming.getId()));
+        .orElseThrow(() -> new IllegalStateException("Composition not found: " + incoming.getId()));
 
     Long currentUserId = userSession.getUserId();
     if (currentUserId != null
@@ -144,29 +163,7 @@ public class CompositionService {
 
     Composition result = compositionRepository.save(managed);
     entityManager.flush();
-    log.info("[COMPOSITION] Updated id={} name='{}'",
-        result.getId(), result.getName());
-    return result;
-  }
-
-  private Composition createNew(Composition composition) {
-    if (composition.getUser() != null && composition.getUser().getId() != null) {
-      composition.setUser(userRepository.getReferenceById(
-          composition.getUser().getId()));
-    }
-    if (composition.getStatus() == null) {
-      composition.setStatus(CompositionStatus.DRAFT);
-    }
-    composition.setUpdatedAt(LocalDateTime.now());
-
-    for (CompositionItem item : composition.getItems()) {
-      resolveNoteReference(item);
-    }
-
-    Composition result = compositionRepository.save(composition);
-    entityManager.flush();
-    log.info("[COMPOSITION] Created id={} name='{}'",
-        result.getId(), result.getName());
+    log.info("[COMPOSITION] Updated id={} name='{}'", result.getId(), result.getName());
     return result;
   }
 
