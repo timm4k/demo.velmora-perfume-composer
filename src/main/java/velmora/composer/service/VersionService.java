@@ -20,6 +20,7 @@ import velmora.composer.model.Note;
 import velmora.composer.repository.CompositionRepository;
 import velmora.composer.repository.CompositionVersionRepository;
 import velmora.composer.repository.NoteRepository;
+import velmora.composer.model.CompositionVersion;
 
 @Slf4j
 @Service

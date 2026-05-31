@@ -47,12 +47,12 @@ public class AnalysisPanelRenderer {
   private String lastInsightKey = "";
 
   public AnalysisPanelRenderer(Canvas harmonyCircle, Rectangle balanceBar, Rectangle longevityBar,
-                                Rectangle projectionBar, Rectangle complexityBar,
-                                Label balanceScore, Label longevityValue, Label projectionLabel,
-                                Label complexityLabel, Label dominantFamilyValue, Label openingCharValue,
-                                Label dryDownCharValue, VBox familyDistributionList,
-                                VBox insightsContainer, CompositionAnalysisService analysisService,
-                                SynergyService synergyService) {
+      Rectangle projectionBar, Rectangle complexityBar,
+      Label balanceScore, Label longevityValue, Label projectionLabel,
+      Label complexityLabel, Label dominantFamilyValue, Label openingCharValue,
+      Label dryDownCharValue, VBox familyDistributionList,
+      VBox insightsContainer, CompositionAnalysisService analysisService,
+      SynergyService synergyService) {
     this.harmonyCircle = harmonyCircle;
     this.balanceBar = balanceBar;
     this.longevityBar = longevityBar;
@@ -72,10 +72,10 @@ public class AnalysisPanelRenderer {
   }
 
   public void renderAll(List<Note> all, Map<Long, Integer> notePercentages,
-                         List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+      List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
     Platform.runLater(() -> {
       if (all.isEmpty()) {
-        renderEmpty();
+        renderEmptyImpl();
         return;
       }
 
@@ -116,28 +116,30 @@ public class AnalysisPanelRenderer {
   }
 
   public void renderEmpty() {
-    Platform.runLater(() -> {
-      lastInsightKey = "";
-      balanceScore.setText("—");
-      longevityValue.setText("—");
-      projectionLabel.setText("—");
-      complexityLabel.setText("—");
-      dominantFamilyValue.setText("—");
-      openingCharValue.setText("—");
-      dryDownCharValue.setText("—");
-      ComposerAnimationHelper.animatePerfBar(balanceBar, 0);
-      ComposerAnimationHelper.animatePerfBar(longevityBar, 0);
-      ComposerAnimationHelper.animatePerfBar(projectionBar, 0);
-      ComposerAnimationHelper.animatePerfBar(complexityBar, 0);
-      ComposerAnimationHelper.drawBalanceCircle(harmonyCircle, 0);
-      familyDistributionList.getChildren().clear();
-      insightsContainer.getChildren().clear();
-      Label hint = new Label("Add notes to see live analysis");
-      hint.setStyle("-fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
-      insightsContainer.getChildren().add(hint);
-      javafx.application.Platform.runLater(insightsContainer::requestLayout);
-      javafx.application.Platform.runLater(familyDistributionList::requestLayout);
-    });
+    Platform.runLater(this::renderEmptyImpl);
+  }
+
+  private void renderEmptyImpl() {
+    lastInsightKey = "";
+    balanceScore.setText("—");
+    longevityValue.setText("—");
+    projectionLabel.setText("—");
+    complexityLabel.setText("—");
+    dominantFamilyValue.setText("—");
+    openingCharValue.setText("—");
+    dryDownCharValue.setText("—");
+    ComposerAnimationHelper.animatePerfBar(balanceBar, 0);
+    ComposerAnimationHelper.animatePerfBar(longevityBar, 0);
+    ComposerAnimationHelper.animatePerfBar(projectionBar, 0);
+    ComposerAnimationHelper.animatePerfBar(complexityBar, 0);
+    ComposerAnimationHelper.drawBalanceCircle(harmonyCircle, 0);
+    familyDistributionList.getChildren().clear();
+    insightsContainer.getChildren().clear();
+    Label hint = new Label("Add notes to see live analysis");
+    hint.setStyle("-fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;");
+    insightsContainer.getChildren().add(hint);
+    insightsContainer.requestLayout();
+    familyDistributionList.requestLayout();
   }
 
   private String complexityLabel(int score) {
@@ -233,17 +235,17 @@ public class AnalysisPanelRenderer {
       familyDistributionList.getChildren().add(row);
     }
 
-    javafx.application.Platform.runLater(familyDistributionList::requestLayout);
+    familyDistributionList.requestLayout();
   }
 
   private void renderInsights(AnalysisResult result, SynergyService.SynergyResult synergy,
-                              List<Note> all, Map<Long, Integer> notePercentages,
-                              List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
-                              double topR, double heartR, double baseR) {
+      List<Note> all, Map<Long, Integer> notePercentages,
+      List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
+      double topR, double heartR, double baseR) {
     insightsContainer.getChildren().clear();
     if (all.isEmpty()) {
       addHint("Add notes to see live analysis");
-      javafx.application.Platform.runLater(insightsContainer::requestLayout);
+      insightsContainer.requestLayout();
       return;
     }
 
@@ -304,7 +306,7 @@ public class AnalysisPanelRenderer {
       addHint("Add at least 2 notes for detailed insights");
     }
 
-    javafx.application.Platform.runLater(insightsContainer::requestLayout);
+    insightsContainer.requestLayout();
   }
 
   private void addHint(String text) {

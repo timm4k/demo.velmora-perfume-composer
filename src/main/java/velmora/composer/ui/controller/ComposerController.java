@@ -159,6 +159,7 @@ public class ComposerController {
       compositionState.setCurrentNoteIds(allNotes().stream().map(Note::getId).collect(Collectors.toList()));
       compositionState.setCurrentNoteNames(allNotes().stream().map(Note::getName).collect(Collectors.toList()));
     });
+
     loadNotes();
     clearPyramid();
     restoreFromState();
@@ -170,7 +171,7 @@ public class ComposerController {
     updateAll();
     Platform.runLater(this::runAnalysis);
 
-    autoSaveService.setListener(status -> {
+    autoSaveService.setListener(status -> Platform.runLater(() -> {
       formulaStatus.setText(switch (status) {
         case SAVED -> "Saved";
         case SAVING -> "Saving...";
@@ -182,7 +183,7 @@ public class ComposerController {
         case SAVING -> "status-dot-saving";
         case UNSAVED -> "status-dot-warn";
       });
-    });
+    }));
 
     formulaName.textProperty().addListener((obs, old, val) -> {
       autoSaveService.setCurrentName(val);
@@ -477,32 +478,36 @@ public class ComposerController {
   }
 
   private void updateAll() {
-    renderChips();
-    adjustZoneWidths();
-    updateCounts();
-    List<Note> all = allNotes();
-    if (all.isEmpty()) {
-      concentrationPanelRenderer.renderEmpty();
-      analysisPanelRenderer.renderEmpty();
-      heatmapPanelRenderer.renderEmpty();
-      return;
-    }
-    concentrationPanelRenderer.renderRows(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes, this::runAnalysis);
-    analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
-    heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    Platform.runLater(() -> {
+      renderChips();
+      adjustZoneWidths();
+      updateCounts();
+      List<Note> all = allNotes();
+      if (all.isEmpty()) {
+        concentrationPanelRenderer.renderEmpty();
+        analysisPanelRenderer.renderEmpty();
+        heatmapPanelRenderer.renderEmpty();
+        return;
+      }
+      concentrationPanelRenderer.renderRows(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes, this::runAnalysis);
+      analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
+      heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    });
   }
 
   private void runAnalysis() {
-    List<Note> all = allNotes();
-    if (all.isEmpty()) {
-      concentrationPanelRenderer.renderEmpty();
-      analysisPanelRenderer.renderEmpty();
-      heatmapPanelRenderer.renderEmpty();
-      return;
-    }
-    concentrationPanelRenderer.updateLabels(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
-    analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
-    heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    Platform.runLater(() -> {
+      List<Note> all = allNotes();
+      if (all.isEmpty()) {
+        concentrationPanelRenderer.renderEmpty();
+        analysisPanelRenderer.renderEmpty();
+        heatmapPanelRenderer.renderEmpty();
+        return;
+      }
+      concentrationPanelRenderer.updateLabels(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
+      analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
+      heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    });
   }
 
   private void renderChips() {
@@ -757,6 +762,7 @@ public class ComposerController {
 
   @FXML
   public void handleSettings() { viewManager.showSettings(); }
+
   @FXML
   public void handleHistory() { viewManager.showHistory(); }
 }

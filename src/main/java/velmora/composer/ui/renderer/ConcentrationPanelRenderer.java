@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
-import javafx.application.Platform;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -35,10 +35,10 @@ public class ConcentrationPanelRenderer {
   private boolean concentrationUpdating = false;
 
   public ConcentrationPanelRenderer(VBox concentrationRows, Label validationLabel,
-                                    Circle balanceIndicator,
-                                    Label totalConcentration, Label concentrationValidation,
-                                    Label topPct, Label heartPct, Label basePct,
-                                    AutoSaveService autoSaveService) {
+      Circle balanceIndicator,
+      Label totalConcentration, Label concentrationValidation,
+      Label topPct, Label heartPct, Label basePct,
+      AutoSaveService autoSaveService) {
     this.concentrationRows = concentrationRows;
     this.validationLabel = validationLabel;
     this.balanceIndicator = balanceIndicator;
@@ -51,8 +51,8 @@ public class ConcentrationPanelRenderer {
   }
 
   public void renderRows(List<Note> all, Map<Long, Integer> notePercentages,
-                          List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
-                          Runnable onUpdate) {
+      List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
+      Runnable onUpdate) {
     Platform.runLater(() -> {
       concentrationUpdating = true;
       concentrationRows.getChildren().clear();
@@ -97,7 +97,7 @@ public class ConcentrationPanelRenderer {
   }
 
   public void updateLabels(List<Note> all, Map<Long, Integer> notePercentages,
-                            List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+      List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
     Platform.runLater(() -> {
       if (all.isEmpty()) {
         renderEmptyImpl();
@@ -196,7 +196,7 @@ public class ConcentrationPanelRenderer {
   }
 
   private void updatePhaseLabels(Map<Long, Integer> notePercentages,
-                                  List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+      List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
     double topSum = topNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();
     double heartSum = heartNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();
     double baseSum = baseNotes.stream().mapToInt(n -> notePercentages.getOrDefault(n.getId(), 0)).sum();

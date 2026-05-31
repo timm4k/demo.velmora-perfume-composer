@@ -22,10 +22,10 @@ public class HeatmapPanelRenderer {
   }
 
   public void update(List<Note> all, List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
-                     Map<Long, Integer> notePercentages) {
+      Map<Long, Integer> notePercentages) {
     Platform.runLater(() -> {
       if (all.isEmpty()) {
-        renderEmpty();
+        renderEmptyImpl();
         return;
       }
       var data = timelineService.calculate(topNotes, heartNotes, baseNotes, notePercentages, 0);
@@ -34,6 +34,10 @@ public class HeatmapPanelRenderer {
   }
 
   public void renderEmpty() {
+    Platform.runLater(this::renderEmptyImpl);
+  }
+
+  private void renderEmptyImpl() {
     heatMapContainer.getChildren().clear();
   }
 

@@ -1,10 +1,12 @@
 package velmora.composer.ui.controller;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,20 +16,25 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import velmora.composer.model.Composition;
 import velmora.composer.model.CompositionStatus;
+import velmora.composer.model.CompositionVersion;
 import velmora.composer.repository.CompositionRepository;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.service.HistoryService;
@@ -58,15 +65,23 @@ public class HistoryController {
   @FXML private ComboBox<String> statusFilter;
   @FXML private ComboBox<String> sortFilter;
   @FXML private Button favoritesBtn;
+
   @FXML private StackPane detailOverlay;
   @FXML private StackPane compareOverlay;
-  @FXML private VBox detailPanel;
+
+  @FXML private AnchorPane detailPanel;
   @FXML private VBox comparePanel;
 
   private HistoryDetailRenderer detailRenderer;
   private HistoryCompareRenderer compareRenderer;
   private List<Composition> allCompositions;
   private boolean favoritesFilterActive;
+
+  private static final DateTimeFormatter DATE_FMT =
+      DateTimeFormatter.ofPattern("MMM dd, yyyy  HH:mm");
+
+  private static final DateTimeFormatter SHORT_DATE =
+      DateTimeFormatter.ofPattern("MMM dd, HH:mm");
 
   @FXML
   public void initialize() {
@@ -101,7 +116,7 @@ public class HistoryController {
   @FXML
   private void toggleFavoritesFilter() {
     favoritesFilterActive = !favoritesFilterActive;
-    favoritesBtn.setText(favoritesFilterActive ? "\u2665 Favorites" : "\u2661 Favorites");
+    favoritesBtn.setText(favoritesFilterActive ? "♥ Favorites" : "♡ Favorites");
     if (favoritesFilterActive) {
       favoritesBtn.getStyleClass().add("filter-btn-active");
     } else {
@@ -208,7 +223,7 @@ public class HistoryController {
     header.getStyleClass().add("history-card-header");
     header.setAlignment(Pos.CENTER_LEFT);
 
-    Label favBtn = new Label(comp.isFavorite() ? "\u2665" : "\u2661");
+    Label favBtn = new Label(comp.isFavorite() ? "♥" : "♡");
     favBtn.getStyleClass().add("history-card-fav");
     favBtn.setStyle(comp.isFavorite()
         ? "-fx-text-fill: #D69478;" : "-fx-text-fill: #C4BFB9;");
@@ -218,7 +233,7 @@ public class HistoryController {
       loadHistory();
     });
 
-    Label visBtn = new Label(comp.isPublic() ? "\u25C9 Public" : "\u25CB Private");
+    Label visBtn = new Label(comp.isPublic() ? "◉ Public" : "○ Private");
     visBtn.getStyleClass().add("history-card-vis");
     visBtn.setOnMouseClicked(e -> {
       e.consume();
@@ -268,7 +283,7 @@ public class HistoryController {
     versionsLabel.setCursor(javafx.scene.Cursor.HAND);
     versionsLabel.setOnMouseClicked(e -> showDetailOverlay(comp));
 
-    Button detailBtn = new Button("\u25BC Versions");
+    Button detailBtn = new Button("▼ Versions");
     detailBtn.getStyleClass().add("history-card-changes-btn");
     detailBtn.setOnAction(e -> showDetailOverlay(comp));
 
@@ -311,7 +326,7 @@ public class HistoryController {
     ContextMenu cm = new ContextMenu();
     MenuItem open      = new MenuItem("Open in Composer");
     MenuItem details   = new MenuItem("View Versions");
-    MenuItem compare   = new MenuItem("Compare Versions\u2026");
+    MenuItem compare   = new MenuItem("Compare Versions…");
     MenuItem duplicate = new MenuItem("Duplicate");
     MenuItem rename    = new MenuItem("Rename");
     MenuItem delete    = new MenuItem("Delete");
@@ -347,7 +362,7 @@ public class HistoryController {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    Label closeBtn = new Label("\u2715");
+    Label closeBtn = new Label("✕");
     closeBtn.getStyleClass().add("detail-close");
     closeBtn.setOnMouseClicked(e -> closeDetail());
 
@@ -360,9 +375,9 @@ public class HistoryController {
       var stats = historyService.getStats(comp.getId());
       if (stats != null) {
         statsGrid.getChildren().add(statBox("Created",
-            stats.createdAt != null ? stats.createdAt.format(SHORT_DATE) : "\u2014"));
+            stats.createdAt != null ? stats.createdAt.format(SHORT_DATE) : "—"));
         statsGrid.getChildren().add(statBox("Modified",
-            stats.lastModified != null ? stats.lastModified.format(SHORT_DATE) : "\u2014"));
+            stats.lastModified != null ? stats.lastModified.format(SHORT_DATE) : "—"));
         statsGrid.getChildren().add(statBox("Versions", String.valueOf(stats.versionCount)));
         statsGrid.getChildren().add(statBox("Notes",    String.valueOf(stats.noteCount)));
         if (stats.dominantFamily != null)
@@ -415,10 +430,7 @@ public class HistoryController {
     scroll.setFitToWidth(true);
     scroll.setStyle("-fx-background-color: transparent;");
     scroll.getStyleClass().add("thin-scroll");
-    AnchorPane.setTopAnchor(scroll, 0.0);
-    AnchorPane.setBottomAnchor(scroll, 0.0);
-    AnchorPane.setLeftAnchor(scroll, 0.0);
-    AnchorPane.setRightAnchor(scroll, 0.0);
+    VBox.setVgrow(scroll, Priority.ALWAYS);
 
     detailPanel.getChildren().add(scroll);
     detailOverlay.setOnMouseClicked(e -> {
@@ -436,7 +448,8 @@ public class HistoryController {
       List<CompositionVersion> versions = task.getValue();
       if (versions.isEmpty()) {
         Label empty = new Label("No versions saved yet");
-        empty.setStyle("-fx-font-size: 14; -fx-text-fill: #B0ADA8; -fx-font-style: italic; -fx-padding: 8 0;");
+        empty.setStyle(
+            "-fx-font-size: 14; -fx-text-fill: #B0ADA8; -fx-font-style: italic; -fx-padding: 8 0;");
         container.getChildren().add(empty);
         return;
       }
@@ -451,24 +464,25 @@ public class HistoryController {
       }
 
       if (versions.size() >= 2) {
-        Label compareLink = new Label("Compare Versions \u2192");
+        Label compareLink = new Label("Compare Versions →");
         compareLink.setStyle(
             "-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #B18DB8;" +
-            " -fx-cursor: hand; -fx-padding: 10 0 4 36;");
+                " -fx-cursor: hand; -fx-padding: 10 0 4 36;");
         compareLink.setOnMouseClicked(ev -> showCompareDialog(comp));
         container.getChildren().add(compareLink);
       }
     });
     task.setOnFailed(e -> {
-      log.error("Failed to load versions for composition {}: {}", comp.getId(), e.getSource().getException().getMessage());
+      log.error("Failed to load versions for composition {}: {}",
+          comp.getId(), e.getSource().getException().getMessage());
       container.getChildren().add(new Label("Could not load versions"));
     });
     new Thread(task).start();
   }
 
   private HBox buildTimelineItem(Composition comp, CompositionVersion v,
-                                  boolean isLatest, boolean isLast,
-                                  List<CompositionVersion> allVersions) {
+      boolean isLatest, boolean isLast,
+      List<CompositionVersion> allVersions) {
     HBox item = new HBox(10);
     item.getStyleClass().add("timeline-item");
     item.setAlignment(Pos.TOP_LEFT);
@@ -513,8 +527,8 @@ public class HistoryController {
       Label currentTag = new Label("CURRENT");
       currentTag.setStyle(
           "-fx-font-size: 10; -fx-font-weight: 700; -fx-text-fill: #5A9E8F;" +
-          " -fx-background-color: rgba(90,158,143,0.12); -fx-background-radius: 6;" +
-          " -fx-padding: 1 6;");
+              " -fx-background-color: rgba(90,158,143,0.12); -fx-background-radius: 6;" +
+              " -fx-padding: 1 6;");
       topRow.getChildren().addAll(vNum, desc, currentTag);
     } else {
       topRow.getChildren().addAll(vNum, desc);
@@ -531,11 +545,8 @@ public class HistoryController {
       allVersions.stream()
           .filter(prev -> prev.getVersionNumber() == prevNum)
           .findFirst()
-          .ifPresent(prevV -> {
-            VBox diffBox = buildInlineDiff(comp.getId(), prevV.getVersionNumber(),
-                v.getVersionNumber());
-            content.getChildren().add(diffBox);
-          });
+          .ifPresent(prevV -> content.getChildren().add(
+              buildInlineDiff(comp.getId(), prevV.getVersionNumber(), v.getVersionNumber())));
     }
 
     HBox btnRow = new HBox(6);
@@ -574,39 +585,36 @@ public class HistoryController {
         box.getChildren().add(noChange);
         return;
       }
-
       if (!diff.addedNoteIds.isEmpty()) {
         box.getChildren().add(diffSectionTitle("ADDED", "#5A9E8F"));
         diff.addedNoteIds.forEach(id ->
             noteRepository.findById(id).ifPresent(n ->
                 box.getChildren().add(diffRow("+ " + n.getName(), "#5A9E8F"))));
       }
-
       if (!diff.removedNoteIds.isEmpty()) {
         box.getChildren().add(diffSectionTitle("REMOVED", "#D9534F"));
         diff.removedNoteIds.forEach(id ->
             noteRepository.findById(id).ifPresent(n ->
-                box.getChildren().add(diffRow("\u2212 " + n.getName(), "#D9534F"))));
+                box.getChildren().add(diffRow("− " + n.getName(), "#D9534F"))));
       }
-
       if (!diff.changedPercentages.isEmpty()) {
         box.getChildren().add(diffSectionTitle("CHANGED %", "#C8954A"));
         diff.changedPercentages.forEach((id, vals) ->
             noteRepository.findById(id).ifPresent(n ->
                 box.getChildren().add(diffRow(
-                    n.getName() + "  " + vals[0] + "% \u2192 " + vals[1] + "%",
-                    "#C8954A"))));
+                    n.getName() + "  " + vals[0] + "% → " + vals[1] + "%", "#C8954A"))));
       }
-
       if (diff.nameChanged) {
         box.getChildren().add(diffSectionTitle("RENAMED", "#B18DB8"));
         box.getChildren().add(diffRow(
-            "\"" + diff.oldName + "\" \u2192 \"" + diff.newName + "\"", "#B18DB8"));
+            "\"" + diff.oldName + "\" → \"" + diff.newName + "\"", "#B18DB8"));
       }
     });
 
     task.setOnFailed(e -> {
-      log.error("Failed to load diff for composition {} v{}-v{}: {}", compositionId, fromVersion, toVersion, e.getSource().getException().getMessage());
+      log.error("Failed to load diff for composition {} v{}-v{}: {}",
+          compositionId, fromVersion, toVersion,
+          e.getSource().getException().getMessage());
       Label err = new Label("Could not load diff");
       err.setStyle("-fx-font-size: 11; -fx-text-fill: #B0ADA8;");
       box.getChildren().add(err);
@@ -657,7 +665,7 @@ public class HistoryController {
     verB.getStyleClass().add("detail-status-combo");
 
     for (CompositionVersion v : versions) {
-      String label = "v" + v.getVersionNumber() + " \u2014 " +
+      String label = "v" + v.getVersionNumber() + " — " +
           (v.getChangeDescription() != null ? v.getChangeDescription() : "Saved");
       verA.getItems().add(label);
       verB.getItems().add(label);
@@ -674,7 +682,7 @@ public class HistoryController {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    Label closeBtn = new Label("\u2715");
+    Label closeBtn = new Label("✕");
     closeBtn.getStyleClass().add("detail-close");
     closeBtn.setOnMouseClicked(e -> closeCompare());
 
@@ -712,6 +720,7 @@ public class HistoryController {
     scroll.setFitToWidth(true);
     scroll.setStyle("-fx-background-color: transparent;");
     scroll.getStyleClass().add("thin-scroll");
+    VBox.setVgrow(scroll, Priority.ALWAYS);
     comparePanel.getChildren().add(scroll);
 
     compareOverlay.setOnMouseClicked(e -> {
@@ -726,7 +735,6 @@ public class HistoryController {
       container.getChildren().add(l);
       return;
     }
-
     if (!diff.addedNoteIds.isEmpty()) {
       container.getChildren().add(compareSectionTitle("ADDED NOTES"));
       diff.addedNoteIds.forEach(id -> noteRepository.findById(id).ifPresent(n -> {
@@ -735,39 +743,34 @@ public class HistoryController {
         container.getChildren().add(l);
       }));
     }
-
     if (!diff.removedNoteIds.isEmpty()) {
       container.getChildren().add(compareSectionTitle("REMOVED NOTES"));
       diff.removedNoteIds.forEach(id -> noteRepository.findById(id).ifPresent(n -> {
-        Label l = new Label("\u2212 " + n.getName());
+        Label l = new Label("− " + n.getName());
         l.getStyleClass().add("compare-removed");
         container.getChildren().add(l);
       }));
     }
-
     if (!diff.changedPercentages.isEmpty()) {
       container.getChildren().add(compareSectionTitle("CHANGED PERCENTAGES"));
       diff.changedPercentages.forEach((id, vals) ->
           noteRepository.findById(id).ifPresent(n -> {
-            Label l = new Label(n.getName() + "  " + vals[0] + "% \u2192 " + vals[1] + "%");
+            Label l = new Label(n.getName() + "  " + vals[0] + "% → " + vals[1] + "%");
             l.getStyleClass().add("compare-changed");
             container.getChildren().add(l);
           }));
     }
-
     if (diff.nameChanged) {
       container.getChildren().add(compareSectionTitle("NAME CHANGED"));
-      Label l = new Label(
-          "\"" + diff.oldName + "\" \u2192 \"" + diff.newName + "\"");
+      Label l = new Label("\"" + diff.oldName + "\" → \"" + diff.newName + "\"");
       l.getStyleClass().add("compare-desc-change");
       l.setWrapText(true);
       container.getChildren().add(l);
     }
-
     if (diff.descriptionChanged) {
       container.getChildren().add(compareSectionTitle("DESCRIPTION CHANGED"));
       Label l = new Label(
-          "\"" + diff.oldDescription + "\" \u2192 \"" + diff.newDescription + "\"");
+          "\"" + diff.oldDescription + "\" → \"" + diff.newDescription + "\"");
       l.getStyleClass().add("compare-desc-change");
       l.setWrapText(true);
       container.getChildren().add(l);
@@ -847,7 +850,7 @@ public class HistoryController {
   private void confirmRestore(Composition comp, int versionNumber) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
         "Restore Version " + versionNumber + " of \"" + comp.getName() + "\"?\n" +
-        "A new version will be created with the restored state.");
+            "A new version will be created with the restored state.");
     alert.showAndWait().ifPresent(r -> {
       if (r == ButtonType.OK) {
         Task<Void> t = new Task<>() {

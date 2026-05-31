@@ -1,7 +1,9 @@
 package velmora.composer.ui.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -22,7 +24,7 @@ import javafx.util.Duration;
 
 public final class ComposerAnimationHelper {
 
-  private static final double PERF_BAR_MAX = 160.0;
+  private static final Map<Rectangle, Timeline> activeBarTimelines = new HashMap<>();
 
   private ComposerAnimationHelper() {}
 
@@ -51,16 +53,43 @@ public final class ComposerAnimationHelper {
   }
 
   public static void animatePerfBar(Rectangle bar, int value) {
-    double target = PERF_BAR_MAX * value / 100.0;
+    if (bar == null) return;
+
+    Timeline prev = activeBarTimelines.get(bar);
+    if (prev != null) {
+      prev.stop();
+    }
+
+    double maxWidth = 0;
+    if (bar.getParent() != null) {
+      maxWidth = bar.getParent().getLayoutBounds().getWidth();
+    }
+
+    if (maxWidth <= 0) {
+      if (bar.getParent() != null) {
+        bar.getParent().layoutBoundsProperty().addListener((obs, oldB, newB) -> {
+          if (newB.getWidth() > 0) animatePerfBar(bar, value);
+        });
+      }
+      return;
+    }
+
+    double target = maxWidth * Math.max(0, Math.min(value, 100)) / 100.0;
     if (bar.getWidth() == target) return;
+
     Timeline anim = new Timeline(
+        new KeyFrame(Duration.ZERO,
+            new KeyValue(bar.widthProperty(), bar.getWidth())),
         new KeyFrame(Duration.millis(400),
             new KeyValue(bar.widthProperty(), target, Interpolator.EASE_OUT))
     );
+    anim.setOnFinished(e -> activeBarTimelines.remove(bar));
+    activeBarTimelines.put(bar, anim);
     anim.play();
   }
 
   public static void animatePyramidBar(Rectangle bar, double target) {
+    if (bar == null) return;
     if (bar.getWidth() == target) return;
     Timeline anim = new Timeline(
         new KeyFrame(Duration.millis(400),
