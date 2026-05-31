@@ -1,5 +1,5 @@
 .btn {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-cursor: hand;
   -fx-background-radius: 12;
@@ -43,7 +43,6 @@
 .btn-ghost {
   -fx-background-color: transparent;
   -fx-text-fill: -velmora-text-secondary;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
   -fx-letter-spacing: 2;
   -fx-background-radius: 0;
   -fx-border-radius: 0;
@@ -56,7 +55,7 @@
 .btn-ghost-sm {
   -fx-background-color: transparent;
   -fx-text-fill: -velmora-text-muted;
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-padding: 4 8;
   -fx-cursor: hand;
   -fx-background-radius: 4;
@@ -85,7 +84,6 @@
 .btn-teal {
   -fx-background-color: -velmora-accent-teal;
   -fx-text-fill: white;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
   -fx-letter-spacing: 3;
 }
 
@@ -100,7 +98,6 @@
 .btn-peach {
   -fx-background-color: -velmora-accent-peach;
   -fx-text-fill: white;
-  -fx-font-family: 'Garamond', 'Georgia', serif;
   -fx-letter-spacing: 3;
 }
 
@@ -111,7 +108,7 @@
 .filter-tab {
   -fx-background-color: transparent;
   -fx-text-fill: -velmora-text-muted;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-letter-spacing: 2;
   -fx-padding: 6 14;

@@ -130,7 +130,7 @@
         <VBox spacing="5.0">
           <Label text="VERIFICATION CODE" styleClass="field-label" />
           <TextField fx:id="verifyCode" promptText="0 0 0 0 0 0" alignment="CENTER"
-            style="-fx-font-family: 'Garamond', 'Georgia', serif; -fx-font-size: 34;
+            style="-fx-font-family: 'Cormorant Garamond', 'Georgia', serif; -fx-font-size: 30;
                    -fx-font-weight: bold; -fx-letter-spacing: 14; -fx-text-fill: #1C1917;" />
         </VBox>
 

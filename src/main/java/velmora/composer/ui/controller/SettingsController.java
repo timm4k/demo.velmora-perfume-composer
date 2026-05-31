@@ -1,6 +1,7 @@
 package velmora.composer.ui.controller;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -90,7 +91,7 @@ public class SettingsController {
 
           Label date = new Label(
               c.getCreatedAt() != null
-                  ? c.getCreatedAt().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+                  ? c.getCreatedAt().format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH))
                   : ""
           );
           date.setStyle("-fx-font-size: 17; -fx-text-fill: #B0ADA8;");

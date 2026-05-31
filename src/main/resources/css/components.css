@@ -59,7 +59,7 @@
   -fx-background-radius: 2;
   -fx-padding: 3 10;
   -fx-text-fill: derive(-velmora-accent-purple, -20%);
-  -fx-font-size: 17;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-letter-spacing: 1;
   -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 4, 0, 0, 1);
@@ -70,7 +70,7 @@
   -fx-background-radius: 2;
   -fx-padding: 3 10;
   -fx-text-fill: derive(-velmora-accent-teal, -20%);
-  -fx-font-size: 17;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-letter-spacing: 1;
   -fx-effect: dropshadow(gaussian, rgba(109,168,158,0.06), 4, 0, 0, 1);
@@ -81,7 +81,7 @@
   -fx-background-radius: 2;
   -fx-padding: 3 10;
   -fx-text-fill: derive(-velmora-accent-peach, -25%);
-  -fx-font-size: 17;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-letter-spacing: 1;
   -fx-effect: dropshadow(gaussian, rgba(214,148,120,0.06), 4, 0, 0, 1);
@@ -97,8 +97,7 @@
   -fx-background-color: transparent;
   -fx-padding: 10 12;
   -fx-text-fill: -velmora-text;
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-cursor: hand;
 }
 
@@ -143,8 +142,7 @@
 .tooltip {
   -fx-background-color: #1C1917;
   -fx-text-fill: #F7F1EB;
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 17;
+  -fx-font-size: 14;
   -fx-background-radius: 2;
   -fx-padding: 6 12;
 }

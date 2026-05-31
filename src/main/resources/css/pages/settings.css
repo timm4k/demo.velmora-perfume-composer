@@ -27,7 +27,6 @@
   -fx-border-radius: 2;
   -fx-padding: 8 12;
   -fx-font-size: 14;
-  -fx-font-family: 'Libre Baskerville', serif;
 }
 
 .settings-input:focused {

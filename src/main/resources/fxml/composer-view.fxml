@@ -3,7 +3,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.chart.PieChart?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1180.0"
             xmlns="http://javafx.com/javafx/21"
@@ -20,36 +19,34 @@
 
       <VBox style="-fx-padding: 28 20 12 24;" spacing="2.0">
         <HBox spacing="8.0" alignment="CENTER_LEFT">
-          <Rectangle width="20.0" height="1.0" fill="#C4BFB9" />
-          <Label text="MATERIAL LIBRARY" styleClass="section-sub" />
+          <Rectangle width="20.0" height="1.0" fill="#C4BFB9"/>
+          <Label text="MATERIAL LIBRARY" styleClass="section-sub"/>
         </HBox>
-        <Label text="Raw Materials" styleClass="composer-heading" />
+        <Label text="Raw Materials" styleClass="composer-heading"/>
         <HBox alignment="CENTER_RIGHT">
           <Label fx:id="materialCount" text="0 materials"
-                 style="-fx-font-size: 16; -fx-text-fill: #B0ADA8; -fx-font-style: italic;" />
+                 style="-fx-font-size: 16; -fx-text-fill: #B0ADA8; -fx-font-style: italic;"/>
         </HBox>
       </VBox>
 
       <HBox spacing="6.0" style="-fx-padding: 0 20 14 24;">
-        <Button text="ALL"   styleClass="filter-pill" fx:id="filterAll" />
-        <Button text="TOP"   styleClass="filter-pill" fx:id="filterTop" />
-        <Button text="HEART" styleClass="filter-pill" fx:id="filterHeart" />
-        <Button text="BASE"  styleClass="filter-pill" fx:id="filterBase" />
+        <Button text="ALL"   styleClass="filter-pill" fx:id="filterAll"/>
+        <Button text="TOP"   styleClass="filter-pill" fx:id="filterTop"/>
+        <Button text="HEART" styleClass="filter-pill" fx:id="filterHeart"/>
+        <Button text="BASE"  styleClass="filter-pill" fx:id="filterBase"/>
       </HBox>
 
       <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS"
-                  style="-fx-background-color: transparent;"
-                  styleClass="thin-scroll">
+                  style="-fx-background-color: transparent;" styleClass="thin-scroll">
         <ListView fx:id="materialsList" VBox.vgrow="ALWAYS"
-                  style="-fx-background-color: transparent;"
-                  styleClass="thin-scroll" />
+                  style="-fx-background-color: transparent;" styleClass="thin-scroll"/>
       </ScrollPane>
 
       <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="selected-bar"
             minHeight="40.0" prefHeight="40.0" maxHeight="40.0">
-        <Label text="SELECTED" styleClass="section-sub" />
+        <Label text="SELECTED" styleClass="section-sub"/>
         <Label fx:id="selectedCount" text="0"
-               style="-fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #b18db8;" />
+               style="-fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #b18db8;"/>
       </HBox>
     </VBox>
   </AnchorPane>
@@ -58,351 +55,236 @@
               AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="340.0"
               style="-fx-background-color: transparent;">
 
-    <Circle radius="360.0" layoutX="300.0" layoutY="320.0" styleClass="mol-ambient" />
-    <Pane fx:id="floatingGradients" mouseTransparent="true" />
-    <Pane fx:id="particleLayer" mouseTransparent="true" />
+    <Circle radius="360.0" layoutX="300.0" layoutY="320.0" styleClass="mol-ambient"/>
+    <Pane fx:id="floatingGradients" mouseTransparent="true"/>
+    <Pane fx:id="particleLayer" mouseTransparent="true"/>
 
     <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           AnchorPane.topAnchor="0.0" styleClass="composer-header" spacing="6.0">
-
       <HBox alignment="CENTER_LEFT" spacing="8.0">
-        <Rectangle width="3.0" height="18.0" fill="#E2A998" arcWidth="2" arcHeight="2" />
-        <TextField fx:id="formulaName"
-                   promptText="Untitled Formula"
-                   styleClass="formula-field"
-                   HBox.hgrow="ALWAYS" />
+        <Rectangle width="3.0" height="18.0" fill="#E2A998" arcWidth="2" arcHeight="2"/>
+        <TextField fx:id="formulaName" promptText="Untitled Formula"
+                   styleClass="formula-field" HBox.hgrow="ALWAYS"/>
         <Button fx:id="closeDraftBtn" text="✕" onAction="#handleCloseDraft"
-                visible="false" managed="false" styleClass="btn-ghost-sm" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button text="SAVE"   onAction="#handleSave"   styleClass="btn-save" />
-        <Button text="EXPORT" onAction="#handleExport" styleClass="btn-ghost-lux" />
+                visible="false" managed="false" styleClass="btn-ghost-sm"/>
+        <Button fx:id="visibilityToggle" text="○ Private" onAction="#handleToggleVisibility"
+                styleClass="btn-visibility"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="saveButton" text="SAVE"   onAction="#handleSave"   styleClass="btn-save"/>
+        <Button text="EXPORT" onAction="#handleExport" styleClass="btn-ghost-lux"/>
       </HBox>
-
       <HBox alignment="CENTER_LEFT" spacing="14.0" style="-fx-padding: 0 4 4 4;">
-        <HBox fx:id="statusIndicator" alignment="CENTER_LEFT" spacing="5.0"
-              visible="true" managed="true">
-          <Circle fx:id="statusDot" radius="4.0" styleClass="status-dot" />
-          <Label fx:id="formulaStatus" text="" styleClass="status-text" />
+        <HBox fx:id="statusIndicator" alignment="CENTER_LEFT" spacing="5.0">
+          <Circle fx:id="statusDot" radius="4.0" styleClass="status-dot"/>
+          <Label fx:id="formulaStatus" text="" styleClass="status-text"/>
         </HBox>
-
-        <Region minWidth="8.0" />
-
+        <Region minWidth="8.0"/>
         <Label fx:id="totalConcentration" text="Total: 0%"
-               style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;" />
+               style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;"/>
         <Label fx:id="concentrationValidation" text=""
-               style="-fx-font-size: 12; -fx-font-weight: 500;" />
-
-        <Region HBox.hgrow="ALWAYS" />
-
-        <Button text="AUTO BALANCE" onAction="#handleAutoBalance" styleClass="btn-ghost-lux" />
+               style="-fx-font-size: 12; -fx-font-weight: 500;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="autoBalanceBtn" text="AUTO BALANCE" onAction="#handleAutoBalance" styleClass="btn-ghost-lux"/>
       </HBox>
     </VBox>
 
     <ScrollPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                AnchorPane.topAnchor="90.0" AnchorPane.bottomAnchor="230.0"
+                AnchorPane.topAnchor="90.0" AnchorPane.bottomAnchor="260.0"
                 fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER"
                 style="-fx-background-color: transparent; -fx-padding: 0; -fx-background-insets: 0;"
                 styleClass="thin-scroll">
-      <VBox spacing="14.0" style="-fx-padding: 60 0 40 0;" alignment="TOP_CENTER" fillWidth="false">
+      <VBox spacing="18.0" style="-fx-padding: 60 0 40 0;" alignment="TOP_CENTER" fillWidth="false">
 
         <VBox styleClass="zone-floating, zone-floating-top" fx:id="topZone">
           <HBox alignment="CENTER_LEFT" spacing="8.0">
-            <Circle radius="5.0" style="-fx-fill: rgba(226,169,152,0.8);" />
-            <Label text="TOP NOTES" styleClass="zone-label" />
+            <Circle radius="5.0" style="-fx-fill: rgba(226,169,152,0.8);"/>
+            <Label text="TOP NOTES" styleClass="zone-label"/>
             <Label fx:id="topPct" text=""
-                   style="-fx-font-size: 16; -fx-text-fill: rgba(214,148,120,0.7); -fx-font-weight: 600;" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="topCount" text="0" styleClass="zone-count" />
+                   style="-fx-font-size: 18; -fx-text-fill: rgba(214,148,120,0.7); -fx-font-weight: 600;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="topCount" text="0" styleClass="zone-count"/>
           </HBox>
-          <TilePane fx:id="topChips" orientation="HORIZONTAL"
-                    prefColumns="4" hgap="6" vgap="6" />
-          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+          <TilePane fx:id="topChips" orientation="HORIZONTAL" prefColumns="4" hgap="6" vgap="6"/>
+          <Label text="Drag ingredients here" styleClass="zone-placeholder"/>
         </VBox>
 
         <VBox styleClass="zone-floating, zone-floating-heart" fx:id="heartZone">
           <HBox alignment="CENTER_LEFT" spacing="8.0">
-            <Circle radius="5.0" style="-fx-fill: rgba(177,141,184,0.8);" />
-            <Label text="HEART NOTES" styleClass="zone-label" />
+            <Circle radius="5.0" style="-fx-fill: rgba(177,141,184,0.8);"/>
+            <Label text="HEART NOTES" styleClass="zone-label"/>
             <Label fx:id="heartPct" text=""
-                   style="-fx-font-size: 16; -fx-text-fill: rgba(177,141,184,0.7); -fx-font-weight: 600;" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="heartCount" text="0" styleClass="zone-count" />
+                   style="-fx-font-size: 18; -fx-text-fill: rgba(177,141,184,0.7); -fx-font-weight: 600;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="heartCount" text="0" styleClass="zone-count"/>
           </HBox>
-          <TilePane fx:id="heartChips" orientation="HORIZONTAL"
-                    prefColumns="4" hgap="6" vgap="6" />
-          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+          <TilePane fx:id="heartChips" orientation="HORIZONTAL" prefColumns="4" hgap="6" vgap="6"/>
+          <Label text="Drag ingredients here" styleClass="zone-placeholder"/>
         </VBox>
 
         <VBox styleClass="zone-floating, zone-floating-base" fx:id="baseZone">
           <HBox alignment="CENTER_LEFT" spacing="8.0">
-            <Circle radius="5.0" style="-fx-fill: rgba(120,160,160,0.8);" />
-            <Label text="BASE NOTES" styleClass="zone-label" />
+            <Circle radius="5.0" style="-fx-fill: rgba(120,160,160,0.8);"/>
+            <Label text="BASE NOTES" styleClass="zone-label"/>
             <Label fx:id="basePct" text=""
-                   style="-fx-font-size: 16; -fx-text-fill: rgba(109,168,158,0.7); -fx-font-weight: 600;" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="baseCount" text="0" styleClass="zone-count" />
+                   style="-fx-font-size: 18; -fx-text-fill: rgba(109,168,158,0.7); -fx-font-weight: 600;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="baseCount" text="0" styleClass="zone-count"/>
           </HBox>
-          <TilePane fx:id="baseChips" orientation="HORIZONTAL"
-                    prefColumns="4" hgap="6" vgap="6" />
-          <Label text="Drag ingredients here" styleClass="zone-placeholder" />
+          <TilePane fx:id="baseChips" orientation="HORIZONTAL" prefColumns="4" hgap="6" vgap="6"/>
+          <Label text="Drag ingredients here" styleClass="zone-placeholder"/>
         </VBox>
+
       </VBox>
     </ScrollPane>
 
     <VBox AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
           AnchorPane.bottomAnchor="0.0"
-          prefHeight="270.0" styleClass="insight-panel"
-          spacing="6.0" style="-fx-padding: 28 0 0 16;">
+          prefHeight="260.0" styleClass="insight-panel"
+          spacing="6.0" style="-fx-padding: 14 0 0 16;">
       <HBox alignment="CENTER_LEFT" spacing="8.0">
-        <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.6);" />
-        <Label text="COMPOSITION INSIGHTS" styleClass="section-sub" />
+        <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.6);"/>
+        <Label text="COMPOSITION INSIGHTS" styleClass="section-sub"/>
       </HBox>
       <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                   style="-fx-background-color: transparent; -fx-padding: 0;"
                   styleClass="thin-scroll">
-        <VBox fx:id="insightsContainer" spacing="6.0"
-              style="-fx-padding: 4 0 4 0;">
+        <VBox fx:id="insightsContainer" spacing="6.0" style="-fx-padding: 4 12 4 0;">
           <Label text="Add at least 2 notes to see analysis"
-                 style="-fx-font-size: 17; -fx-font-style: italic; -fx-text-fill: #B0ADA8;" />
+                 wrapText="true"
+                 style="-fx-font-size: 15; -fx-font-style: italic; -fx-text-fill: #B0ADA8;"/>
         </VBox>
       </ScrollPane>
     </VBox>
   </AnchorPane>
 
   <AnchorPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.rightAnchor="0.0"
-              prefWidth="340.0"
+              AnchorPane.rightAnchor="0.0" prefWidth="340.0"
               style="-fx-background-color: transparent;">
     <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
 
-      <VBox style="-fx-padding: 28 24 16 24;" spacing="3.0">
+      <VBox style="-fx-padding: 24 24 10 24;" spacing="3.0">
         <HBox spacing="8.0" alignment="CENTER_LEFT">
-          <Rectangle width="20.0" height="1.0" fill="#C4BFB9" />
-          <Label text="LIVE ANALYSIS" styleClass="section-sub" />
+          <Rectangle width="20.0" height="1.0" fill="#C4BFB9"/>
+          <Label text="LIVE ANALYSIS" styleClass="section-sub"/>
         </HBox>
-        <Label text="Olfactory Data" styleClass="composer-heading" />
+        <Label text="Olfactory Data" styleClass="composer-heading"/>
       </VBox>
 
       <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                   vbarPolicy="AS_NEEDED" hbarPolicy="NEVER"
-                  style="-fx-background-color: transparent; -fx-padding: 0 8 0 12;"
+                  style="-fx-background-color: transparent; -fx-padding: 0;"
                   styleClass="thin-scroll">
-        <VBox spacing="14.0" style="-fx-padding: 4 12 28 12;">
+        <VBox spacing="12.0" style="-fx-padding: 0 14 28 14;" fillWidth="true">
 
-          <VBox styleClass="analysis-glass" spacing="10.0">
+          <VBox styleClass="analysis-glass" spacing="8.0">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(90,158,143,0.7);" />
-              <Label text="FORMULA BALANCE" styleClass="section-sub" />
+              <Label text="FORMULA BALANCE" styleClass="section-sub"/>
             </HBox>
-            <Label fx:id="formulaTotalLabel" text="Current Formula: 0%"
-                   style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #4B4B4B;" />
-            <ScrollPane fitToWidth="true" prefHeight="140" maxHeight="180"
-                        style="-fx-background-color: transparent; -fx-background: transparent;">
-              <VBox fx:id="concentrationRows" spacing="4.0" />
-            </ScrollPane>
-            <HBox spacing="8.0" alignment="CENTER_LEFT">
-              <Label fx:id="validationLabel" text=""
+            <HBox spacing="6.0" alignment="CENTER_LEFT" maxWidth="Infinity">
+              <Circle fx:id="balanceIndicator" radius="4.0" style="-fx-fill: #C4BFB9;"/>
+              <Label fx:id="validationLabel" text="" maxWidth="Infinity" HBox.hgrow="ALWAYS"
                      wrapText="true"
-                     style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #C8954A;" />
-              <Region HBox.hgrow="ALWAYS" />
-              <Button text="Auto Balance" onAction="#handleAutoBalance"
-                      style="-fx-background-color: rgba(177,141,184,0.12); -fx-text-fill: #6B67A8; -fx-font-size: 14; -fx-font-weight: 700; -fx-background-radius: 18; -fx-padding: 6 18; -fx-cursor: hand;" />
+                     style="-fx-font-size: 13; -fx-font-weight: 600;"/>
             </HBox>
+            <VBox fx:id="concentrationRows" spacing="5.0" fillWidth="true"/>
           </VBox>
 
           <VBox styleClass="analysis-glass" spacing="8.0">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.7);" />
-              <Label text="OLFACTORY PROFILE" styleClass="section-sub" />
+              <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.7);"/>
+              <Label text="OLFACTORY PROFILE" styleClass="section-sub"/>
             </HBox>
-            <VBox spacing="4.0">
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Dominant Family"
-                       style="-fx-font-size: 14; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 100;" />
-                <Label fx:id="dominantFamilyValue" text="—" wrapText="true"
-                       style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #B18DB8;" />
+            <VBox spacing="5.0">
+              <HBox spacing="8.0" alignment="TOP_LEFT">
+                <Label text="Dominant" styleClass="profile-key"/>
+                <Label fx:id="dominantFamilyValue" text="—"
+                       wrapText="true" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                       styleClass="profile-val-purple"/>
               </HBox>
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Opening"
-                       style="-fx-font-size: 14; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 100;" />
-                <Label fx:id="openingCharValue" text="—" wrapText="true"
-                       style="-fx-font-size: 14; -fx-font-weight: 600; -fx-text-fill: #D69478;" />
+              <HBox spacing="8.0" alignment="TOP_LEFT">
+                <Label text="Opening" styleClass="profile-key"/>
+                <Label fx:id="openingCharValue" text="—"
+                       wrapText="true" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                       styleClass="profile-val-peach"/>
               </HBox>
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Dry Down"
-                       style="-fx-font-size: 14; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 100;" />
-                <Label fx:id="dryDownCharValue" text="—" wrapText="true"
-                       style="-fx-font-size: 14; -fx-font-weight: 600; -fx-text-fill: #6DA89E;" />
+              <HBox spacing="8.0" alignment="TOP_LEFT">
+                <Label text="Dry Down" styleClass="profile-key"/>
+                <Label fx:id="dryDownCharValue" text="—"
+                       wrapText="true" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                       styleClass="profile-val-teal"/>
               </HBox>
             </VBox>
           </VBox>
 
-          <VBox styleClass="analysis-glass" spacing="10.0">
+          <VBox styleClass="analysis-glass" spacing="8.0">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(90,158,143,0.7);" />
-              <Label text="PERFORMANCE METRICS" styleClass="section-sub" />
+              <Circle radius="3.0" style="-fx-fill: rgba(90,158,143,0.7);"/>
+              <Label text="PERFORMANCE METRICS" styleClass="section-sub"/>
             </HBox>
-            <VBox spacing="6.0">
+            <VBox spacing="8.0">
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Canvas fx:id="harmonyCircle" width="36" height="36" />
-                <VBox spacing="0.0" HBox.hgrow="ALWAYS">
-                  <Label text="Balance" styleClass="perf-label" />
-                  <StackPane prefHeight="6.0">
-                    <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
-                    <Rectangle fx:id="balanceBar" width="0" height="4.0" styleClass="perf-fill-purple" />
+                <Canvas fx:id="harmonyCircle" width="30" height="30"/>
+                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                  <Label text="Balance" styleClass="perf-label"/>
+                  <StackPane prefHeight="5.0">
+                    <Rectangle width="Infinity" height="4.0" styleClass="perf-track"/>
+                    <Rectangle fx:id="balanceBar" width="0" height="4.0"
+                               styleClass="perf-fill-purple" StackPane.alignment="CENTER_LEFT"/>
                   </StackPane>
                 </VBox>
-                <Label fx:id="balanceScore" text="—" styleClass="perf-value" />
+                <Label fx:id="balanceScore" text="—" styleClass="perf-value" minWidth="38"/>
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Longevity" styleClass="perf-label" prefWidth="70" />
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
-                  <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
-                  <Rectangle fx:id="longevityBar" width="0" height="4.0" styleClass="perf-fill-peach" />
-                </StackPane>
-                <Label fx:id="longevityValue" text="—" styleClass="perf-value" />
+                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                  <Label text="Longevity" styleClass="perf-label"/>
+                  <StackPane prefHeight="5.0">
+                    <Rectangle width="Infinity" height="4.0" styleClass="perf-track"/>
+                    <Rectangle fx:id="longevityBar" width="0" height="4.0"
+                               styleClass="perf-fill-peach" StackPane.alignment="CENTER_LEFT"/>
+                  </StackPane>
+                </VBox>
+                <Label fx:id="longevityValue" text="—" styleClass="perf-value" minWidth="38"/>
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Projection" styleClass="perf-label" prefWidth="70" />
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
-                  <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
-                  <Rectangle fx:id="projectionBar" width="0" height="4.0" styleClass="perf-fill-teal" />
-                </StackPane>
-                <Label fx:id="projectionLabel" text="—" styleClass="perf-value" />
+                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                  <Label text="Projection" styleClass="perf-label"/>
+                  <StackPane prefHeight="5.0">
+                    <Rectangle width="Infinity" height="4.0" styleClass="perf-track"/>
+                    <Rectangle fx:id="projectionBar" width="0" height="4.0"
+                               styleClass="perf-fill-teal" StackPane.alignment="CENTER_LEFT"/>
+                  </StackPane>
+                </VBox>
+                <Label fx:id="projectionLabel" text="—" styleClass="perf-value" minWidth="38"/>
               </HBox>
               <HBox spacing="8.0" alignment="CENTER_LEFT">
-                <Label text="Complexity" styleClass="perf-label" prefWidth="70" />
-                <StackPane HBox.hgrow="ALWAYS" prefHeight="6.0">
-                  <Rectangle width="Infinity" height="4.0" styleClass="perf-track" />
-                  <Rectangle fx:id="complexityBar" width="0" height="4.0" styleClass="perf-fill-teal" />
-                </StackPane>
-                <Label fx:id="complexityLabel" text="—" styleClass="perf-value" />
+                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                  <Label text="Complexity" styleClass="perf-label"/>
+                  <StackPane prefHeight="5.0">
+                    <Rectangle width="Infinity" height="4.0" styleClass="perf-track"/>
+                    <Rectangle fx:id="complexityBar" width="0" height="4.0"
+                               styleClass="perf-fill-teal" StackPane.alignment="CENTER_LEFT"/>
+                  </StackPane>
+                </VBox>
+                <Label fx:id="complexityLabel" text="—" styleClass="perf-value" minWidth="38"/>
               </HBox>
             </VBox>
           </VBox>
 
           <VBox styleClass="analysis-glass" spacing="8.0">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.7);" />
-              <Label text="FAMILY DISTRIBUTION" styleClass="section-sub" />
+              <Circle radius="3.0" style="-fx-fill: rgba(177,141,184,0.7);"/>
+              <Label text="FAMILY DISTRIBUTION" styleClass="section-sub"/>
             </HBox>
-            <PieChart fx:id="familyChart" legendVisible="false" animated="false"
-                      labelsVisible="true" startAngle="90"
-                      prefHeight="160" maxHeight="160" />
+            <VBox fx:id="familyDistributionList" spacing="5.0" fillWidth="true"/>
           </VBox>
 
           <VBox styleClass="analysis-glass" spacing="8.0">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(109,168,158,0.7);" />
-              <Label text="COMPOSITION PYRAMID" styleClass="section-sub" />
+              <Circle radius="3.0" style="-fx-fill: rgba(214,148,120,0.7);"/>
+              <Label text="NOTE ACTIVITY" styleClass="section-sub"/>
             </HBox>
-            <VBox alignment="CENTER" spacing="4.0" style="-fx-padding: 8 0;">
-              <StackPane fx:id="pyramidTopContainer" maxWidth="Infinity">
-                <Rectangle fx:id="pyramidTop" height="28.0" styleClass="pyramid-top" />
-                <HBox spacing="6.0" alignment="CENTER">
-                  <Label text="TOP"
-                         style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: rgba(107,101,96,0.8);" />
-                  <Label fx:id="pyramidTopPct" text="0%"
-                         style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: rgba(107,101,96,0.6);" />
-                </HBox>
-              </StackPane>
-              <StackPane fx:id="pyramidHeartContainer" maxWidth="Infinity">
-                <Rectangle fx:id="pyramidHeart" height="32.0" styleClass="pyramid-heart" />
-                <HBox spacing="6.0" alignment="CENTER">
-                  <Label text="HEART"
-                         style="-fx-font-size: 13; -fx-font-weight: 700; -fx-text-fill: rgba(107,101,96,0.8);" />
-                  <Label fx:id="pyramidHeartPct" text="0%"
-                         style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: rgba(107,101,96,0.6);" />
-                </HBox>
-              </StackPane>
-              <StackPane fx:id="pyramidBaseContainer" maxWidth="Infinity">
-                <Rectangle fx:id="pyramidBase" height="26.0" styleClass="pyramid-base" />
-                <HBox spacing="6.0" alignment="CENTER">
-                  <Label text="BASE"
-                         style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: rgba(107,101,96,0.8);" />
-                  <Label fx:id="pyramidBasePct" text="0%"
-                         style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: rgba(107,101,96,0.6);" />
-                </HBox>
-              </StackPane>
-            </VBox>
-          </VBox>
-
-          <VBox styleClass="analysis-glass" spacing="8.0">
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-              <Circle radius="3.0" style="-fx-fill: rgba(214,148,120,0.7);" />
-              <Label text="FRAGRANCE TIMELINE" styleClass="section-sub" />
-            </HBox>
-
-            <VBox spacing="2.0" styleClass="timeline-scale">
-              <StackPane prefHeight="24.0">
-                <Rectangle width="Infinity" height="2.0" styleClass="timeline-line" />
-                <HBox alignment="CENTER" spacing="0" style="-fx-padding: 0 2;">
-                  <Region styleClass="timeline-tick-start" />
-                  <Label text="0m"  styleClass="timeline-label" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label text="15m" styleClass="timeline-label" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label text="1h"  styleClass="timeline-label" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label text="3h"  styleClass="timeline-label" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label text="8h"  styleClass="timeline-label" />
-                  <Region styleClass="timeline-tick-end" />
-                </HBox>
-              </StackPane>
-            </VBox>
-
-            <Slider fx:id="timelineSlider" min="0.0" max="8.0" value="0.0"
-                    showTickLabels="false" showTickMarks="false"
-                    styleClass="timeline-slider" />
-
-            <VBox styleClass="phase-card" spacing="4.0">
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Current Stage"
-                       style="-fx-font-size: 13; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 90;" />
-                <Label fx:id="currentStageValue" text="—" wrapText="true"
-                       style="-fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #B18DB8;" />
-              </HBox>
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Character"
-                       style="-fx-font-size: 13; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 90;" />
-                <Label fx:id="currentCharValue" text="—" wrapText="true"
-                       style="-fx-font-size: 14; -fx-font-weight: 600; -fx-text-fill: #D69478;" />
-              </HBox>
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Dominant Notes"
-                       style="-fx-font-size: 13; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 90;" />
-                <Label fx:id="currentNotesValue" text="—" wrapText="true"
-                       style="-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #6DA89E;" />
-              </HBox>
-              <HBox spacing="6.0" alignment="CENTER_LEFT">
-                <Label text="Intensity"
-                       style="-fx-font-size: 13; -fx-text-fill: #A8A29E; -fx-font-weight: 600; -fx-min-width: 90;" />
-                <Label fx:id="currentIntensityValue" text="—" wrapText="true"
-                       style="-fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #4B4B4B;" />
-              </HBox>
-            </VBox>
-
-            <VBox spacing="3.0">
-              <Label text="ACTIVE NOTES"
-                     style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
-              <VBox fx:id="noteActivityContainer" spacing="2.0" />
-            </VBox>
-
-            <VBox spacing="3.0">
-              <Label text="NOTE ACTIVITY HEATMAP"
-                     style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
-              <VBox fx:id="heatMapContainer" spacing="2.0" />
-            </VBox>
-
-            <VBox spacing="3.0" styleClass="story-card">
-              <Label text="FRAGRANCE JOURNEY"
-                     style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
-              <Label fx:id="fragranceStory" text="Add notes to generate a fragrance story."
-                     wrapText="true"
-                     style="-fx-font-size: 14; -fx-text-fill: #5F5B57; -fx-line-spacing: 3;" />
-            </VBox>
+            <VBox fx:id="heatMapContainer" spacing="2.0"/>
           </VBox>
 
         </VBox>

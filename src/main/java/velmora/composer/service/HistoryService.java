@@ -28,9 +28,6 @@ public class HistoryService {
   public List<Composition> getFilteredCompositions(Long userId, String search, CompositionStatus status,
       Boolean favoritesOnly, Boolean publicOnly,
       String sortBy) {
-    // Завантажуємо всі композиції юзера одним запитом,
-    // далі всі фільтри комбінуємо in-memory — це усуває проблему
-    // коли status + search не комбінувались через окремі repository-методи
     List<Composition> compositions = compositionRepository.findByUserIdOrderByUpdatedAtDesc(userId);
 
     if (status != null) {
@@ -156,17 +153,12 @@ public class HistoryService {
     return stats;
   }
 
-  /**
-   * Розраховує "баланс" композиції як відстань суми відсотків від ідеальних 100%.
-   * Чим ближче до 100 — тим вищий score (менша відстань = краще).
-   */
   private int balanceScore(Composition c) {
     if (c.getItems() == null || c.getItems().isEmpty()) return 0;
     int total = c.getItems().stream()
         .filter(i -> i.getPercentage() != null)
         .mapToInt(CompositionItem::getPercentage)
         .sum();
-    // Повертаємо 100 - |total - 100|, щоб max score = 100 (ідеальний баланс)
     return Math.max(0, 100 - Math.abs(total - 100));
   }
 

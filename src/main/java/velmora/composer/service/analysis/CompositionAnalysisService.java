@@ -143,15 +143,17 @@ public class CompositionAnalysisService {
     List<String> parts = new ArrayList<>();
     for (Note n : tops) {
       String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "citrus" -> parts.add(n.getName() + " brings bright citrus lift");
-        case "green" -> parts.add(n.getName() + " offers fresh green vibrancy");
-        case "aromatic" -> parts.add(n.getName() + " provides herbal aromatic clarity");
-        case "spicy" -> parts.add(n.getName() + " adds spicy top notes");
-        case "floral" -> parts.add(n.getName() + " opens with floral delicacy");
-        case "fruity" -> parts.add(n.getName() + " contributes fruity sweetness");
-        default -> parts.add(n.getName() + " opens the composition");
-      }
+      parts.add(switch (cat.toLowerCase()) {
+        case "citrus" -> n.getName() + " — bright citrus spark, adds freshness and lift";
+        case "green" -> n.getName() + " — crisp green vibrancy, brings a natural dewy feel";
+        case "aromatic" -> n.getName() + " — herbal aromatic clarity, gives an airy freshness";
+        case "spicy" -> n.getName() + " — warm spicy kick, adds energy and bite";
+        case "floral" -> n.getName() + " — soft floral opening, lends elegance and delicacy";
+        case "fruity" -> n.getName() + " — juicy fruity sweetness, creates a playful top";
+        case "aquatic" -> n.getName() + " — fresh aquatic accord, brings a clean sea breeze";
+        case "aldehydic" -> n.getName() + " — sparkling aldehydic effect, adds soapy sophistication";
+        default -> n.getName() + " — bright opening note, gives the first impression";
+      });
     }
     return String.join("; ", parts) + ".";
   }
@@ -160,14 +162,17 @@ public class CompositionAnalysisService {
     List<String> parts = new ArrayList<>();
     for (Note n : hearts) {
       String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "floral" -> parts.add(n.getName() + " forms a floral heart");
-        case "spicy" -> parts.add(n.getName() + " introduces warmth and spice");
-        case "woody" -> parts.add(n.getName() + " adds a woody transition");
-        case "gourmand" -> parts.add(n.getName() + " brings gourmand richness");
-        case "oriental" -> parts.add(n.getName() + " deepens with oriental warmth");
-        default -> parts.add(n.getName() + " anchors the heart");
-      }
+      parts.add(switch (cat.toLowerCase()) {
+        case "floral" -> n.getName() + " — lush floral heart, delivers richness and body";
+        case "spicy" -> n.getName() + " — warm spice infusion, adds depth and sensuality";
+        case "woody" -> n.getName() + " — smooth woody transition, bridges top and base";
+        case "gourmand" -> n.getName() + " — sweet gourmand accord, brings edible warmth";
+        case "oriental" -> n.getName() + " — rich oriental depth, adds resinous complexity";
+        case "green" -> n.getName() + " — green floral heart, keeps freshness alive";
+        case "earthy" -> n.getName() + " — earthy heart note, introduces grounded character";
+        case "balsamic" -> n.getName() + " — balsamic warmth, gives a smooth rounded feel";
+        default -> n.getName() + " — anchors the heart, defines the fragrance character";
+      });
     }
     return String.join("; ", parts) + ".";
   }
@@ -176,14 +181,19 @@ public class CompositionAnalysisService {
     List<String> parts = new ArrayList<>();
     for (Note n : bases) {
       String cat = n.getCategory() != null ? n.getCategory() : "";
-      switch (cat.toLowerCase()) {
-        case "woody" -> parts.add(n.getName() + " provides long woody fixation");
-        case "earthy" -> parts.add(n.getName() + " grounds with earthy depth");
-        case "musk" -> parts.add(n.getName() + " adds soft musky persistence");
-        case "amber" -> parts.add(n.getName() + " creates warm amber trail");
-        case "gourmand" -> parts.add(n.getName() + " leaves sweet gourmand imprint");
-        default -> parts.add(n.getName() + " extends the dry-down");
-      }
+      parts.add(switch (cat.toLowerCase()) {
+        case "woody" -> n.getName() + " — warm woody base, gives structure and longevity";
+        case "earthy" -> n.getName() + " — earthy depth, adds a dark grounded finish";
+        case "musk" -> n.getName() + " — soft musky trail, creates intimate warmth";
+        case "amber" -> n.getName() + " — warm amber glow, leaves a rich lingering trail";
+        case "gourmand" -> n.getName() + " — sweet gourmand finish, leaves a creamy imprint";
+        case "leather" -> n.getName() + " — smoky leather base, adds rugged sophistication";
+        case "green" -> n.getName() + " — green woody base, keeps freshness in the dry-down";
+        case "resin" -> n.getName() + " — resinous depth, adds balsamic persistence";
+        case "animalic" -> n.getName() + " — animalic warmth, gives primal sensuality";
+        case "tobacco" -> n.getName() + " — tobacco leaf warmth, adds smoky richness";
+        default -> n.getName() + " — anchors the base, provides lasting foundation";
+      });
     }
     return String.join("; ", parts) + ".";
   }

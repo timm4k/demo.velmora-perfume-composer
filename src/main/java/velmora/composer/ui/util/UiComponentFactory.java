@@ -20,7 +20,6 @@ public final class UiComponentFactory {
             + "-fx-font-weight: 700;"
             + "-fx-padding: 4 12;"
             + "-fx-background-radius: 12;"
-            + "-fx-font-family: 'Libre Baskerville',serif;"
             + "-fx-letter-spacing: 1;"
     );
     return chip;
@@ -32,7 +31,7 @@ public final class UiComponentFactory {
     badge.setPadding(new Insets(6, 14, 6, 14));
     badge.setStyle("-fx-background-color: rgba(177,141,184,0.06); -fx-background-radius: 2;");
     Label lbl = new Label(label);
-    lbl.setStyle("-fx-font-size: 10; -fx-text-fill: #B0ADA8; -fx-font-weight: 600; -fx-font-family: 'Libre Baskerville',serif;");
+    lbl.setStyle("-fx-font-size: 10; -fx-text-fill: #B0ADA8; -fx-font-weight: 600;");
     Label val = new Label(value);
     val.setStyle("-fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #F5F0EB;");
     badge.getChildren().addAll(lbl, val);
@@ -45,23 +44,23 @@ public final class UiComponentFactory {
     Label phaseLabel = new Label(phase);
     phaseLabel.setStyle(
         "-fx-font-size: 11; -fx-font-weight: 700; -fx-text-fill: " + color + ";"
-            + "-fx-min-width: 60; -fx-font-family: 'Libre Baskerville',serif;"
+            + "-fx-min-width: 60;"
     );
     Label notesLabel = new Label(notes);
-    notesLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #D4CFC9; -fx-font-family: 'Libre Baskerville',serif;");
+    notesLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #D4CFC9;");
     row.getChildren().addAll(phaseLabel, notesLabel);
     return row;
   }
 
   public static Label createAccordChip(String text) {
     Label chip = new Label(text.toUpperCase());
-    chip.setStyle("-fx-background-color: rgba(109,168,158,0.12); -fx-text-fill: #6DA89E; -fx-font-size: 10; -fx-font-weight: 700; -fx-padding: 3 10; -fx-background-radius: 8; -fx-font-family: 'Libre Baskerville',serif;");
+    chip.setStyle("-fx-background-color: rgba(109,168,158,0.12); -fx-text-fill: #6DA89E; -fx-font-size: 10; -fx-font-weight: 700; -fx-padding: 3 10; -fx-background-radius: 8;");
     return chip;
   }
 
   public static Label createOccasionBadge(String text) {
     Label badge = new Label(text.toUpperCase());
-    badge.setStyle("-fx-background-color: rgba(177,141,184,0.08); -fx-text-fill: #b18db8; -fx-font-size: 10; -fx-font-weight: 700; -fx-padding: 4 12; -fx-background-radius: 10; -fx-font-family: 'Libre Baskerville',serif;");
+    badge.setStyle("-fx-background-color: rgba(177,141,184,0.08); -fx-text-fill: #b18db8; -fx-font-size: 10; -fx-font-weight: 700; -fx-padding: 4 12; -fx-background-radius: 10;");
     return badge;
   }
 
@@ -71,7 +70,7 @@ public final class UiComponentFactory {
     badge.setPadding(new Insets(4, 10, 4, 10));
     badge.setStyle("-fx-background-color: rgba(45,42,36,0.75); -fx-background-radius: 10;");
     Label pct = new Label(score + "%");
-    pct.setStyle("-fx-font-size: 18; -fx-font-weight: 700; -fx-text-fill: " + color + "; -fx-font-family: 'Libre Baskerville',serif;");
+    pct.setStyle("-fx-font-size: 16; -fx-font-weight: 700; -fx-text-fill: " + color + ";");
     badge.getChildren().add(pct);
     return badge;
   }

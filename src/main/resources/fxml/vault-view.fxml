@@ -151,8 +151,7 @@
 
           <Label fx:id="detailName"
             wrapText="true"
-            style=" -fx-font-size: 24;
-                   -fx-font-family: 'Libre Baskerville';
+            style=" -fx-font-family: 'Cormorant Garamond', 'Georgia', serif; -fx-font-size: 22;
                    -fx-text-fill: #1F1A17;
                    -fx-padding: 10 0 18 0;" />
 
@@ -260,9 +259,9 @@
             style="-fx-background-color: #161210;
                    -fx-background-radius: 14;
                    -fx-text-fill: white;
-                   -fx-font-size: 22;
+                   -fx-font-size: 18;
                    -fx-font-weight: bold;
-                   -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
+                   -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
                    -fx-font-style: italic;
                    -fx-letter-spacing: 1;
                    -fx-cursor: hand;" />

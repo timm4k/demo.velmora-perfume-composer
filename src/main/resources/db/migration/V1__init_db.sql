@@ -72,15 +72,3 @@ CREATE TABLE composition_items (
     percentage INT NOT NULL,
     PRIMARY KEY (composition_id, note_id)
 );
-
--- =============================================================================
--- Таблиця: composition_history
--- Нормальна форма: 3НФ (враховуючи використання JSONB для snapshot)
--- Тип: Weak Entity. Архів версій для конкретної композиції
--- =============================================================================
-CREATE TABLE composition_history (
-    id BIGSERIAL PRIMARY KEY,
-    composition_id BIGINT REFERENCES compositions(id) ON DELETE CASCADE,
-    snapshot_data JSONB,
-    version_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);

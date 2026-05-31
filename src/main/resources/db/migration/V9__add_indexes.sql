@@ -10,7 +10,5 @@ CREATE INDEX IF NOT EXISTS idx_compositions_perfume_id ON compositions(perfume_i
 
 CREATE INDEX IF NOT EXISTS idx_composition_items_note_id ON composition_items(note_id);
 
-CREATE INDEX IF NOT EXISTS idx_composition_history_composition_id ON composition_history(composition_id);
-
 CREATE INDEX IF NOT EXISTS idx_family_synergy_a ON family_synergy(family_a);
 CREATE INDEX IF NOT EXISTS idx_family_synergy_b ON family_synergy(family_b);

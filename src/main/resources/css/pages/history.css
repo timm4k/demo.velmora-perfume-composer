@@ -3,27 +3,27 @@
 }
 
 .history-heading {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 34;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 28;
   -fx-text-fill: #2D2A24;
   -fx-font-weight: 700;
 }
 
 .history-heading-sub {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 20;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 18;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
 }
 
 .history-subtitle {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: #A8A29E;
   -fx-font-style: italic;
 }
 
 .history-end {
-  -fx-font-size: 16;
+  -fx-font-size: 14;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
   -fx-padding: 16 0 0 0;
@@ -65,23 +65,23 @@
 }
 
 .history-card-name {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 22;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 20;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
 }
 
 .history-card-fav {
-  -fx-font-size: 18;
+  -fx-font-size: 16;
   -fx-cursor: hand;
 }
 
 .history-card-fav:hover {
-  -fx-font-size: 20;
+  -fx-font-size: 18;
 }
 
 .history-card-vis {
-  -fx-font-size: 16;
+  -fx-font-size: 14;
   -fx-cursor: hand;
   -fx-text-fill: #B0ADA8;
 }
@@ -91,7 +91,7 @@
 }
 
 .history-status-badge {
-  -fx-font-size: 13;
+  -fx-font-size: 12;
   -fx-font-weight: 700;
   -fx-letter-spacing: 1;
   -fx-padding: 2 10 2 10;
@@ -121,20 +121,46 @@
 }
 
 .history-card-date {
-  -fx-font-size: 15;
+  -fx-font-size: 13;
   -fx-text-fill: #B0ADA8;
 }
 
 .history-card-notes {
-  -fx-font-size: 15;
+  -fx-font-size: 13;
   -fx-text-fill: #B0ADA8;
   -fx-font-weight: 600;
 }
 
 .history-card-versions {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-text-fill: #B18DB8;
   -fx-font-weight: 600;
+  -fx-cursor: hand;
+}
+
+.history-card-version-badge {
+  -fx-font-size: 12;
+  -fx-font-weight: 700;
+  -fx-text-fill: #FFFDFB;
+  -fx-background-color: #B18DB8;
+  -fx-background-radius: 4;
+  -fx-padding: 1 8;
+}
+
+.history-card-changes-btn {
+  -fx-font-size: 10;
+  -fx-text-fill: #B0ADA8;
+  -fx-background-color: transparent;
+  -fx-background-radius: 4;
+  -fx-padding: 1 6;
+  -fx-cursor: hand;
+  -fx-min-width: 20;
+  -fx-min-height: 18;
+}
+
+.history-card-changes-btn:hover {
+  -fx-text-fill: #B18DB8;
+  -fx-background-color: rgba(177,141,184,0.1);
 }
 
 .history-card-stats {
@@ -144,7 +170,7 @@
 }
 
 .history-stat-chip {
-  -fx-font-size: 12;
+  -fx-font-size: 11;
   -fx-text-fill: #8A8580;
   -fx-background-color: rgba(177,141,184,0.08);
   -fx-background-radius: 4;
@@ -173,8 +199,8 @@
 }
 
 .timeline-title {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 22;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 20;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
   -fx-padding: 0 0 12 0;
@@ -208,24 +234,41 @@
 }
 
 .timeline-version-num {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-font-weight: 700;
   -fx-text-fill: #B18DB8;
   -fx-min-width: 32;
+  -fx-cursor: hand;
+}
+
+.timeline-version-num-active {
+  -fx-font-size: 14;
+  -fx-font-weight: 800;
+  -fx-text-fill: #5A9E8F;
+  -fx-min-width: 32;
+}
+
+.version-diff-inline {
+  -fx-background-color: rgba(177,141,184,0.04);
+  -fx-background-radius: 6;
+  -fx-border-color: rgba(177,141,184,0.12);
+  -fx-border-radius: 6;
+  -fx-border-width: 1;
+  -fx-max-width: 500;
 }
 
 .timeline-version-desc {
-  -fx-font-size: 15;
+  -fx-font-size: 14;
   -fx-text-fill: #5F5B57;
 }
 
 .timeline-version-date {
-  -fx-font-size: 13;
+  -fx-font-size: 12;
   -fx-text-fill: #B0ADA8;
 }
 
 .timeline-restore-btn {
-  -fx-font-size: 12;
+  -fx-font-size: 11;
   -fx-font-weight: 600;
   -fx-text-fill: #6DA89E;
   -fx-background-color: transparent;
@@ -241,8 +284,8 @@
 
 /* Version Comparison */
 .compare-title {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 22;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 20;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
   -fx-padding: 16 20 8 20;
@@ -255,7 +298,7 @@
 }
 
 .compare-vs {
-  -fx-font-size: 18;
+  -fx-font-size: 16;
   -fx-font-weight: 700;
   -fx-text-fill: #B18DB8;
   -fx-padding: 0 8;
@@ -266,7 +309,7 @@
 }
 
 .compare-section-title {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-font-weight: 700;
   -fx-text-fill: #A8A29E;
   -fx-letter-spacing: 1.5;
@@ -274,28 +317,28 @@
 }
 
 .compare-added {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-text-fill: #5A9E8F;
   -fx-font-weight: 600;
   -fx-padding: 2 0 2 16;
 }
 
 .compare-removed {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-text-fill: #D9534F;
   -fx-font-weight: 600;
   -fx-padding: 2 0 2 16;
 }
 
 .compare-changed {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-text-fill: #C8954A;
   -fx-font-weight: 600;
   -fx-padding: 2 0 2 16;
 }
 
 .compare-desc-change {
-  -fx-font-size: 14;
+  -fx-font-size: 13;
   -fx-text-fill: #6B6560;
   -fx-font-style: italic;
   -fx-padding: 2 0 2 16;
@@ -317,14 +360,14 @@
 }
 
 .stat-value {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 24;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 22;
   -fx-font-weight: 700;
   -fx-text-fill: #2D2A24;
 }
 
 .stat-label {
-  -fx-font-size: 12;
+  -fx-font-size: 11;
   -fx-font-weight: 700;
   -fx-text-fill: #A8A29E;
   -fx-letter-spacing: 1;
@@ -337,21 +380,24 @@
 }
 
 .detail-title {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 26;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 24;
   -fx-font-weight: 700;
   -fx-text-fill: #2D2A24;
 }
 
 .detail-close {
   -fx-font-size: 20;
-  -fx-text-fill: #B0ADA8;
+  -fx-text-fill: #8B8580;
   -fx-cursor: hand;
-  -fx-padding: 0 4;
+  -fx-padding: 2 8;
+  -fx-background-color: rgba(0,0,0,0.04);
+  -fx-background-radius: 6;
 }
 
 .detail-close:hover {
-  -fx-text-fill: #6B6560;
+  -fx-text-fill: #D9534F;
+  -fx-background-color: rgba(217,83,79,0.08);
 }
 
 .detail-actions {
@@ -361,7 +407,7 @@
 }
 
 .detail-action-btn {
-  -fx-font-size: 13;
+  -fx-font-size: 12;
   -fx-font-weight: 600;
   -fx-text-fill: #6B6560;
   -fx-background-color: rgba(177,141,184,0.08);
@@ -398,7 +444,7 @@
   -fx-background-radius: 6;
   -fx-border-color: #E2DDD4;
   -fx-border-radius: 6;
-  -fx-font-size: 13;
+  -fx-font-size: 12;
   -fx-padding: 2 6;
 }
 
@@ -409,14 +455,14 @@
 }
 
 .history-empty-title {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 28;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 26;
   -fx-text-fill: #B0ADA8;
   -fx-font-weight: 600;
 }
 
 .history-empty-sub {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: #C4BFB9;
   -fx-font-style: italic;
   -fx-padding: 8 0 0 0;
@@ -425,7 +471,7 @@
 .status-combo-box {
   -fx-background-color: rgba(177,141,184,0.08);
   -fx-background-radius: 4;
-  -fx-font-size: 12;
+  -fx-font-size: 11;
   -fx-font-weight: 600;
   -fx-padding: 2 4;
 }

@@ -12,14 +12,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import velmora.composer.model.Role;
 import velmora.composer.state.CompositionState;
 
 @Component
@@ -165,12 +163,6 @@ public class ViewManager {
     HBox settingsItem = createNavItem("◎", "Settings", "PREFERENCES", "settings", () -> showSettings());
     nav.getChildren().add(settingsItem);
 
-    HBox adminItem = createNavItem("⚙", "Admin", "NOTE DATABASE", "admin", () -> showAdmin());
-    adminItem.setId("adminLink");
-    adminItem.setVisible(userSession.getRole() == Role.ADMIN);
-    adminItem.setManaged(userSession.getRole() == Role.ADMIN);
-    nav.getChildren().add(adminItem);
-
     sb.getChildren().addAll(brandBlock, div1, molMap, div2, nav);
     return sb;
   }
@@ -261,6 +253,12 @@ public class ViewManager {
     setActiveNav("catalog");
   }
 
+  public void showCommunity() {
+    root.setLeft(sidebar);
+    loadContent("/fxml/community-view.fxml");
+    setActiveNav("catalog");
+  }
+
   public void showHistory() {
     root.setLeft(sidebar);
     loadContent("/fxml/history-view.fxml");
@@ -271,12 +269,6 @@ public class ViewManager {
     root.setLeft(sidebar);
     loadContent("/fxml/settings-view.fxml");
     setActiveNav("settings");
-  }
-
-  public void showAdmin() {
-    root.setLeft(sidebar);
-    loadContent("/fxml/admin-view.fxml");
-    setActiveNav("admin");
   }
 
   private void loadContent(String fxmlPath) {

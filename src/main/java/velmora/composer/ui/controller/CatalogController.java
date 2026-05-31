@@ -1,14 +1,15 @@
 package velmora.composer.ui.controller;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -21,12 +22,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -34,14 +33,16 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import velmora.composer.model.Composition;
+import velmora.composer.model.CompositionItem;
 import velmora.composer.model.Note;
 import velmora.composer.model.NoteType;
 import velmora.composer.model.Perfume;
+import velmora.composer.repository.CompositionRepository;
 import velmora.composer.repository.NoteRepository;
 import velmora.composer.repository.PerfumeRepository;
 import velmora.composer.service.analysis.AlternativeNoteService;
@@ -50,6 +51,7 @@ import velmora.composer.service.analysis.PerfumeSimilarityService;
 import velmora.composer.service.analysis.PerfumeStyleService;
 import velmora.composer.service.analysis.SimilarityService;
 import velmora.composer.state.CompositionState;
+import velmora.composer.ui.UserSession;
 import velmora.composer.ui.util.UiUtils;
 import velmora.composer.ui.ViewManager;
 
@@ -59,6 +61,7 @@ public class CatalogController {
 
   private final PerfumeRepository perfumeRepository;
   private final NoteRepository noteRepository;
+  private final CompositionRepository compositionRepository;
   private final CompositionState compositionState;
   private final ViewManager viewManager;
   private final SimilarityService similarityService;
@@ -66,6 +69,9 @@ public class CatalogController {
   private final PerfumeStyleService perfumeStyleService;
   private final AlternativeNoteService alternativeNoteService;
   private final FormulaRecommendationService formulaRecommendationService;
+  private final UserSession userSession;
+
+  private static final DateTimeFormatter SHORT_DATE = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
 
   @FXML private FlowPane catalogGrid;
   @FXML private Label catalogCount;
@@ -75,16 +81,21 @@ public class CatalogController {
   @FXML private ComboBox<String> familyFilter;
   @FXML private ComboBox<String> styleFilter;
   @FXML private ComboBox<String> longevityFilter;
-  @FXML private Slider similaritySlider;
-  @FXML private Label similarityLabel;
-  @FXML private StackPane modalOverlay;
-  @FXML private VBox modalContent;
+  @FXML private Button catalogTab;
+  @FXML private Button communityTab;
+  @FXML private HBox perfumeFilterRow;
+  @FXML private HBox communityFilterRow;
+  @FXML private TextField communitySearchField;
+  @FXML private Label communityCount;
   @FXML private ScrollPane gridScroll;
   @FXML private VBox emptyState;
-  @FXML private VBox mainContent;
   @FXML private Label emptyTitle;
   @FXML private Label emptySubtitle;
-
+  @FXML private VBox mainContent;
+  @FXML private VBox communityContent;
+  @FXML private VBox communityList;
+  @FXML private StackPane modalOverlay;
+  @FXML private VBox modalContent;
   private List<Perfume> allPerfumes;
   private List<Note> cachedComposerNotes;
   private Set<String> cachedComposerNoteNames;
@@ -95,11 +106,9 @@ public class CatalogController {
   public void initialize() {
     loadPerfumes();
     setupFilters();
+    setupTabs();
     searchField.textProperty().addListener((obs, o, n) -> applyFilters());
-    similaritySlider.valueProperty().addListener((obs, o, n) -> {
-      similarityLabel.setText(String.format("%.0f%%+", n));
-      applyFilters();
-    });
+    communitySearchField.textProperty().addListener((obs, o, n) -> loadCommunity());
   }
 
   private void setupFilters() {
@@ -107,6 +116,43 @@ public class CatalogController {
     familyFilter.valueProperty().addListener((obs, o, n) -> applyFilters());
     styleFilter.valueProperty().addListener((obs, o, n) -> applyFilters());
     longevityFilter.valueProperty().addListener((obs, o, n) -> applyFilters());
+  }
+
+  private void setupTabs() {
+    catalogTab.setOnAction(e -> switchToCatalog());
+    communityTab.setOnAction(e -> switchToCommunity());
+  }
+
+  private void switchToCatalog() {
+    catalogTab.getStyleClass().setAll("catalog-tab-active");
+    communityTab.getStyleClass().setAll("catalog-tab");
+    perfumeFilterRow.setVisible(true);
+    perfumeFilterRow.setManaged(true);
+    communityFilterRow.setVisible(false);
+    communityFilterRow.setManaged(false);
+    mainContent.setVisible(true);
+    mainContent.setManaged(true);
+    communityContent.setVisible(false);
+    communityContent.setManaged(false);
+    headerTitle.setText("Perfume Catalog");
+    applyFilters();
+  }
+
+  private void switchToCommunity() {
+    catalogTab.getStyleClass().setAll("catalog-tab");
+    communityTab.getStyleClass().setAll("catalog-tab-active");
+    perfumeFilterRow.setVisible(false);
+    perfumeFilterRow.setManaged(false);
+    communityFilterRow.setVisible(true);
+    communityFilterRow.setManaged(true);
+    mainContent.setVisible(false);
+    mainContent.setManaged(false);
+    communityContent.setVisible(true);
+    communityContent.setManaged(true);
+    headerTitle.setText("Community Formulas");
+    modalOverlay.setVisible(false);
+    modalOverlay.setManaged(false);
+    loadCommunity();
   }
 
   private void refreshComposerContext() {
@@ -146,39 +192,37 @@ public class CatalogController {
     viewManager.showMain();
   }
 
+  private <T> List<T> prependAll(List<T> items) {
+    List<T> result = new ArrayList<>();
+    result.add(null);
+    result.addAll(items);
+    return result;
+  }
+
   private void loadPerfumes() {
-    Task<List<Perfume>> task = new Task<>() {
-      @Override protected List<Perfume> call() {
-        return perfumeRepository.findAll();
-      }
-    };
-    task.setOnSucceeded(e -> {
-      allPerfumes = task.getValue();
-      Set<String> brands = allPerfumes.stream()
-          .map(Perfume::getBrand).filter(b -> b != null && !b.isBlank())
-          .collect(Collectors.toSet());
-      Set<String> families = allPerfumes.stream()
-          .map(Perfume::getOlfactoryFamily).filter(f -> f != null && !f.isBlank())
-          .collect(Collectors.toSet());
-      Set<String> styles = allPerfumes.stream()
-          .map(Perfume::getStyle).filter(s -> s != null && !s.isBlank())
-          .collect(Collectors.toSet());
+    allPerfumes = perfumeRepository.findAll();
+    Set<String> brands = allPerfumes.stream()
+        .map(Perfume::getBrand).filter(b -> b != null && !b.isBlank())
+        .collect(Collectors.toSet());
+    Set<String> families = allPerfumes.stream()
+        .map(Perfume::getOlfactoryFamily).filter(f -> f != null && !f.isBlank())
+        .collect(Collectors.toSet());
+    Set<String> styles = allPerfumes.stream()
+        .map(Perfume::getStyle).filter(s -> s != null && !s.isBlank())
+        .collect(Collectors.toSet());
 
-      brandFilter.setItems(FXCollections.observableArrayList(
-          brands.stream().sorted().collect(Collectors.toList())));
-      familyFilter.setItems(FXCollections.observableArrayList(
-          families.stream().sorted().collect(Collectors.toList())));
-      styleFilter.setItems(FXCollections.observableArrayList(
-          styles.stream().sorted().collect(Collectors.toList())));
-      longevityFilter.setItems(FXCollections.observableArrayList(
-          "All", "Short (1-3h)", "Moderate (4-6h)", "Long (7-9h)", "Very Long (10h+)"));
+    brandFilter.setItems(FXCollections.observableArrayList(
+        prependAll(brands.stream().sorted().collect(Collectors.toList()))));
+    familyFilter.setItems(FXCollections.observableArrayList(
+        prependAll(families.stream().sorted().collect(Collectors.toList()))));
+    styleFilter.setItems(FXCollections.observableArrayList(
+        prependAll(styles.stream().sorted().collect(Collectors.toList()))));
+    longevityFilter.setItems(FXCollections.observableArrayList(
+        "All", "Short (1-3h)", "Moderate (4-6h)", "Long (7-9h)", "Very Long (10h+)"));
 
-      refreshComposerContext();
-      updateHeader();
-      renderGrid(allPerfumes);
-    });
-    task.setOnFailed(e -> System.err.println("[CATALOG] Load failed: " + task.getException().getMessage()));
-    new Thread(task).start();
+    refreshComposerContext();
+    updateHeader();
+    renderGrid(allPerfumes);
   }
 
   private void updateHeader() {
@@ -196,83 +240,14 @@ public class CatalogController {
 
   @FXML
   private void refreshRecommendations() {
+    brandFilter.setValue(null);
+    familyFilter.setValue(null);
+    styleFilter.setValue(null);
+    longevityFilter.setValue(null);
+    searchField.clear();
     refreshComposerContext();
     updateHeader();
     applyFilters();
-  }
-
-  private void applyFilters() {
-    if (allPerfumes == null) return;
-    List<Perfume> filtered = allPerfumes.stream()
-        .filter(p -> matchesSearch(p))
-        .filter(p -> matchesBrand(p))
-        .filter(p -> matchesFamily(p))
-        .filter(p -> matchesStyle(p))
-        .filter(p -> matchesLongevity(p))
-        .filter(p -> matchesSimilarity(p))
-        .collect(Collectors.toList());
-
-    if (lastSimilarityResults != null && !lastSimilarityResults.isEmpty()) {
-      Map<Long, Integer> scoreMap = lastSimilarityResults.stream()
-          .collect(Collectors.toMap(m -> m.perfume().getId(), m -> m.overallScore()));
-      filtered.sort((a, b) -> Integer.compare(
-          scoreMap.getOrDefault(b.getId(), 0),
-          scoreMap.getOrDefault(a.getId(), 0)));
-    }
-
-    catalogCount.setText(filtered.size() + " fragrances");
-    renderGrid(filtered);
-  }
-
-  private boolean matchesSearch(Perfume p) {
-    String q = searchField.getText();
-    if (q == null || q.isBlank()) return true;
-    String lq = q.toLowerCase();
-    if (p.getName() != null && p.getName().toLowerCase().contains(lq)) return true;
-    if (p.getBrand() != null && p.getBrand().toLowerCase().contains(lq)) return true;
-    if (p.getOlfactoryFamily() != null && p.getOlfactoryFamily().toLowerCase().contains(lq)) return true;
-    if (p.getStyle() != null && p.getStyle().toLowerCase().contains(lq)) return true;
-    if (p.getTopNotes() != null && p.getTopNotes().toLowerCase().contains(lq)) return true;
-    if (p.getHeartNotes() != null && p.getHeartNotes().toLowerCase().contains(lq)) return true;
-    if (p.getBaseNotes() != null && p.getBaseNotes().toLowerCase().contains(lq)) return true;
-    return false;
-  }
-
-  private boolean matchesBrand(Perfume p) {
-    String val = brandFilter.getValue();
-    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getBrand());
-  }
-
-  private boolean matchesFamily(Perfume p) {
-    String val = familyFilter.getValue();
-    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getOlfactoryFamily());
-  }
-
-  private boolean matchesStyle(Perfume p) {
-    String val = styleFilter.getValue();
-    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getStyle());
-  }
-
-  private boolean matchesLongevity(Perfume p) {
-    String val = longevityFilter.getValue();
-    if (val == null || val.equals("All") || val.isBlank()) return true;
-    int score = p.getLongevityScore() != null ? p.getLongevityScore() : 0;
-    return switch (val) {
-      case "Short (1-3h)" -> score <= 3;
-      case "Moderate (4-6h)" -> score >= 4 && score <= 6;
-      case "Long (7-9h)" -> score >= 7 && score <= 9;
-      case "Very Long (10h+)" -> score >= 10;
-      default -> true;
-    };
-  }
-
-  private boolean matchesSimilarity(Perfume p) {
-    double minSim = similaritySlider.getValue();
-    if (minSim <= 1) return true;
-    if (lastSimilarityResults == null) return false;
-    return lastSimilarityResults.stream()
-        .filter(m -> m.perfume().getId().equals(p.getId()))
-        .anyMatch(m -> m.overallScore() >= minSim);
   }
 
   private void renderGrid(List<Perfume> perfumes) {
@@ -322,24 +297,159 @@ public class CatalogController {
     }
   }
 
+  private void applyFilters() {
+    if (allPerfumes == null) return;
+    List<Perfume> filtered = allPerfumes.stream()
+        .filter(p -> matchesSearch(p))
+        .filter(p -> matchesBrand(p))
+        .filter(p -> matchesFamily(p))
+        .filter(p -> matchesStyle(p))
+        .filter(p -> matchesLongevity(p))
+        .collect(Collectors.toList());
+
+    if (lastSimilarityResults != null && !lastSimilarityResults.isEmpty()) {
+      Map<Long, Integer> scoreMap = lastSimilarityResults.stream()
+          .collect(Collectors.toMap(m -> m.perfume().getId(), m -> m.overallScore()));
+      filtered.sort((a, b) -> Integer.compare(
+          scoreMap.getOrDefault(b.getId(), 0),
+          scoreMap.getOrDefault(a.getId(), 0)));
+    }
+
+    catalogCount.setText(filtered.size() + " fragrances");
+    renderGrid(filtered);
+  }
+
+  private void loadCommunity() {
+    Task<List<Composition>> task = new Task<>() {
+      @Override
+      protected List<Composition> call() {
+        String q = communitySearchField.getText().trim().toLowerCase();
+        List<Composition> all = compositionRepository.findByIsPublicTrueOrderByUpdatedAtDesc();
+        return all.stream()
+            .filter(c -> c.getUser() != null)
+            .filter(c -> q.isEmpty() || (c.getName() != null && c.getName().toLowerCase().contains(q)))
+            .collect(Collectors.toList());
+      }
+    };
+    task.setOnSucceeded(e -> renderCommunity(task.getValue()));
+    task.setOnFailed(e -> System.err.println("[CATALOG] Community load failed: " + task.getException().getMessage()));
+    new Thread(task).start();
+  }
+
+  private void renderCommunity(List<Composition> compositions) {
+    communityList.getChildren().clear();
+    communityCount.setText(compositions.size() + " formulas");
+
+    if (compositions.isEmpty()) {
+      VBox empty = new VBox(4);
+      empty.setAlignment(Pos.CENTER);
+      empty.setPadding(new Insets(40, 0, 0, 0));
+      Label title = new Label("No community formulas yet");
+      title.setStyle("-fx-font-family: 'Cormorant Garamond', 'Georgia', serif; -fx-font-size: 26; -fx-text-fill: #B0ADA8; -fx-font-weight: 600;");
+      Label sub = new Label("Formulas made public by other users will appear here");
+      sub.setStyle("-fx-font-size: 15; -fx-text-fill: #C4BFB9; -fx-font-style: italic; -fx-padding: 8 0 0 0;");
+      empty.getChildren().addAll(title, sub);
+      communityList.getChildren().add(empty);
+      return;
+    }
+
+    for (Composition comp : compositions) {
+      communityList.getChildren().add(createCommunityCard(comp));
+    }
+  }
+
+  private Node createCommunityCard(Composition comp) {
+    VBox card = new VBox(8);
+    card.getStyleClass().add("community-card");
+
+    HBox header = new HBox(12);
+    header.setAlignment(Pos.CENTER_LEFT);
+
+    Label name = new Label(comp.getName() != null ? comp.getName() : "Untitled");
+    name.getStyleClass().add("community-card-name");
+
+    String userText = comp.getUser() != null && comp.getUser().getNickname() != null
+        ? "by " + comp.getUser().getNickname() : "";
+    Label userLabel = new Label(userText);
+    userLabel.getStyleClass().add("community-card-user");
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    int noteCount = comp.getItems() != null ? comp.getItems().size() : 0;
+    Label notesLabel = new Label(noteCount + " notes");
+    notesLabel.getStyleClass().add("community-card-notes");
+
+    header.getChildren().addAll(name, userLabel, spacer, notesLabel);
+
+    HBox meta = new HBox(16);
+    meta.setAlignment(Pos.CENTER_LEFT);
+
+    String dateText = comp.getUpdatedAt() != null
+        ? comp.getUpdatedAt().format(SHORT_DATE) : "";
+    Label date = new Label(dateText);
+    date.getStyleClass().add("community-card-date");
+
+    Region metaSpacer = new Region();
+    HBox.setHgrow(metaSpacer, Priority.ALWAYS);
+
+    Button detailBtn = new Button("View Details");
+    detailBtn.getStyleClass().add("community-card-detail-btn");
+    detailBtn.setOnAction(e -> showCommunityDetail(comp));
+
+    Button openBtn = new Button("Open in Composer");
+    openBtn.getStyleClass().add("community-card-open-btn");
+    openBtn.setOnAction(e -> {
+      compositionState.setFormulaName(comp.getName());
+      compositionState.setEditCompositionId(comp.getId());
+      if (comp.getItems() != null) {
+        compositionState.setCurrentNoteIds(
+            comp.getItems().stream()
+                .filter(i -> i.getNote() != null)
+                .map(i -> i.getNote().getId())
+                .collect(Collectors.toList())
+        );
+        compositionState.setCurrentNoteNames(
+            comp.getItems().stream()
+                .filter(i -> i.getNote() != null)
+                .map(i -> i.getNote().getName() != null ? i.getNote().getName() : "")
+                .collect(Collectors.toList())
+        );
+      }
+      compositionState.setReadOnly(
+          userSession.getUserId() == null
+              || comp.getUser() == null
+              || !comp.getUser().getId().equals(userSession.getUserId())
+      );
+      viewManager.showMain();
+    });
+
+    HBox actions = new HBox(8);
+    actions.setAlignment(Pos.CENTER_RIGHT);
+    actions.getChildren().addAll(detailBtn, openBtn);
+
+    meta.getChildren().addAll(date, metaSpacer, actions);
+
+    card.getChildren().addAll(header, meta);
+    return card;
+  }
+
   private Node createPerfumeCard(Perfume p, boolean hasComposition) {
     VBox card = new VBox(0);
     card.setPrefWidth(220);
     card.getStyleClass().add("perfume-card");
     card.setCursor(Cursor.HAND);
 
-    int matchScore = 0;
-    String scoreColor = "#B0ADA8";
     String glowClass = "";
     if (hasComposition && lastSimilarityResults != null) {
       var match = lastSimilarityResults.stream()
           .filter(m -> m.perfume().getId().equals(p.getId()))
           .findFirst().orElse(null);
       if (match != null) {
-        matchScore = match.overallScore();
-        if (matchScore >= 80) { scoreColor = "#B18DB8"; glowClass = "card-glow-lavender"; }
-        else if (matchScore >= 60) { scoreColor = "#D69478"; glowClass = "card-glow-peach"; }
-        else { scoreColor = "#6DA89E"; glowClass = "card-glow-teal"; }
+        int s = match.overallScore();
+        if (s >= 80) glowClass = "card-glow-lavender";
+        else if (s >= 60) glowClass = "card-glow-peach";
+        else glowClass = "card-glow-teal";
       }
     }
     if (!glowClass.isEmpty()) card.getStyleClass().add(glowClass);
@@ -366,13 +476,6 @@ public class CatalogController {
       Label placeholder = new Label(initial);
       placeholder.getStyleClass().add("perfume-card-placeholder");
       imageArea.getChildren().add(placeholder);
-    }
-
-    if (hasComposition && matchScore > 0) {
-      VBox scoreBadge = createScoreBadge(matchScore, scoreColor);
-      StackPane.setAlignment(scoreBadge, Pos.TOP_RIGHT);
-      StackPane.setMargin(scoreBadge, new Insets(8));
-      imageArea.getChildren().add(scoreBadge);
     }
 
     Label brandBadge = new Label(p.getBrand() != null ? p.getBrand() : "");
@@ -408,17 +511,6 @@ public class CatalogController {
     });
 
     return card;
-  }
-
-  private VBox createScoreBadge(int score, String color) {
-    VBox badge = new VBox(0);
-    badge.setAlignment(Pos.CENTER);
-    badge.setPadding(new Insets(4, 10, 4, 10));
-    badge.setStyle("-fx-background-color: rgba(45,42,36,0.75); -fx-background-radius: 10;");
-    Label pct = new Label(score + "%");
-    pct.setStyle("-fx-font-size: 18; -fx-font-weight: 700; -fx-text-fill: " + color + "; -fx-font-family: 'Libre Baskerville',serif;");
-    badge.getChildren().add(pct);
-    return badge;
   }
 
   private void showModal(Perfume p) {
@@ -880,7 +972,360 @@ public class CatalogController {
     modalOverlay.setManaged(false);
   }
 
+  private boolean matchesSearch(Perfume p) {
+    String q = searchField.getText();
+    if (q == null || q.isBlank()) return true;
+    String lq = q.toLowerCase();
+    if (p.getName() != null && p.getName().toLowerCase().contains(lq)) return true;
+    if (p.getBrand() != null && p.getBrand().toLowerCase().contains(lq)) return true;
+    if (p.getOlfactoryFamily() != null && p.getOlfactoryFamily().toLowerCase().contains(lq)) return true;
+    if (p.getStyle() != null && p.getStyle().toLowerCase().contains(lq)) return true;
+    if (p.getTopNotes() != null && p.getTopNotes().toLowerCase().contains(lq)) return true;
+    if (p.getHeartNotes() != null && p.getHeartNotes().toLowerCase().contains(lq)) return true;
+    if (p.getBaseNotes() != null && p.getBaseNotes().toLowerCase().contains(lq)) return true;
+    return false;
+  }
+
+  private boolean matchesBrand(Perfume p) {
+    String val = brandFilter.getValue();
+    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getBrand());
+  }
+
+  private boolean matchesFamily(Perfume p) {
+    String val = familyFilter.getValue();
+    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getOlfactoryFamily());
+  }
+
+  private boolean matchesStyle(Perfume p) {
+    String val = styleFilter.getValue();
+    return val == null || val.equals("All") || val.isBlank() || val.equals(p.getStyle());
+  }
+
+  private boolean matchesLongevity(Perfume p) {
+    String val = longevityFilter.getValue();
+    if (val == null || val.equals("All") || val.isBlank()) return true;
+    int score = p.getLongevityScore() != null ? p.getLongevityScore() : 0;
+    return switch (val) {
+      case "Short (1-3h)" -> score <= 3;
+      case "Moderate (4-6h)" -> score >= 4 && score <= 6;
+      case "Long (7-9h)" -> score >= 7 && score <= 9;
+      case "Very Long (10h+)" -> score >= 10;
+      default -> true;
+    };
+  }
+
   private String capitalize(String s) {
     return UiUtils.capitalize(s);
+  }
+
+  private void showCommunityDetail(Composition comp) {
+    modalContent.getChildren().clear();
+    modalContent.getStyleClass().add("modal-glass");
+    modalContent.setMaxWidth(580);
+    modalContent.setMaxHeight(760);
+
+    HBox headerRow = new HBox();
+    headerRow.setAlignment(Pos.CENTER_RIGHT);
+    Label closeBtn = new Label("\u2715");
+    closeBtn.getStyleClass().add("modal-close");
+    closeBtn.setOnMouseClicked(e -> hideModal());
+    headerRow.getChildren().add(closeBtn);
+
+    Label name = new Label(comp.getName() != null ? comp.getName() : "Untitled");
+    name.getStyleClass().add("modal-title");
+
+    HBox metaRow = new HBox(8);
+    metaRow.setAlignment(Pos.CENTER_LEFT);
+    if (comp.getUser() != null && comp.getUser().getNickname() != null) {
+      Label author = new Label("by " + comp.getUser().getNickname());
+      author.setStyle("-fx-font-size: 15; -fx-font-weight: 600; -fx-text-fill: #B18DB8; -fx-font-style: italic;");
+      metaRow.getChildren().add(author);
+    }
+    if (comp.getUpdatedAt() != null) {
+      Label dateLbl = new Label(comp.getUpdatedAt().format(SHORT_DATE));
+      dateLbl.setStyle("-fx-font-size: 14; -fx-text-fill: #B0ADA8;");
+      metaRow.getChildren().add(dateLbl);
+    }
+
+    Rectangle divider = new Rectangle();
+    divider.setHeight(1);
+    divider.setFill(Color.web("rgba(177,141,184,0.2)"));
+
+    FlowPane statsGrid = new FlowPane(8, 8);
+    statsGrid.setPadding(new Insets(4, 0, 8, 0));
+
+    int noteCount = comp.getItems() != null ? comp.getItems().size() : 0;
+    statsGrid.getChildren().add(createStatBox("Notes", String.valueOf(noteCount)));
+
+    String family = getDominantFamily(comp);
+    if (family != null) {
+      statsGrid.getChildren().add(createStatBox("Top Family", family));
+    }
+
+    double harmony = computeHarmonyScore(comp);
+    statsGrid.getChildren().add(createStatBox("Harmony", String.format("%.0f%%", harmony)));
+
+    double balance = computeBalance(comp);
+    statsGrid.getChildren().add(createStatBox("Balance", String.format("%.0f%%", balance)));
+
+    int longevity = computeLongevity(comp);
+    statsGrid.getChildren().add(createStatBox("Longevity", longevity + "/10"));
+
+    int complexity = computeComplexity(comp);
+    statsGrid.getChildren().add(createStatBox("Complexity", complexity + "/10"));
+
+    Rectangle divider2 = new Rectangle();
+    divider2.setHeight(1);
+    divider2.setFill(Color.web("rgba(177,141,184,0.2)"));
+
+    VBox pyramidSection = new VBox(8);
+    Label pyrTitle = new Label("OLFACTORY PYRAMID");
+    pyrTitle.getStyleClass().add("modal-section-title");
+    pyramidSection.getChildren().add(pyrTitle);
+
+    if (comp.getItems() != null && !comp.getItems().isEmpty()) {
+      List<CompositionItem> topItems = comp.getItems().stream()
+          .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.TOP)
+          .sorted((a, b) -> Integer.compare(
+              b.getPercentage() != null ? b.getPercentage() : 0,
+              a.getPercentage() != null ? a.getPercentage() : 0))
+          .collect(Collectors.toList());
+      List<CompositionItem> heartItems = comp.getItems().stream()
+          .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.HEART)
+          .sorted((a, b) -> Integer.compare(
+              b.getPercentage() != null ? b.getPercentage() : 0,
+              a.getPercentage() != null ? a.getPercentage() : 0))
+          .collect(Collectors.toList());
+      List<CompositionItem> baseItems = comp.getItems().stream()
+          .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE)
+          .sorted((a, b) -> Integer.compare(
+              b.getPercentage() != null ? b.getPercentage() : 0,
+              a.getPercentage() != null ? a.getPercentage() : 0))
+          .collect(Collectors.toList());
+
+      if (!topItems.isEmpty()) {
+        pyramidSection.getChildren().add(createNotePhaseRow("TOP", topItems, "#E2A998"));
+      }
+      if (!heartItems.isEmpty()) {
+        pyramidSection.getChildren().add(createNotePhaseRow("HEART", heartItems, "#b18db8"));
+      }
+      if (!baseItems.isEmpty()) {
+        pyramidSection.getChildren().add(createNotePhaseRow("BASE", baseItems, "#78A0A0"));
+      }
+
+      Rectangle divider3 = new Rectangle();
+      divider3.setHeight(1);
+      divider3.setFill(Color.web("rgba(177,141,184,0.2)"));
+      pyramidSection.getChildren().add(divider3);
+
+      Label breakdownTitle = new Label("NOTE BREAKDOWN");
+      breakdownTitle.setStyle("-fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #A8A29E; -fx-letter-spacing: 1.5; -fx-padding: 4 0 4 0;");
+      pyramidSection.getChildren().add(breakdownTitle);
+
+      for (CompositionItem item : comp.getItems()) {
+        if (item.getNote() != null) {
+          String noteColor = switch (item.getNote().getType()) {
+            case TOP -> "#E2A998";
+            case HEART -> "#b18db8";
+            case BASE -> "#78A0A0";
+          };
+          pyramidSection.getChildren().add(createNoteBreakdownRow(
+              item.getNote().getName(),
+              item.getPercentage() != null ? item.getPercentage() : 0,
+              noteColor
+          ));
+        }
+      }
+    }
+
+    Rectangle divider4 = new Rectangle();
+    divider4.setHeight(1);
+    divider4.setFill(Color.web("rgba(177,141,184,0.2)"));
+
+    Button openBtn = new Button("Open in Composer");
+    openBtn.getStyleClass().addAll("btn-similar", "btn-similar-full");
+    openBtn.setOnAction(e -> {
+      hideModal();
+      compositionState.setFormulaName(comp.getName());
+      compositionState.setEditCompositionId(comp.getId());
+      if (comp.getItems() != null) {
+        compositionState.setCurrentNoteIds(
+            comp.getItems().stream()
+                .filter(i -> i.getNote() != null)
+                .map(i -> i.getNote().getId())
+                .collect(Collectors.toList())
+        );
+        compositionState.setCurrentNoteNames(
+            comp.getItems().stream()
+                .filter(i -> i.getNote() != null)
+                .map(i -> i.getNote().getName() != null ? i.getNote().getName() : "")
+                .collect(Collectors.toList())
+        );
+      }
+      compositionState.setReadOnly(
+          userSession.getUserId() == null
+              || comp.getUser() == null
+              || !comp.getUser().getId().equals(userSession.getUserId())
+      );
+      viewManager.showMain();
+    });
+
+    VBox content = new VBox(10);
+    content.getChildren().addAll(headerRow, name, metaRow, divider,
+        statsGrid, divider2, pyramidSection, divider4, openBtn);
+
+    ScrollPane scrollContent = new ScrollPane(content);
+    scrollContent.setFitToWidth(true);
+    scrollContent.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+    scrollContent.getStyleClass().add("thin-scroll");
+
+    modalContent.getChildren().add(scrollContent);
+    modalOverlay.setVisible(true);
+    modalOverlay.setManaged(true);
+  }
+
+  private VBox createStatBox(String label, String value) {
+    VBox box = new VBox(2);
+    box.setAlignment(Pos.CENTER);
+    box.setPadding(new Insets(6, 14, 6, 14));
+    box.setStyle("-fx-background-color: rgba(240,237,230,0.6); -fx-background-radius: 8;");
+    Label lbl = new Label(label);
+    lbl.setStyle("-fx-font-size: 11; -fx-font-weight: 700; -fx-text-fill: #A8A29E; -fx-letter-spacing: 1;");
+    Label val = new Label(value);
+    val.setStyle("-fx-font-size: 16; -fx-font-weight: 700; -fx-text-fill: #2D2A24;");
+    box.getChildren().addAll(lbl, val);
+    return box;
+  }
+
+  private HBox createNotePhaseRow(String phase, List<CompositionItem> items, String color) {
+    HBox row = new HBox(8);
+    row.setAlignment(Pos.CENTER_LEFT);
+    row.setPadding(new Insets(4, 0, 4, 0));
+    Rectangle dot = new Rectangle(4, 14);
+    dot.setFill(Color.web(color));
+    dot.setArcWidth(2);
+    dot.setArcHeight(2);
+    Label phaseLabel = new Label(phase);
+    phaseLabel.setMinWidth(50);
+    phaseLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 700; -fx-text-fill: #A8A29E; -fx-letter-spacing: 1;");
+    FlowPane chips = new FlowPane(6, 4);
+    chips.setAlignment(Pos.CENTER_LEFT);
+    for (CompositionItem item : items) {
+      int pct = item.getPercentage() != null ? item.getPercentage() : 0;
+      Label chip = new Label(item.getNote().getName() + " (" + pct + "%)");
+      chip.setStyle("-fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 6; -fx-padding: 2 8;"
+          + "-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #4B4B4B;"
+          + "-fx-border-color: " + color + "40; -fx-border-radius: 6; -fx-border-width: 1;");
+      chips.getChildren().add(chip);
+    }
+    row.getChildren().addAll(dot, phaseLabel, chips);
+    return row;
+  }
+
+  private HBox createNoteBreakdownRow(String noteName, int percentage, String color) {
+    HBox row = new HBox(8);
+    row.setAlignment(Pos.CENTER_LEFT);
+    Label nameLbl = new Label(noteName);
+    nameLbl.setMinWidth(100);
+    nameLbl.setStyle("-fx-font-size: 14; -fx-font-weight: 600; -fx-text-fill: #6B6560;");
+    StackPane track = new StackPane();
+    track.setPrefWidth(180);
+    track.setPrefHeight(10);
+    track.setStyle("-fx-background-color: rgba(234,230,223,0.5); -fx-background-radius: 5;");
+    Rectangle fill = new Rectangle();
+    fill.setHeight(10);
+    fill.setArcWidth(5);
+    fill.setArcHeight(5);
+    fill.setWidth(180 * percentage / 100.0);
+    fill.setFill(Color.web(color));
+    StackPane.setAlignment(fill, Pos.CENTER_LEFT);
+    track.getChildren().add(fill);
+    Label pct = new Label(percentage + "%");
+    pct.setMinWidth(30);
+    pct.setStyle("-fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: " + color + "; -fx-alignment: center-right;");
+    row.getChildren().addAll(nameLbl, track, pct);
+    return row;
+  }
+
+  private String getDominantFamily(Composition comp) {
+    if (comp.getItems() == null || comp.getItems().isEmpty()) return null;
+    Map<String, Long> freq = new HashMap<>();
+    for (CompositionItem item : comp.getItems()) {
+      if (item.getNote() != null && item.getNote().getCategory() != null) {
+        freq.merge(item.getNote().getCategory(), 1L, Long::sum);
+      }
+    }
+    return freq.entrySet().stream()
+        .max(Map.Entry.comparingByValue())
+        .map(Map.Entry::getKey)
+        .orElse(null);
+  }
+
+  private double computeHarmonyScore(Composition comp) {
+    if (comp.getItems() == null || comp.getItems().isEmpty()) return 0;
+    long top = comp.getItems().stream().filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.TOP).count();
+    long heart = comp.getItems().stream().filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.HEART).count();
+    long base = comp.getItems().stream().filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE).count();
+    long total = top + heart + base;
+    if (total == 0) return 0;
+    double idealTop = total * 0.25;
+    double idealHeart = total * 0.45;
+    double idealBase = total * 0.30;
+    double score = 100
+        - Math.abs(top - idealTop) / idealTop * 25
+        - Math.abs(heart - idealHeart) / idealHeart * 40
+        - Math.abs(base - idealBase) / idealBase * 35;
+    return Math.max(0, Math.min(100, score));
+  }
+
+  private double computeBalance(Composition comp) {
+    if (comp.getItems() == null || comp.getItems().isEmpty()) return 0;
+    int totalPct = comp.getItems().stream()
+        .filter(i -> i.getPercentage() != null)
+        .mapToInt(CompositionItem::getPercentage)
+        .sum();
+    if (totalPct == 0) return 0;
+    double topPct = comp.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.TOP)
+        .filter(i -> i.getPercentage() != null)
+        .mapToInt(CompositionItem::getPercentage)
+        .sum();
+    double heartPct = comp.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.HEART)
+        .filter(i -> i.getPercentage() != null)
+        .mapToInt(CompositionItem::getPercentage)
+        .sum();
+    double basePct = comp.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE)
+        .filter(i -> i.getPercentage() != null)
+        .mapToInt(CompositionItem::getPercentage)
+        .sum();
+    double idealTop = totalPct * 0.25;
+    double idealHeart = totalPct * 0.45;
+    double idealBase = totalPct * 0.30;
+    double score = 100
+        - Math.abs(topPct - idealTop) / idealTop * 25
+        - Math.abs(heartPct - idealHeart) / idealHeart * 40
+        - Math.abs(basePct - idealBase) / idealBase * 35;
+    return Math.max(0, Math.min(100, score));
+  }
+
+  private int computeLongevity(Composition comp) {
+    if (comp.getItems() == null || comp.getItems().isEmpty()) return 5;
+    long baseCount = comp.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.BASE)
+        .count();
+    long heartCount = comp.getItems().stream()
+        .filter(i -> i.getNote() != null && i.getNote().getType() == NoteType.HEART)
+        .count();
+    int score = 4 + (int) (baseCount * 1.5) + (int) (heartCount * 0.5);
+    return Math.max(1, Math.min(10, score));
+  }
+
+  private int computeComplexity(Composition comp) {
+    if (comp.getItems() == null || comp.getItems().isEmpty()) return 1;
+    int totalNotes = comp.getItems().size();
+    int score = 2 + totalNotes / 2;
+    return Math.max(1, Math.min(10, score));
   }
 }

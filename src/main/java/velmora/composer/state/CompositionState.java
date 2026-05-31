@@ -14,11 +14,13 @@ public class CompositionState {
   private List<Long> currentNoteIds = new ArrayList<>();
   private String formulaName;
   private Long editCompositionId;
+  private boolean readOnly;
 
   public void clear() {
     currentNoteNames.clear();
     currentNoteIds.clear();
     formulaName = null;
     editCompositionId = null;
+    readOnly = false;
   }
 }

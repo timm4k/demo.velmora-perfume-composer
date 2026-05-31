@@ -17,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.chart.PieChart;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -43,7 +42,7 @@ import velmora.composer.ui.ViewManager;
 import velmora.composer.ui.component.MaterialCardCell;
 import velmora.composer.ui.renderer.AnalysisPanelRenderer;
 import velmora.composer.ui.renderer.ConcentrationPanelRenderer;
-import velmora.composer.ui.renderer.TimelinePanelRenderer;
+import velmora.composer.ui.renderer.HeatmapPanelRenderer;
 import velmora.composer.ui.util.ComposerAnimationHelper;
 
 @Component
@@ -99,7 +98,6 @@ public class ComposerController {
   @FXML private Label projectionLabel;
   @FXML private Label complexityLabel;
 
-  @FXML private Label formulaTotalLabel;
   @FXML private Label validationLabel;
   @FXML private VBox concentrationRows;
 
@@ -107,31 +105,14 @@ public class ComposerController {
   @FXML private Label openingCharValue;
   @FXML private Label dryDownCharValue;
 
-  @FXML private PieChart familyChart;
-
-  @FXML private StackPane pyramidTopContainer;
-  @FXML private StackPane pyramidHeartContainer;
-  @FXML private StackPane pyramidBaseContainer;
-  @FXML private Rectangle pyramidTop;
-  @FXML private Rectangle pyramidHeart;
-  @FXML private Rectangle pyramidBase;
-  @FXML private Label pyramidTopPct;
-  @FXML private Label pyramidHeartPct;
-  @FXML private Label pyramidBasePct;
+  @FXML private VBox familyDistributionList;
 
   @FXML private Label totalConcentration;
   @FXML private Label concentrationValidation;
   @FXML private Circle statusDot;
+  @FXML private Circle balanceIndicator;
   @FXML private HBox statusIndicator;
-
-  @FXML private Slider timelineSlider;
-  @FXML private Label currentStageValue;
-  @FXML private Label currentCharValue;
-  @FXML private Label currentNotesValue;
-  @FXML private Label currentIntensityValue;
-  @FXML private VBox noteActivityContainer;
   @FXML private VBox heatMapContainer;
-  @FXML private Label fragranceStory;
 
   private final ObservableList<Note> allNotes = FXCollections.observableArrayList();
   private final ObservableList<Note> currentTopNotes = FXCollections.observableArrayList();
@@ -141,16 +122,20 @@ public class ComposerController {
   private final Set<Long> previousNoteIds = new HashSet<>();
   private FilteredList<Note> filteredNotes;
   @FXML private Button closeDraftBtn;
+  @FXML private Button visibilityToggle;
+  @FXML private Button saveButton;
+  @FXML private Button autoBalanceBtn;
+  private boolean isPublicComposition;
   private Long editingCompositionId;
 
   private ConcentrationPanelRenderer concentrationPanelRenderer;
   private AnalysisPanelRenderer analysisPanelRenderer;
-  private TimelinePanelRenderer timelinePanelRenderer;
+  private HeatmapPanelRenderer heatmapPanelRenderer;
 
   @FXML
   public void initialize() {
     concentrationPanelRenderer = new ConcentrationPanelRenderer(
-        concentrationRows, formulaTotalLabel, validationLabel,
+        concentrationRows, validationLabel, balanceIndicator,
         totalConcentration, concentrationValidation,
         topPct, heartPct, basePct,
         autoSaveService
@@ -159,14 +144,11 @@ public class ComposerController {
         harmonyCircle, balanceBar, longevityBar, projectionBar, complexityBar,
         balanceScore, longevityValue, projectionLabel, complexityLabel,
         dominantFamilyValue, openingCharValue, dryDownCharValue,
-        familyChart, pyramidTop, pyramidHeart, pyramidBase,
-        pyramidTopPct, pyramidHeartPct, pyramidBasePct, insightsContainer,
+        familyDistributionList, insightsContainer,
         analysisService, synergyService
     );
-    timelinePanelRenderer = new TimelinePanelRenderer(
-        timelineSlider, currentStageValue, currentCharValue, currentNotesValue, currentIntensityValue,
-        noteActivityContainer, heatMapContainer, fragranceStory,
-        timelineService
+    heatmapPanelRenderer = new HeatmapPanelRenderer(
+        heatMapContainer, timelineService
     );
 
     viewManager.setBeforeCatalogNavigate(() -> {
@@ -185,7 +167,6 @@ public class ComposerController {
     setupDragDrop();
     ComposerAnimationHelper.initParticles(particleLayer);
     ComposerAnimationHelper.initFloatingGradients(floatingGradients);
-    timelinePanelRenderer.init(this::runAnalysis);
     updateAll();
     Platform.runLater(this::runAnalysis);
 
@@ -211,6 +192,23 @@ public class ComposerController {
     if (editingCompositionId != null) {
       autoSaveService.setCurrentComposition(editingCompositionId, formulaName.getText(), "");
     }
+    applyReadOnly();
+  }
+
+  private void applyReadOnly() {
+    boolean readOnly = compositionState.isReadOnly();
+    saveButton.setDisable(readOnly);
+    saveButton.setManaged(!readOnly);
+    autoBalanceBtn.setDisable(readOnly);
+    autoBalanceBtn.setManaged(!readOnly);
+    visibilityToggle.setDisable(readOnly);
+    visibilityToggle.setManaged(!readOnly);
+    formulaName.setEditable(!readOnly);
+    if (readOnly) {
+      formulaName.setStyle(formulaName.getStyle() + "-fx-text-fill: #8A8580;");
+    }
+    closeDraftBtn.setVisible(!readOnly && editingCompositionId != null);
+    closeDraftBtn.setManaged(!readOnly && editingCompositionId != null);
   }
 
   private void loadNotes() {
@@ -253,7 +251,9 @@ public class ComposerController {
     boolean isEditing = editingCompositionId != null;
     closeDraftBtn.setVisible(isEditing);
     closeDraftBtn.setManaged(isEditing);
+    boolean readOnly = compositionState.isReadOnly();
     compositionState.clear();
+    compositionState.setReadOnly(readOnly);
   }
 
   private void setupFilterButtons() {
@@ -281,6 +281,10 @@ public class ComposerController {
   }
 
   private void setupMaterialClick() {
+    if (compositionState.isReadOnly()) {
+      materialsList.setOnMouseClicked(null);
+      return;
+    }
     materialsList.setOnMouseClicked(event -> {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
         Note selected = materialsList.getSelectionModel().getSelectedItem();
@@ -292,6 +296,10 @@ public class ComposerController {
   }
 
   private void setupDragDrop() {
+    if (compositionState.isReadOnly()) {
+      materialsList.setCellFactory(lv -> new MaterialCardCell());
+      return;
+    }
     materialsList.setCellFactory(lv -> {
       MaterialCardCell cell = new MaterialCardCell();
       cell.setOnDragDetected(event -> {
@@ -345,6 +353,18 @@ public class ComposerController {
     ((VBox) event.getSource()).getStyleClass().remove("drag-over");
   }
 
+  private void syncAutoSaveItems() {
+    List<Note> all = allNotes();
+    List<velmora.composer.model.CompositionItem> items = new ArrayList<>();
+    for (Note note : all) {
+      velmora.composer.model.CompositionItem item = new velmora.composer.model.CompositionItem();
+      item.setNoteId(note.getId());
+      item.setPercentage(notePercentages.getOrDefault(note.getId(), 100 / Math.max(1, all.size())));
+      items.add(item);
+    }
+    autoSaveService.setCurrentItems(items);
+  }
+
   private void addNoteToPyramid(Note note) {
     NoteType type = note.getType();
     if (type == null) return;
@@ -356,6 +376,7 @@ public class ComposerController {
     if (!targetList.contains(note)) {
       targetList.add(note);
       redistributePercentages();
+      syncAutoSaveItems();
       autoSaveService.markDirty();
     }
     updateAll();
@@ -372,6 +393,7 @@ public class ComposerController {
     targetList.remove(note);
     notePercentages.remove(note.getId());
     redistributePercentages();
+    syncAutoSaveItems();
     autoSaveService.markDirty();
     updateAll();
   }
@@ -444,7 +466,9 @@ public class ComposerController {
 
   @FXML
   private void handleAutoBalance() {
+    if (compositionState.isReadOnly()) return;
     redistributePercentages();
+    syncAutoSaveItems();
     updateAll();
   }
 
@@ -460,12 +484,12 @@ public class ComposerController {
     if (all.isEmpty()) {
       concentrationPanelRenderer.renderEmpty();
       analysisPanelRenderer.renderEmpty();
-      timelinePanelRenderer.renderEmpty();
+      heatmapPanelRenderer.renderEmpty();
       return;
     }
     concentrationPanelRenderer.renderRows(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes, this::runAnalysis);
     analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
-    timelinePanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
   }
 
   private void runAnalysis() {
@@ -473,12 +497,12 @@ public class ComposerController {
     if (all.isEmpty()) {
       concentrationPanelRenderer.renderEmpty();
       analysisPanelRenderer.renderEmpty();
-      timelinePanelRenderer.renderEmpty();
+      heatmapPanelRenderer.renderEmpty();
       return;
     }
     concentrationPanelRenderer.updateLabels(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
     analysisPanelRenderer.renderAll(all, notePercentages, currentTopNotes, currentHeartNotes, currentBaseNotes);
-    timelinePanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
+    heatmapPanelRenderer.update(all, currentTopNotes, currentHeartNotes, currentBaseNotes, notePercentages);
   }
 
   private void renderChips() {
@@ -604,10 +628,24 @@ public class ComposerController {
     updateAll();
     closeDraftBtn.setVisible(false);
     closeDraftBtn.setManaged(false);
+    isPublicComposition = false;
+    visibilityToggle.setText("\u25CB Private");
+    autoSaveService.setCurrentItems(null);
+  }
+
+  @FXML
+  public void handleToggleVisibility() {
+    if (compositionState.isReadOnly()) return;
+    isPublicComposition = !isPublicComposition;
+    visibilityToggle.setText(isPublicComposition ? "\u25C9 Public" : "\u25CB Private");
   }
 
   @FXML
   public void handleSave() {
+    if (compositionState.isReadOnly()) {
+      formulaStatus.setText("READ ONLY");
+      return;
+    }
     if (userSession.getUserId() == null) {
       formulaStatus.setText("LOG IN TO SAVE");
       statusDot.getStyleClass().removeAll("status-dot-saved", "status-dot-saving", "status-dot-warn");
@@ -639,7 +677,7 @@ public class ComposerController {
     }
     composition.setName(name);
     composition.setDescription("Created in Velmora Olfactory Lab");
-    composition.setPublic(false);
+    composition.setPublic(isPublicComposition);
     composition.setUser(userRef);
     for (Note note : all) {
       CompositionItem item = new CompositionItem();
@@ -647,7 +685,7 @@ public class ComposerController {
       item.setPercentage(notePercentages.getOrDefault(note.getId(), 100 / all.size()));
       composition.getItems().add(item);
     }
-    autoSaveService.forceSave();
+    syncAutoSaveItems();
     javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
       @Override protected Void call() {
         compositionService.saveComposition(composition, "Manual save");
@@ -719,10 +757,6 @@ public class ComposerController {
 
   @FXML
   public void handleSettings() { viewManager.showSettings(); }
-
-  @FXML
-  public void handleAdmin() { viewManager.showAdmin(); }
-
   @FXML
   public void handleHistory() { viewManager.showHistory(); }
 }

@@ -24,10 +24,15 @@
 
         <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 6 0 0 0;">
           <Button text="←  Back to Composer" onAction="#handleBack" styleClass="btn-ghost-lux" />
-          <Button text="⟳ Refresh" onAction="#refreshRecommendations" styleClass="filter-btn"
-                  style="-fx-font-size: 14; -fx-padding: 4 12;" />
 
           <Rectangle width="1.0" height="20.0" fill="rgba(177,141,184,0.15)" arcWidth="1" arcHeight="1" />
+          <Button fx:id="catalogTab" text="Catalog" styleClass="catalog-tab-active" />
+          <Button fx:id="communityTab" text="Community" styleClass="catalog-tab" />
+
+          <Rectangle width="1.0" height="20.0" fill="rgba(177,141,184,0.15)" arcWidth="1" arcHeight="1" />
+
+          <Button text="⟳ Refresh" onAction="#refreshRecommendations" styleClass="filter-btn"
+                  style="-fx-font-size: 14; -fx-padding: 4 12;" />
 
           <Label text="BRAND" style=" -fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
           <ComboBox fx:id="brandFilter" promptText="All" prefWidth="110"
@@ -46,15 +51,16 @@
                     style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #E2DDD4; -fx-border-radius: 6; -fx-font-size: 15;" />
         </HBox>
 
-        <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
+        <HBox fx:id="perfumeFilterRow" spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
           <TextField fx:id="searchField" promptText="Search perfumes..."
                      styleClass="catalog-search" prefWidth="240.0" />
+        </HBox>
+
+        <HBox fx:id="communityFilterRow" spacing="8.0" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;" visible="false" managed="false">
+          <TextField fx:id="communitySearchField" promptText="Search community formulas..."
+                     styleClass="catalog-search" prefWidth="240.0" />
           <Region HBox.hgrow="ALWAYS" />
-          <Label text="MIN SIMILARITY" style=" -fx-font-size: 14; -fx-font-weight: 700; -fx-text-fill: #B0ADA8; -fx-letter-spacing: 1.5;" />
-          <Slider fx:id="similaritySlider" min="0" max="100" value="0"
-                  prefWidth="120" showTickLabels="false" showTickMarks="false"
-                  styleClass="vault-slider" />
-          <Label fx:id="similarityLabel" text="0%+" style="-fx-font-size: 16; -fx-font-weight: 700; -fx-text-fill: #b18db8; -fx-min-width: 40;" />
+          <Label fx:id="communityCount" text="0 formulas" styleClass="catalog-subtitle" />
         </HBox>
       </VBox>
 
@@ -65,9 +71,9 @@
             alignment="CENTER" VBox.vgrow="ALWAYS"
             style="-fx-padding: 80 40;">
         <Label fx:id="emptyTitle" text="Create a composition first"
-               style="-fx-font-family: 'Libre Baskerville', serif; -fx-font-size: 28; -fx-text-fill: #B0ADA8; -fx-font-weight: 600;" />
+               style="-fx-font-family: 'Cormorant Garamond', 'Georgia', serif; -fx-font-size: 26; -fx-text-fill: #B0ADA8; -fx-font-weight: 600;" />
         <Label fx:id="emptySubtitle" text="Build your formula in the Composer to discover similar perfumes."
-               style="-fx-font-size: 18; -fx-text-fill: #C4BFB9; -fx-font-style: italic; -fx-padding: 8 0 0 0;" />
+               style="-fx-font-size: 15; -fx-text-fill: #C4BFB9; -fx-font-style: italic; -fx-padding: 8 0 0 0;" />
       </VBox>
 
       <VBox fx:id="mainContent" VBox.vgrow="ALWAYS">
@@ -77,6 +83,15 @@
           <FlowPane fx:id="catalogGrid" hgap="16.0" vgap="16.0"
                     style="-fx-padding: 24 48 48 48;"
                     alignment="TOP_LEFT" />
+        </ScrollPane>
+      </VBox>
+
+      <VBox fx:id="communityContent" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-padding: 0;"
+                    styleClass="thin-scroll">
+          <VBox fx:id="communityList" spacing="8.0"
+                style="-fx-padding: 24 48 48 48;" />
         </ScrollPane>
       </VBox>
     </VBox>

@@ -1,9 +1,12 @@
 package velmora.composer.ui.renderer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
+import javafx.application.Platform;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -19,23 +22,26 @@ import velmora.composer.service.AutoSaveService;
 public class ConcentrationPanelRenderer {
 
   private final VBox concentrationRows;
-  private final Label formulaTotalLabel;
   private final Label validationLabel;
+  private final Circle balanceIndicator;
   private final Label totalConcentration;
   private final Label concentrationValidation;
   private final Label topPct;
   private final Label heartPct;
   private final Label basePct;
   private final AutoSaveService autoSaveService;
+  private final Map<Long, Label> pctLabelById = new HashMap<>();
+  private final PauseTransition analysisDebounce = new PauseTransition(Duration.millis(150));
   private boolean concentrationUpdating = false;
 
-  public ConcentrationPanelRenderer(VBox concentrationRows, Label formulaTotalLabel, Label validationLabel,
+  public ConcentrationPanelRenderer(VBox concentrationRows, Label validationLabel,
+                                    Circle balanceIndicator,
                                     Label totalConcentration, Label concentrationValidation,
                                     Label topPct, Label heartPct, Label basePct,
                                     AutoSaveService autoSaveService) {
     this.concentrationRows = concentrationRows;
-    this.formulaTotalLabel = formulaTotalLabel;
     this.validationLabel = validationLabel;
+    this.balanceIndicator = balanceIndicator;
     this.totalConcentration = totalConcentration;
     this.concentrationValidation = concentrationValidation;
     this.topPct = topPct;
@@ -45,36 +51,43 @@ public class ConcentrationPanelRenderer {
   }
 
   public void renderRows(List<Note> all, Map<Long, Integer> notePercentages,
-                         List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
-                         Runnable onUpdate) {
-    concentrationUpdating = true;
-    concentrationRows.getChildren().clear();
+                          List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes,
+                          Runnable onUpdate) {
+    Platform.runLater(() -> {
+      concentrationUpdating = true;
+      concentrationRows.getChildren().clear();
+      pctLabelById.clear();
 
-    if (!all.isEmpty()) {
-      for (Note note : all) {
-        HBox row = buildRow(note, notePercentages, onUpdate);
-        concentrationRows.getChildren().add(row);
+      if (!all.isEmpty()) {
+        for (Note note : all) {
+          HBox row = buildRow(note, notePercentages, onUpdate);
+          concentrationRows.getChildren().add(row);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(200), row);
-        ft.setToValue(1.0);
-        ScaleTransition st = new ScaleTransition(Duration.millis(250), row);
-        st.setToX(1.0);
-        st.setToY(1.0);
-        st.setInterpolator(Interpolator.EASE_OUT);
-        ft.play();
-        st.play();
+          FadeTransition ft = new FadeTransition(Duration.millis(200), row);
+          ft.setToValue(1.0);
+          ScaleTransition st = new ScaleTransition(Duration.millis(250), row);
+          st.setToX(1.0);
+          st.setToY(1.0);
+          st.setInterpolator(Interpolator.EASE_OUT);
+          ft.play();
+          st.play();
+        }
+        updateConcentrationLabels(notePercentages);
+        updatePhaseLabels(notePercentages, topNotes, heartNotes, baseNotes);
       }
-      updatePanelLabels(notePercentages);
-      updateConcentrationLabels(notePercentages);
-      updatePhaseLabels(notePercentages, topNotes, heartNotes, baseNotes);
-    }
-    concentrationUpdating = false;
+      concentrationUpdating = false;
+    });
   }
 
   public void renderEmpty() {
+    Platform.runLater(this::renderEmptyImpl);
+  }
+
+  private void renderEmptyImpl() {
     concentrationRows.getChildren().clear();
-    formulaTotalLabel.setText("Current Formula: 0%");
+    pctLabelById.clear();
     validationLabel.setText("");
+    balanceIndicator.setStyle("-fx-fill: #C4BFB9;");
     totalConcentration.setText("Total: 0%");
     concentrationValidation.getStyleClass().removeAll("conc-display-ok", "conc-display-warn", "conc-display-error");
     concentrationValidation.setText("");
@@ -84,13 +97,21 @@ public class ConcentrationPanelRenderer {
   }
 
   public void updateLabels(List<Note> all, Map<Long, Integer> notePercentages,
-                           List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
-    if (all.isEmpty()) {
-      renderEmpty();
-      return;
-    }
-    updateConcentrationLabels(notePercentages);
-    updatePhaseLabels(notePercentages, topNotes, heartNotes, baseNotes);
+                            List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {
+    Platform.runLater(() -> {
+      if (all.isEmpty()) {
+        renderEmptyImpl();
+        return;
+      }
+      for (Note note : all) {
+        Label pctLbl = pctLabelById.get(note.getId());
+        if (pctLbl != null) {
+          pctLbl.setText(notePercentages.getOrDefault(note.getId(), 0) + "%");
+        }
+      }
+      updateConcentrationLabels(notePercentages);
+      updatePhaseLabels(notePercentages, topNotes, heartNotes, baseNotes);
+    });
   }
 
   private HBox buildRow(Note note, Map<Long, Integer> notePercentages, Runnable onUpdate) {
@@ -111,6 +132,7 @@ public class ConcentrationPanelRenderer {
     int pct = notePercentages.getOrDefault(note.getId(), 0);
     Label pctLbl = new Label(pct + "%");
     pctLbl.setStyle("-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #6B6560; -fx-min-width: 30; -fx-alignment: center-right;");
+    pctLabelById.put(note.getId(), pctLbl);
 
     Slider slider = new Slider(0, 100, pct);
     slider.setShowTickLabels(false);
@@ -125,9 +147,10 @@ public class ConcentrationPanelRenderer {
         pctLbl.setText(intVal + "%");
         concentrationUpdating = true;
         updateConcentrationLabels(notePercentages);
-        onUpdate.run();
         concentrationUpdating = false;
         autoSaveService.markDirty();
+        analysisDebounce.setOnFinished(e -> onUpdate.run());
+        analysisDebounce.playFromStart();
       }
     });
 
@@ -135,38 +158,40 @@ public class ConcentrationPanelRenderer {
     return row;
   }
 
-  private void updatePanelLabels(Map<Long, Integer> notePercentages) {
-    int totalPct = notePercentages.values().stream().mapToInt(Integer::intValue).sum();
-    formulaTotalLabel.setText("Current Formula: " + totalPct + "%");
-    if (totalPct == 100) {
-      validationLabel.setText("Balanced Formula \u2713");
-      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;");
-    } else if (totalPct < 100) {
-      int need = 100 - totalPct;
-      validationLabel.setText("Need " + need + "% more");
-      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #C8954A;");
-    } else {
-      int excess = totalPct - 100;
-      validationLabel.setText("Reduce by " + excess + "%");
-      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #D9534F;");
-    }
-  }
-
   private void updateConcentrationLabels(Map<Long, Integer> notePercentages) {
     int total = notePercentages.values().stream().mapToInt(Integer::intValue).sum();
     totalConcentration.setText("Total: " + total + "%");
     concentrationValidation.getStyleClass().removeAll("conc-display-ok", "conc-display-warn", "conc-display-error");
     if (total == 100) {
-      concentrationValidation.setText("\u2713 Formula balanced");
+      concentrationValidation.setText("Formula balanced");
       concentrationValidation.getStyleClass().add("conc-display-ok");
     } else if (total < 100) {
       int remaining = 100 - total;
-      concentrationValidation.setText("\u26A0 Incomplete. " + remaining + "% remaining.");
+      concentrationValidation.setText("Incomplete. " + remaining + "% remaining.");
       concentrationValidation.getStyleClass().add("conc-display-warn");
     } else {
       int excess = total - 100;
-      concentrationValidation.setText("\u2717 Exceeds by " + excess + "%.");
+      concentrationValidation.setText("Exceeds by " + excess + "%.");
       concentrationValidation.getStyleClass().add("conc-display-error");
+    }
+    updateValidationLabel(total);
+  }
+
+  private void updateValidationLabel(int totalPct) {
+    if (totalPct == 100) {
+      validationLabel.setText("Balanced");
+      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #5A9E8F;");
+      balanceIndicator.setStyle("-fx-fill: #5A9E8F;");
+    } else if (totalPct < 100) {
+      int need = 100 - totalPct;
+      validationLabel.setText("Need " + need + "% more");
+      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #C8954A;");
+      balanceIndicator.setStyle("-fx-fill: #C8954A;");
+    } else {
+      int excess = totalPct - 100;
+      validationLabel.setText("Reduce by " + excess + "%");
+      validationLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600; -fx-text-fill: #D9534F;");
+      balanceIndicator.setStyle("-fx-fill: #D9534F;");
     }
   }
 

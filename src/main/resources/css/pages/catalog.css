@@ -3,14 +3,14 @@
 }
 
 .catalog-heading {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 34;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 28;
   -fx-text-fill: #2D2A24;
   -fx-font-weight: 700;
 }
 
 .catalog-subtitle {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: #A8A29E;
   -fx-font-style: italic;
 }
@@ -19,7 +19,7 @@
   -fx-background-color: #FFFDFB;
   -fx-background-radius: 8;
   -fx-padding: 8 14 8 14;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: #2D2A24;
   -fx-prompt-text-fill: #C4BFB9;
   -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.04), 4, 0, 0, 1);
@@ -72,8 +72,8 @@
 }
 
 .perfume-card-placeholder {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 48;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 28;
   -fx-text-fill: #C4BFB9;
   -fx-font-weight: 700;
 }
@@ -92,30 +92,28 @@
   -fx-background-color: rgba(45,42,36,0.6);
   -fx-background-radius: 4;
   -fx-text-fill: #F0C040;
-  -fx-font-size: 16;
+  -fx-font-size: 14;
   -fx-font-weight: 700;
   -fx-padding: 2 6 2 6;
 }
 
 .perfume-card-name {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 21;
+  -fx-font-size: 15;
   -fx-font-weight: 600;
   -fx-text-fill: #2D2A24;
 }
 
 .perfume-card-family {
-  -fx-font-size: 15;
+  -fx-font-size: 13;
   -fx-text-fill: #A8A29E;
   -fx-font-weight: 600;
   -fx-letter-spacing: 1;
 }
 
 .perfume-card-price {
-  -fx-font-size: 15;
+  -fx-font-size: 14;
   -fx-font-weight: 700;
   -fx-text-fill: #6B6560;
-  -fx-font-family: 'Libre Baskerville', serif;
 }
 
 .modal-overlay {
@@ -129,7 +127,7 @@
 }
 
 .modal-close {
-  -fx-font-size: 22;
+  -fx-font-size: 20;
   -fx-text-fill: #B0ADA8;
   -fx-cursor: hand;
   -fx-padding: 4 8;
@@ -140,29 +138,29 @@
 }
 
 .modal-title {
-  -fx-font-family: "Libre Baskerville", serif;
-  -fx-font-size: 30;
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 26;
   -fx-font-weight: 700;
   -fx-text-fill: #2D2A24;
   -fx-line-spacing: 1;
 }
 
 .modal-brand {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: #A8A29E;
   -fx-font-weight: 600;
   -fx-letter-spacing: 1;
 }
 
 .modal-section-title {
-  -fx-font-size: 16;
+  -fx-font-size: 13;
   -fx-text-fill: #A8A29E;
   -fx-font-weight: 700;
   -fx-letter-spacing: 1;
 }
 
 .modal-desc {
-  -fx-font-size: 17;
+  -fx-font-size: 14;
   -fx-text-fill: #6B6762;
   -fx-line-spacing: 2;
   -fx-font-style: italic;
@@ -172,7 +170,7 @@
   -fx-background-color: #B18DB8;
   -fx-background-radius: 8;
   -fx-text-fill: white;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-font-weight: 700;
   -fx-padding: 10 20 10 20;
   -fx-cursor: hand;
@@ -186,7 +184,7 @@
 .btn-similar-full {
   -fx-background-radius: 10;
   -fx-padding: 12 20;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-letter-spacing: 1;
 }
 
@@ -195,7 +193,7 @@
   -fx-background-radius: 16;
   -fx-padding: 6 16;
   -fx-font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-text-fill: #6B6560;
   -fx-cursor: hand;
@@ -211,7 +209,7 @@
   -fx-text-fill: #8A8580;
   -fx-background-radius: 20px;
   -fx-padding: 8 18;
-  -fx-font-size: 16px;
+  -fx-font-size: 14px;
   -fx-font-weight: 600;
   -fx-letter-spacing: 1;
   -fx-cursor: hand;
@@ -220,6 +218,104 @@
 
 .btn-ghost-lux:hover {
   -fx-background-color: rgba(177, 141, 184, 0.08);
+}
+
+.catalog-tab {
+  -fx-background-color: transparent;
+  -fx-background-radius: 8;
+  -fx-padding: 6 16;
+  -fx-font-size: 13;
+  -fx-font-weight: 600;
+  -fx-text-fill: #B0ADA8;
+  -fx-cursor: hand;
+}
+
+.catalog-tab:hover {
+  -fx-text-fill: #8A8580;
+  -fx-background-color: rgba(177,141,184,0.06);
+}
+
+.catalog-tab-active {
+  -fx-background-color: #B18DB8;
+  -fx-background-radius: 8;
+  -fx-padding: 6 16;
+  -fx-font-size: 13;
+  -fx-font-weight: 700;
+  -fx-text-fill: white;
+  -fx-cursor: hand;
+}
+
+.catalog-tab-active:hover {
+  -fx-background-color: #9C78A3;
+}
+
+.community-card {
+  -fx-background-color: #FFFDFB;
+  -fx-background-radius: 10;
+  -fx-border-color: #EDE8E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.06), 6, 0, 0, 2);
+  -fx-padding: 16 20;
+}
+
+.community-card:hover {
+  -fx-background-color: #FFFFFF;
+  -fx-border-color: #D8D0C6;
+  -fx-effect: dropshadow(gaussian, rgba(177,141,184,0.1), 10, 0, 0, 3);
+}
+
+.community-card-name {
+  -fx-font-family: "Cormorant Garamond", "Georgia", serif;
+  -fx-font-size: 18;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2D2A24;
+}
+
+.community-card-user {
+  -fx-font-size: 13;
+  -fx-text-fill: #B18DB8;
+  -fx-font-weight: 600;
+  -fx-font-style: italic;
+}
+
+.community-card-notes {
+  -fx-font-size: 13;
+  -fx-text-fill: #8A8580;
+  -fx-font-weight: 600;
+}
+
+.community-card-date {
+  -fx-font-size: 13;
+  -fx-text-fill: #B0ADA8;
+}
+
+.community-card-detail-btn {
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-text-fill: #5F5B57;
+  -fx-background-color: rgba(240,237,230,0.8);
+  -fx-background-radius: 6;
+  -fx-padding: 6 14;
+  -fx-cursor: hand;
+}
+
+.community-card-detail-btn:hover {
+  -fx-background-color: #D4CEC6;
+}
+
+.community-card-open-btn {
+  -fx-font-size: 12;
+  -fx-font-weight: 600;
+  -fx-text-fill: white;
+  -fx-background-color: #B18DB8;
+  -fx-background-radius: 6;
+  -fx-padding: 6 14;
+  -fx-cursor: hand;
+}
+
+.community-card-open-btn:hover {
+  -fx-background-color: #9C78A3;
 }
 
 .vault-slider {

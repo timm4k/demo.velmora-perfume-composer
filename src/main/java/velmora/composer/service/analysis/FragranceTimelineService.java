@@ -26,15 +26,11 @@ public class FragranceTimelineService {
     return new TimelineData(phases, current, curves, story, currentTimeHours);
   }
 
-  private PhaseInfo currentPhase(List<PhaseInfo> phases, double time) {
+  public PhaseInfo findCurrentPhase(List<PhaseInfo> phases, double time) {
     for (PhaseInfo p : phases) {
       if (time >= p.start && time < p.end) return p;
     }
     return phases.get(phases.size() - 1);
-  }
-
-  public PhaseInfo findCurrentPhase(List<PhaseInfo> phases, double time) {
-    return currentPhase(phases, time);
   }
 
   private List<PhaseInfo> buildPhases(List<Note> topNotes, List<Note> heartNotes, List<Note> baseNotes) {

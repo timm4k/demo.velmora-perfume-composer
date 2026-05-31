@@ -199,6 +199,3 @@ UPDATE perfumes SET style='Citrus Aromatic', complexity='Moderate', accords='Cit
 
 -- 65 Amouage Interlude Man
 UPDATE perfumes SET style='Dark Oriental', complexity='Complex', accords='Oriental, Spicy, Woody, Dark', occasions='Evening, Cold Weather, Statement', release_year=2012 WHERE name ILIKE '%Interlude Man%';
-
--- 66 Lacoste L.12.12 Noir Intense already updated above (skip)
--- 67 D&G Light Blue Pour Homme already updated above (skip)

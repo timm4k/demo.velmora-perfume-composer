@@ -3,6 +3,8 @@ package velmora.composer.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
+import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
 @Table(name = "composition_versions")
@@ -23,6 +25,7 @@ public class CompositionVersion {
   @Column(name = "version_number", nullable = false)
   private int versionNumber;
 
+  @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "snapshot_json", columnDefinition = "JSONB", nullable = false)
   private String snapshotJson;
 

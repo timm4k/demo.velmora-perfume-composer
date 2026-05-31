@@ -56,15 +56,19 @@
   </VBox>
 
   <StackPane fx:id="detailOverlay" visible="false" managed="false"
-             styleClass="history-overlay" StackPane.alignment="CENTER">
-    <VBox fx:id="detailPanel" maxWidth="680.0" maxHeight="820.0"
-          styleClass="history-detail-panel" spacing="0.0"
-          style="-fx-padding: 0;">
-    </VBox>
+             styleClass="history-overlay" StackPane.alignment="CENTER"
+             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <AnchorPane fx:id="detailPanel" maxWidth="680.0" maxHeight="820.0"
+                styleClass="history-detail-panel"
+                style="-fx-background-color: #FFFDFB;">
+    </AnchorPane>
   </StackPane>
 
   <StackPane fx:id="compareOverlay" visible="false" managed="false"
-             styleClass="history-overlay" StackPane.alignment="CENTER">
+             styleClass="history-overlay" StackPane.alignment="CENTER"
+             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
     <VBox fx:id="comparePanel" maxWidth="760.0" maxHeight="820.0"
           styleClass="history-detail-panel" spacing="0.0"
           style="-fx-padding: 0;">

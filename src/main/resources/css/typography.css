@@ -7,20 +7,20 @@
 .text-error     { -fx-text-fill: -velmora-error; }
 .text-success   { -fx-text-fill: -velmora-success; }
 
-.text-xs   { -fx-font-size: 14; }
-.text-sm   { -fx-font-size: 15; }
-.text-base { -fx-font-size: 17; }
-.text-md   { -fx-font-size: 22; }
-.text-lg   { -fx-font-size: 24; }
-.text-xl   { -fx-font-size: 28; }
-.text-2xl  { -fx-font-size: 32; }
+.text-xs   { -fx-font-size: 12; }
+.text-sm   { -fx-font-size: 13; }
+.text-base { -fx-font-size: 15; }
+.text-md   { -fx-font-size: 18; }
+.text-lg   { -fx-font-size: 22; }
+.text-xl   { -fx-font-size: 26; }
+.text-2xl  { -fx-font-size: 30; }
 .text-3xl  { -fx-font-size: 40; }
 .text-4xl  { -fx-font-size: 44; }
 
 .font-bold    { -fx-font-weight: bold; }
 .font-semibold { -fx-font-weight: 600; }
 .font-mono    { -fx-font-family: 'Courier New', monospace; }
-.font-serif   { -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif; }
+.font-serif   { -fx-font-family: 'Cormorant Garamond', 'Georgia', serif; }
 .font-italic  { -fx-font-style: italic; }
 
 .tracking-1 { -fx-letter-spacing: 1; }
@@ -31,62 +31,62 @@
 .cursor-hand { -fx-cursor: hand; }
 
 .section-label {
-  -fx-font-size: 19;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 3;
 }
 
 .section-label-purple {
-  -fx-font-size: 19;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-accent-purple;
   -fx-letter-spacing: 3;
 }
 
 .field-label {
-  -fx-font-size: 20;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: -velmora-text-muted;
   -fx-letter-spacing: 3;
 }
 
 .auth-form-title {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 38;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 28;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 2;
 }
 
 .auth-brand {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 82;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 48;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 18;
 }
 
 .auth-subtitle {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 19;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 16;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 7;
 }
 
 .auth-tagline {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 21;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 18;
   -fx-text-fill: -velmora-text-muted;
   -fx-letter-spacing: 2;
   -fx-font-style: italic;
 }
 
 .auth-switch-text {
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-text-muted;
 }
 
 .auth-switch-link {
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-accent-purple;
   -fx-font-weight: bold;
   -fx-border-color: transparent;
@@ -100,28 +100,28 @@
 
 .auth-error {
   -fx-text-fill: -velmora-error;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-font-style: italic;
 }
 
 .heading-hero {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 48;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 44;
   -fx-text-fill: -velmora-text;
   -fx-letter-spacing: 1;
   -fx-font-weight: 600;
 }
 
 .heading-section {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 30;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 28;
   -fx-text-fill: -velmora-text;
   -fx-font-weight: 600;
 }
 
 .heading-sub {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 18;
   -fx-text-fill: -velmora-accent-teal;
   -fx-letter-spacing: 5;
   -fx-font-weight: 600;
@@ -131,78 +131,73 @@
 
 .label-muted {
   -fx-text-fill: -velmora-text-muted;
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-size: 15;
 }
 
 .label-accent-purple { -fx-text-fill: -velmora-accent-purple; -fx-font-weight: 600; }
 .label-accent-teal   { -fx-text-fill: -velmora-accent-teal;   -fx-font-weight: 600; }
 
 .panel-header {
-  -fx-font-size: 18;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
   -fx-text-fill: -velmora-text-muted;
 }
 
 .pyramid-zone-title {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-letter-spacing: 3;
   -fx-text-fill: -velmora-text-secondary;
 }
 
 .pyramid-zone-empty {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-size: 16;
   -fx-text-fill: -velmora-text-muted;
   -fx-font-style: italic;
 }
 
 .score-text {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 34;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 30;
   -fx-text-fill: -velmora-text;
 }
 
 .metric-value {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 38;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 32;
   -fx-text-fill: -velmora-text;
 }
 
 .metric-label {
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-letter-spacing: 2;
   -fx-text-fill: -velmora-text-muted;
 }
 
 .material-name {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-size: 16;
   -fx-font-weight: 600;
   -fx-text-fill: -velmora-text;
 }
 
 .material-family {
-  -fx-font-size: 16;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-letter-spacing: 2;
   -fx-text-fill: -velmora-text-muted;
 }
 
 .material-score {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 18;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-accent-purple;
   -fx-font-style: italic;
 }
 
 .settings-section-header {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Times New Roman', serif;
-  -fx-font-size: 26;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 24;
   -fx-text-fill: -velmora-text;
   -fx-padding: 0 0 6 0;
   -fx-border-color: transparent transparent -velmora-accent-peach transparent;
@@ -210,33 +205,29 @@
 }
 
 .settings-toggle-title {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-size: 16;
   -fx-text-fill: -velmora-text;
 }
 
 .settings-toggle-desc {
-  -fx-font-size: 19;
+  -fx-font-size: 14;
   -fx-text-fill: -velmora-text-muted;
   -fx-font-style: italic;
 }
 
 .version-label {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-text-secondary;
 }
 
 .version-value {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-text;
   -fx-font-weight: 600;
 }
 
 .version-pro {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-text-fill: -velmora-accent-peach;
   -fx-font-weight: bold;
 }

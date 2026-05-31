@@ -2,7 +2,7 @@
   -fx-background-color: -velmora-surface;
   -fx-border-color: -velmora-border;
   -fx-border-width: 1;
-  -fx-font-size: 20;
+  -fx-font-size: 15;
   -fx-padding: 10 12;
   -fx-text-fill: -velmora-text;
   -fx-prompt-text-fill: #B0ADA8;
@@ -60,4 +60,65 @@
 
 .slider .thumb:hover {
   -fx-background-color: derive(-velmora-accent-purple, -15%);
+}
+
+/* ComboBox popup/dropdown styling */
+.combo-box-popup {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 8;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 4);
+  -fx-border-color: #E2DDD4;
+  -fx-border-radius: 8;
+  -fx-border-width: 1;
+}
+
+.combo-box-popup .list-view {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 8;
+  -fx-padding: 4;
+}
+
+.combo-box-popup .list-cell {
+  -fx-background-color: transparent;
+  -fx-padding: 6 12;
+  -fx-text-fill: #2D2A24;
+  -fx-font-size: 14;
+}
+
+.combo-box-popup .list-cell:hover {
+  -fx-background-color: rgba(177,141,184,0.1);
+  -fx-background-radius: 4;
+}
+
+.combo-box-popup .list-cell:selected {
+  -fx-background-color: rgba(177,141,184,0.15);
+  -fx-background-radius: 4;
+  -fx-text-fill: #2D2A24;
+  -fx-font-weight: 600;
+}
+
+/* ContextMenu popup styling */
+.context-menu {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 8;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 4);
+  -fx-border-color: #E2DDD4;
+  -fx-border-radius: 8;
+  -fx-border-width: 1;
+  -fx-padding: 4;
+}
+
+.menu-item {
+  -fx-padding: 6 12;
+  -fx-background-radius: 4;
+}
+
+.menu-item:hover {
+  -fx-background-color: rgba(177,141,184,0.1);
+  -fx-background-radius: 4;
+}
+
+.menu-item .label {
+  -fx-text-fill: #2D2A24;
+  -fx-font-size: 14;
 }

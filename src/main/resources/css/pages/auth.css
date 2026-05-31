@@ -14,8 +14,8 @@
 }
 
 .auth-brand {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 52;
+  -fx-font-family: 'Victor Mono', 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 48;
   -fx-font-weight: bold;
   -fx-text-fill: #1C1917;
   -fx-letter-spacing: 8;
@@ -23,21 +23,21 @@
 }
 
 .auth-subtitle {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 20;
+  -fx-font-family: 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 16;
   -fx-letter-spacing: 6;
   -fx-text-fill: #B18DB8;
 }
 
 .auth-tagline {
-  -fx-font-size: 19;
+  -fx-font-size: 15;
   -fx-font-style: italic;
   -fx-text-fill: #B5ADA4;
 }
 
 .auth-form-title {
-  -fx-font-family: 'Libre Baskerville', 'Garamond', 'Georgia', serif;
-  -fx-font-size: 28;
+  -fx-font-family: 'Victor Mono', 'Cormorant Garamond', 'Georgia', serif;
+  -fx-font-size: 24;
   -fx-font-weight: bold;
   -fx-text-fill: #1C1917;
   -fx-letter-spacing: 3;
@@ -45,26 +45,26 @@
 }
 
 .field-label {
-  -fx-font-size: 18;
+  -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: #8A847E;
   -fx-letter-spacing: 2;
 }
 
 .auth-error {
-  -fx-font-size: 20;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-text-fill: #C44A4A;
   -fx-padding: 6 0 0 0;
 }
 
 .auth-switch-text {
-  -fx-font-size: 20;
+  -fx-font-size: 15;
   -fx-text-fill: #8A847E;
 }
 
 .auth-switch-link {
-  -fx-font-size: 20;
+  -fx-font-size: 15;
   -fx-font-weight: bold;
   -fx-text-fill: #B18DB8;
 }

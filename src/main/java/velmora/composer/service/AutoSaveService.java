@@ -1,11 +1,13 @@
 package velmora.composer.service;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import velmora.composer.model.Composition;
+import velmora.composer.model.CompositionItem;
 import velmora.composer.model.CompositionStatus;
 import velmora.composer.model.User;
 import velmora.composer.repository.CompositionRepository;
@@ -25,6 +27,7 @@ public class AutoSaveService {
   private Long editCompositionId;
   private String currentName;
   private String currentDescription;
+  private List<CompositionItem> currentItems;
 
   private static final long DEBOUNCE_MS = 30_000;
 
@@ -60,6 +63,10 @@ public class AutoSaveService {
 
   public void setCurrentDescription(String description) {
     this.currentDescription = description;
+  }
+
+  public void setCurrentItems(List<CompositionItem> items) {
+    this.currentItems = items;
   }
 
   private void resetTimer() {
@@ -98,6 +105,16 @@ public class AutoSaveService {
         composition.setStatus(CompositionStatus.DRAFT);
       }
 
+      if (currentItems != null && !currentItems.isEmpty()) {
+        composition.getItems().clear();
+        for (CompositionItem item : currentItems) {
+          CompositionItem copy = new CompositionItem();
+          copy.setNoteId(item.getNoteId());
+          copy.setPercentage(item.getPercentage());
+          composition.getItems().add(copy);
+        }
+      }
+
       composition = compositionService.saveComposition(composition, "Auto-saved");
 
       if (editCompositionId == null) {
@@ -128,6 +145,7 @@ public class AutoSaveService {
     editCompositionId = null;
     currentName = null;
     currentDescription = null;
+    currentItems = null;
     notifyStatus(SaveStatus.SAVED);
   }
 
