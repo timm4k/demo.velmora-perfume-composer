@@ -86,9 +86,8 @@ This project was developed as an educational software system with emphasis on:
 - **Perfume composition modeling** — phase-aware ingredient layering (top / heart / base)
 - **Desktop application development** — native JavaFX UI with scene management
 - **JavaFX interface design** — custom components, animations, and responsive layouts
+- **Spring Data JPA** — simplyfying and authomatic database access
 - **PostgreSQL interaction** — relational schema for ingredients, compositions, and sessions
-- **JDBC programming** — raw SQL access without ORM abstractions
-- **Custom connection pool implementation** — manual pooling for controlled resource management
 - **Analytical perfume systems** — intensity scoring, scent timelines, and olfactory profiling
 
 ---
